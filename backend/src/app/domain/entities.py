@@ -1,0 +1,161 @@
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+
+from app.domain.enums import (
+    AttendanceStatus,
+    CoursePaymentType,
+    CourseType,
+    LessonType,
+    UserRole,
+)
+
+
+@dataclass
+class Organization:
+    id: int = field(init=False)
+    name: str
+    slug: str
+    created_by_id: int
+    created_at: datetime = field(init=False)
+    # Manually set this attribute
+    role: UserRole | None = field(init=False, default=None)
+
+
+@dataclass
+class User:
+    id: int = field(init=False)
+    fullname: str
+    email: str
+    password: str
+    phone: str = ''
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class OrganizationMember:
+    id: int = field(init=False)
+    organization_id: int
+    user_id: int
+    user: User | None = field(init=False, default=None)
+    role: UserRole
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class Subject:
+    id: int = field(init=False)
+    organization_id: int
+    name: str
+    image: str
+    description: str
+
+
+@dataclass
+class Course:
+    id: int = field(init=False)
+    subject_id: int
+    subject: Subject
+    type: CourseType
+    price: int
+    payment_type: CoursePaymentType
+    lesson_type: LessonType
+    lesson_duration: int
+    lessons_count: int | None = None
+    duration: timedelta | None = None
+    created_at: datetime = field(init=False)
+    # Manually set this attribute
+    selected_teacher: User | None = None
+
+
+@dataclass
+class CourseTeacher:
+    id: int = field(init=False)
+    course_id: int
+    teacher_id: int
+    is_active: bool = True
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class CourseTeacherStudent:
+    id: int = field(init=False)
+    course_teacher_id: int
+    student_id: int
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class Cabinet:
+    id: int = field(init=False)
+    address_id: int
+    number: str
+
+
+@dataclass
+class Address:
+    id: int = field(init=False)
+    organization_id: int
+    address: str
+    cabinets: list[Cabinet] = field(default_factory=list)
+
+
+@dataclass
+class Group:
+    id: int = field(init=False)
+    name: str
+    course_id: int
+    max_users_count: int
+    default_cabinet_id: int | None = None
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class UserGroup:
+    id: int = field(init=False)
+    user_id: int
+    group_id: int
+    is_active: bool = True
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class Lesson:
+    id: int = field(init=False)
+    cabinet_id: int
+    conducted_by_id: int
+    start_date: datetime
+    end_date: datetime
+    group_id: int | None = None
+    student_teacher_course_id: int | None = None
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class Attendance:
+    id: int = field(init=False)
+    lesson_id: int
+    user_id: int
+    status: AttendanceStatus
+    comment: str = ''
+
+
+@dataclass
+class Feedback:
+    id: int = field(init=False)
+    author_id: int
+    rating: int
+    teacher_id: int | None = None
+    course_id: int | None = None
+    text: str = ''
+    is_active: bool = True
+    created_at: datetime = field(init=False)
+
+
+@dataclass
+class Payment:
+    id: int = field(init=False)
+    amount: int
+    created_by_id: int
+    user_group_id: int | None = None
+    lesson_id: int | None = None
+    date: datetime = field(init=False)
