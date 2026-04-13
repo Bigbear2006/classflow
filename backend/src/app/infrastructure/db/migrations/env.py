@@ -14,9 +14,17 @@ config = context.config
 
 database_config = DatabaseConfig()
 section = config.config_ini_section
-config.set_section_option(
-    section, 'SUPERUSER_DATABASE_URL', database_config.superuser_url,
-)
+
+def _set_option_if_none(name: str, value: str) -> None:
+    if not config.get_section_option(section, name):
+        config.set_section_option(section, name, value)
+
+
+_set_option_if_none('SUPERUSER_DATABASE_URL', database_config.superuser_url)
+_set_option_if_none('DB_NAME', database_config.NAME)
+_set_option_if_none('APP_USER', database_config.APP_USER)
+_set_option_if_none('APP_PASSWORD', database_config.APP_PASSWORD)
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

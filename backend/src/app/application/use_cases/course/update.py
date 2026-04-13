@@ -9,30 +9,30 @@ from app.domain.enums import CoursePaymentType, CourseType, LessonType
 
 
 @dataclass
-class CreateCourseDTO:
+class UpdateCourseDTO:
+    id: int
     subject_id: int
     type: CourseType
     price: int
     payment_type: CoursePaymentType
     lesson_type: LessonType
-    lesson_duration: timedelta
+    lesson_duration: int
     lessons_count: int | None = None
     duration: timedelta | None = None
 
 
-class CreateCourse:
+class UpdateCourse:
     def __init__(
         self,
         course_repository: CourseRepository,
-        permission_service: PermissionService,
         uow: UnitOfWork,
+        permission_service: PermissionService,
     ) -> None:
         self.course_repository = course_repository
-        self.permission_service = permission_service
         self.uow = uow
+        self.permission_service = permission_service
 
-    async def __call__(self, data: CreateCourseDTO) -> Course:
+    async def __call__(self, data: UpdateCourseDTO) -> Course:
         await self.permission_service.ensure_admin_or_more()
         async with self.uow:
-            course = Course(**asdict(data))
-            return await self.course_repository.create(course)
+            return await self.course_repository.update(**asdict(data))

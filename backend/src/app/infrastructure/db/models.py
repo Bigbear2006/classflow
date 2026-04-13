@@ -54,7 +54,7 @@ mapper_registry = registry(metadata=metadata)
 user_role_enum = Enum(UserRole, name='user_role')
 course_type_enum = Enum(CourseType, name='course_type')
 lesson_type_enum = Enum(LessonType, name='lesson_type')
-course_payment_type_enum = Enum(CoursePaymentType, name='lesson_payment_type')
+course_payment_type_enum = Enum(CoursePaymentType, name='course_payment_type')
 attendance_status_enum = Enum(AttendanceStatus, name='attendance_status')
 lesson_transfer_status_enum = Enum(
     LessonTransferStatus,

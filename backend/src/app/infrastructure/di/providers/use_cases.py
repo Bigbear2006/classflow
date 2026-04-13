@@ -11,12 +11,16 @@ from app.application.use_cases.course.add_current_student import (
 )
 from app.application.use_cases.course.add_teacher import AddTeacherToCourse
 from app.application.use_cases.course.create import CreateCourse
+from app.application.use_cases.course.delete_teacher import (
+    DeleteTeacherFromCourse,
+)
 from app.application.use_cases.course.get_all import GetAllCourses
 from app.application.use_cases.course.get_my import GetMyCourses
 from app.application.use_cases.course.get_students import (
     GetCourseTeacherStudents,
 )
 from app.application.use_cases.course.get_teachers import GetCourseTeachers
+from app.application.use_cases.course.update import UpdateCourse
 from app.application.use_cases.organization.create import CreateOrganization
 from app.application.use_cases.organization.get_all import GetAllOrganizations
 from app.application.use_cases.organization.get_current import (
@@ -81,8 +85,10 @@ class UseCasesProvider(Provider):
         CreateCourse,
         AddTeacherToCourse,
         AddCurrentStudentToCourse,
+        DeleteTeacherFromCourse,
         GetAllCourses,
         GetMyCourses,
+        UpdateCourse,
         GetCourseTeacherStudents,
         GetCourseTeachers,
     )

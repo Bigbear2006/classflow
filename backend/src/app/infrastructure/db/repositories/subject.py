@@ -23,7 +23,12 @@ class SubjectRepositoryImpl(SubjectRepository):
         description: str | None = None,
     ) -> Subject:
         data = exclude_none(name=name, image=image, description=description)
-        stmt = update(Subject).where(subjects_table.c.id == id).values(data)
+        stmt = (
+            update(Subject)
+            .where(subjects_table.c.id == id)
+            .values(data)
+            .returning(Subject)
+        )
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
 

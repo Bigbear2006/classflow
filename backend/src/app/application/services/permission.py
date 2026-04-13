@@ -48,7 +48,9 @@ class PermissionService:
         await self.ensure_role([UserRole.ADMIN, UserRole.OWNER])
 
     async def ensure_teacher_or_more(self) -> None:
-        await self.ensure_role([UserRole.TEACHER])
+        await self.ensure_role(
+            [UserRole.TEACHER, UserRole.ADMIN, UserRole.OWNER],
+        )
 
     async def ensure_student(self) -> None:
         await self.ensure_role([UserRole.STUDENT])

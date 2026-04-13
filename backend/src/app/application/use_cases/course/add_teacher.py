@@ -30,4 +30,4 @@ class AddTeacherToCourse:
                 course_id=data.course_id,
                 teacher_id=data.teacher_id,
             )
-            return self.course_teacher_repository.create(course_teacher)
+            return await self.course_teacher_repository.create(course_teacher)

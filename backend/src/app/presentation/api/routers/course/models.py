@@ -2,24 +2,37 @@ from datetime import datetime, timedelta
 
 from pydantic import BaseModel, ConfigDict
 
-from app.domain.enums import CoursePaymentType, LessonType
+from app.domain.enums import CoursePaymentType, CourseType, LessonType
 from app.presentation.api.routers.subject.models import SubjectResponse
 from app.presentation.api.routers.user.models import UserResponse
 
 
-class CourseResponse(BaseModel):
-    id: int
-    organization_id: int
-    subject: SubjectResponse
-    type: CoursePaymentType
+class UpdateCourseRequest(BaseModel):
+    subject_id: int
+    type: CourseType
     price: int
     payment_type: CoursePaymentType
     lesson_type: LessonType
-    lesson_duration: int
+    lesson_duration: timedelta
+    lessons_count: int | None = None
+    duration: timedelta | None = None
+
+
+class CourseResponse(BaseModel):
+    id: int
+    type: CourseType
+    price: int
+    payment_type: CoursePaymentType
+    lesson_type: LessonType
+    lesson_duration: timedelta
     lessons_count: int | None = None
     duration: timedelta | None = None
     selected_teacher: UserResponse | None = None
     model_config = ConfigDict(from_attributes=True)
+
+
+class DetailCourseResponse(CourseResponse):
+    subject: SubjectResponse
 
 
 class CourseTeacherResponse(BaseModel):

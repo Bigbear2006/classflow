@@ -8,7 +8,6 @@ from app.domain.entities import CourseTeacher, User
 from app.infrastructure.db.models import (
     course_teacher_students_table,
     course_teachers_table,
-    courses_table,
     users_table,
 )
 from app.infrastructure.db.repositories.base import create
@@ -43,10 +42,6 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
     ) -> list[User]:
         stmt = (
             select(User)
-            .join(
-                course_teachers_table,
-                courses_table.c.id == course_teachers_table.c.course_id,
-            )
             .join(
                 course_teacher_students_table,
                 users_table.c.id == course_teacher_students_table.c.student_id,

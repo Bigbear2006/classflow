@@ -27,7 +27,7 @@ class SqlalchemyUnitOfWork(UnitOfWork):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        # if exc_type:
-        #     await self.rollback()
-        # else:
-        await self.commit()
+        try:
+            await self.commit()
+        except:
+            await self.rollback()

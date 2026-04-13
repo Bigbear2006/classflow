@@ -14,6 +14,10 @@ from app.application.use_cases.course.create import (
     CreateCourse,
     CreateCourseDTO,
 )
+from app.application.use_cases.course.delete_teacher import (
+    DeleteTeacherFromCourse,
+    DeleteTeacherFromCourseDTO,
+)
 from app.application.use_cases.course.get_all import GetAllCourses
 from app.application.use_cases.course.get_my import GetMyCourses
 from app.application.use_cases.course.get_students import (
@@ -24,10 +28,16 @@ from app.application.use_cases.course.get_teachers import (
     GetCourseTeachers,
     GetCourseTeachersDTO,
 )
+from app.application.use_cases.course.update import (
+    UpdateCourse,
+    UpdateCourseDTO,
+)
 from app.presentation.api.routers.course.models import (
     CourseResponse,
     CourseTeacherResponse,
     CourseTeacherStudentResponse,
+    DetailCourseResponse,
+    UpdateCourseRequest,
 )
 from app.presentation.api.routers.user.models import UserResponse
 
@@ -50,22 +60,28 @@ async def create_course_router(
 @course_router.get('/')
 async def get_courses_router(
     get_all_courses: FromDishka[GetAllCourses],
-) -> list[CourseResponse]:
+) -> list[DetailCourseResponse]:
     courses = await get_all_courses()
-    return [CourseResponse.model_validate(course) for course in courses]
+    return [DetailCourseResponse.model_validate(course) for course in courses]
 
 
-@course_router.patch('/{course_id}/')
-async def update_course_router() -> CourseResponse:
-    pass
+@course_router.put('/{course_id}/')
+async def update_course_router(
+    course_id: int,
+    data: UpdateCourseRequest,
+    update_course: FromDishka[UpdateCourse],
+) -> CourseResponse:
+    dto = UpdateCourseDTO(id=course_id, **data.model_dump())
+    course = await update_course(dto)
+    return CourseResponse.model_validate(course)
 
 
 @course_router.get('/my/')
 async def get_my_courses_router(
     get_my_courses: FromDishka[GetMyCourses],
-) -> list[CourseResponse]:
+) -> list[DetailCourseResponse]:
     courses = await get_my_courses()
-    return [CourseResponse.model_validate(course) for course in courses]
+    return [DetailCourseResponse.model_validate(course) for course in courses]
 
 
 @course_router.post('/{course_id}/teachers/{teacher_id}/', status_code=201)
@@ -90,11 +106,22 @@ async def get_course_teachers_router(
 
 
 @course_router.delete('/{course_id}/teachers/{teacher_id}/', status_code=204)
-async def delete_teacher_from_course_router() -> None:
-    pass
+async def delete_teacher_from_course_router(
+    course_id: int,
+    teacher_id: int,
+    delete_teacher_from_course: FromDishka[DeleteTeacherFromCourse],
+) -> None:
+    dto = DeleteTeacherFromCourseDTO(
+        course_id=course_id,
+        teacher_id=teacher_id,
+    )
+    await delete_teacher_from_course(dto)
 
 
-@course_router.post('{course_id}/teachers/{teacher_id}/', status_code=201)
+@course_router.post(
+    '/{course_id}/teachers/{teacher_id}/students/me/',
+    status_code=201,
+)
 async def add_current_student_to_course_teacher_router(
     course_id: int,
     teacher_id: int,
@@ -108,7 +135,7 @@ async def add_current_student_to_course_teacher_router(
     return CourseTeacherStudentResponse.model_validate(course_teacher_student)
 
 
-@course_router.get('{course_id}/teachers/{teacher_id}/students/')
+@course_router.get('/{course_id}/teachers/{teacher_id}/students/')
 async def get_course_teacher_students_router(
     course_id: int,
     teacher_id: int,
@@ -120,8 +147,3 @@ async def get_course_teacher_students_router(
     )
     students = await get_course_teacher_students(dto)
     return [UserResponse.model_validate(student) for student in students]
-
-
-@course_router.delete('/teachers/{teacher_id}/', status_code=204)
-async def delete_student_from_course_teacher_router() -> None:
-    pass

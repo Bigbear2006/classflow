@@ -54,12 +54,12 @@ class Subject:
 class Course:
     id: int = field(init=False)
     subject_id: int
-    subject: Subject
+    subject: Subject | None = field(init=False, default=None)
     type: CourseType
     price: int
     payment_type: CoursePaymentType
     lesson_type: LessonType
-    lesson_duration: int
+    lesson_duration: timedelta
     lessons_count: int | None = None
     duration: timedelta | None = None
     created_at: datetime = field(init=False)

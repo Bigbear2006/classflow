@@ -7,7 +7,7 @@ from sqlalchemy.orm import joinedload
 
 from app.application.repositories.course import CourseRepository
 from app.domain.entities import Course, User
-from app.domain.enums import CoursePaymentType, LessonType
+from app.domain.enums import CoursePaymentType, CourseType, LessonType
 from app.infrastructure.db.models import (
     course_teacher_students_table,
     course_teachers_table,
@@ -16,7 +16,7 @@ from app.infrastructure.db.models import (
     user_groups_table,
     users_table,
 )
-from app.infrastructure.db.repositories.base import create, exclude_none
+from app.infrastructure.db.repositories.base import create
 
 
 class CourseRepositoryImpl(CourseRepository):
@@ -30,28 +30,31 @@ class CourseRepositoryImpl(CourseRepository):
         self,
         id: int,
         *,
-        name: str,
-        image: str,
-        lesson_price: int,
+        subject_id: int,
+        type: CourseType,
+        price: int,
+        payment_type: CoursePaymentType,
         lesson_type: LessonType,
-        lesson_payment_type: CoursePaymentType,
-        user_can_select_teacher: bool,
-        description: str = '',
+        lesson_duration: int,
         lessons_count: int | None = None,
         duration: timedelta | None = None,
     ) -> Course:
-        data = exclude_none(
-            name=name,
-            image=image,
-            lesson_price=lesson_price,
-            lesson_type=lesson_type,
-            lesson_payment_type=lesson_payment_type,
-            user_can_select_teacher=user_can_select_teacher,
-            description=description,
-            lessons_count=lessons_count,
-            duration=duration,
+        data = {
+            'subject_id': subject_id,
+            'type': type,
+            'price': price,
+            'payment_type': payment_type,
+            'lesson_type': lesson_type,
+            'lesson_duration': lesson_duration,
+            'lessons_count': lessons_count,
+            'duration': duration,
+        }
+        stmt = (
+            update(Course)
+            .where(courses_table.c.id == id)
+            .values(data)
+            .returning(Course)
         )
-        stmt = update(Course).where(courses_table.c.id == id).values(data)
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
 
@@ -76,23 +79,32 @@ class CourseRepositoryImpl(CourseRepository):
     async def get_student_courses(self, user_id: int) -> list[Course]:
         stmt = (
             select(Course, User)
+            .options(joinedload(Course.subject))
             .join(
                 course_teachers_table,
                 courses_table.c.id == course_teachers_table.c.course_id,
+                isouter=True,
             )
             .join(
                 course_teacher_students_table,
                 course_teachers_table.c.id
                 == course_teacher_students_table.c.course_teacher_id,
+                isouter=True,
             )
             .join(
                 users_table,
                 course_teachers_table.c.teacher_id == users_table.c.id,
+                isouter=True,
             )
-            .join(groups_table, courses_table.c.id == groups_table.c.course_id)
+            .join(
+                groups_table,
+                courses_table.c.id == groups_table.c.course_id,
+                isouter=True,
+            )
             .join(
                 user_groups_table,
                 groups_table.c.id == user_groups_table.c.group_id,
+                isouter=True,
             )
             .where(
                 or_(
@@ -102,7 +114,7 @@ class CourseRepositoryImpl(CourseRepository):
             )
             .distinct()
         )
-        rows = await self.session.scalars(stmt)
+        rows = await self.session.execute(stmt)
         result = []
         for course, user in rows.all():
             course.selected_teacher = user
@@ -112,9 +124,10 @@ class CourseRepositoryImpl(CourseRepository):
     async def get_teacher_courses(self, user_id: int) -> list[Course]:
         stmt = (
             select(Course)
+            .options(joinedload(Course.subject))
             .join(
                 course_teachers_table,
-                courses_table.c.course_id == course_teachers_table.c.course_id,
+                courses_table.c.id == course_teachers_table.c.course_id,
             )
             .where(course_teachers_table.c.teacher_id == user_id)
             .distinct()

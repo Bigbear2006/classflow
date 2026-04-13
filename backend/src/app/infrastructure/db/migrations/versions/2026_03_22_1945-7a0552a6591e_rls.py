@@ -8,7 +8,7 @@ Create Date: 2026-03-22 19:45:37.621461
 
 from collections.abc import Sequence
 
-from alembic import op
+from alembic import op, context
 from app.infrastructure.db.config import DatabaseConfig
 
 # revision identifiers, used by Alembic.
@@ -17,10 +17,10 @@ down_revision: str | Sequence[str] | None = '22c75be5848e'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
-db_config = DatabaseConfig()
-DB_NAME = db_config.NAME
-APP_USER = db_config.APP_USER
-APP_PASSWORD = db_config.APP_PASSWORD
+section = context.config.config_ini_section
+DB_NAME = context.config.get_section_option(section, 'DB_NAME')
+APP_USER = context.config.get_section_option(section, 'APP_USER')
+APP_PASSWORD = context.config.get_section_option(section, 'APP_PASSWORD')
 
 TABLES = [
     'organizations',

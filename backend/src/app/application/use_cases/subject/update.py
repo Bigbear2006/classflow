@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from app.application.common.uow import UnitOfWork
 from app.application.repositories.subject import SubjectRepository
@@ -28,9 +28,4 @@ class UpdateSubject:
     async def __call__(self, data: UpdateSubjectDTO) -> Subject:
         await self.permission_service.ensure_admin_or_more()
         async with self.uow:
-            return await self.subject_repository.update(
-                data.id,
-                name=data.name,
-                image=data.image,
-                description=data.description,
-            )
+            return await self.subject_repository.update(**asdict(data))

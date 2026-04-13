@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 import uvicorn
+from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -33,12 +34,12 @@ async def cors_middleware(request: Request, call_next: Any) -> Response:
     return rsp
 
 
-def create_app() -> FastAPI:
+def create_app(_container: AsyncContainer | None = None) -> FastAPI:
     app = FastAPI(lifespan=lifespan)
     app.include_router(root_router)
     app.add_middleware(BaseHTTPMiddleware, dispatch=cors_middleware)
     setup_exception_handlers(app)
-    setup_dishka(container, app)
+    setup_dishka(_container or container, app)
     return app
 
 
