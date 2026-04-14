@@ -30,7 +30,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
 
     async def get_all(self) -> list[CourseTeacher]:
         stmt = select(CourseTeacher).where(
-            course_teachers_table.c.is_active == True,
+            course_teachers_table.c.is_active.is_(True),
         )
         rows = await self.session.scalars(stmt)
         return cast(list[CourseTeacher], rows.all())

@@ -3,12 +3,12 @@ from typing import cast
 from asyncpg import UniqueViolationError
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import InstrumentedAttribute, joinedload
 
 from app.application.repositories.organization_member import (
     OrganizationMemberRepository,
 )
-from app.domain.entities import OrganizationMember
+from app.domain.entities import OrganizationMember, User
 from app.domain.enums import UserRole
 from app.domain.exceptions import AlreadyExistsError
 from app.infrastructure.db.models import organization_members_table
@@ -69,7 +69,11 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
             .where(
                 organization_members_table.c.organization_id == org_id,
             )
-            .options(joinedload(OrganizationMember.user))
+            .options(
+                joinedload(
+                    cast(InstrumentedAttribute[User], OrganizationMember.user),
+                ),
+            )
         )
         rows = await self.session.scalars(stmt)
         return cast(list[OrganizationMember], rows.all())

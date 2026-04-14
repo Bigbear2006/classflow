@@ -2,33 +2,21 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from app.application.use_cases.course.add_current_student import (
+from app.application.use_cases.course import (
     AddCurrentStudentToCourse,
     AddCurrentStudentToCourseDTO,
-)
-from app.application.use_cases.course.add_teacher import (
     AddTeacherToCourse,
     AddTeacherToCourseDTO,
-)
-from app.application.use_cases.course.create import (
     CreateCourse,
     CreateCourseDTO,
-)
-from app.application.use_cases.course.delete_teacher import (
     DeleteTeacherFromCourse,
     DeleteTeacherFromCourseDTO,
-)
-from app.application.use_cases.course.get_all import GetAllCourses
-from app.application.use_cases.course.get_my import GetMyCourses
-from app.application.use_cases.course.get_students import (
-    GetCourseTeacherStudents,
-    GetCourseTeacherStudentsDTO,
-)
-from app.application.use_cases.course.get_teachers import (
+    GetAllCourses,
     GetCourseTeachers,
     GetCourseTeachersDTO,
-)
-from app.application.use_cases.course.update import (
+    GetCourseTeacherStudents,
+    GetCourseTeacherStudentsDTO,
+    GetMyCourses,
     UpdateCourse,
     UpdateCourseDTO,
 )

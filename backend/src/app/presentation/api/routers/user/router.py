@@ -5,17 +5,14 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, Response
 from fastapi.params import Cookie, Depends
 
-from app.application.use_cases.user.change_password import (
+from app.application.use_cases.user import (
     ChangeUserPassword,
     ChangeUserPasswordDTO,
-)
-from app.application.use_cases.user.get_current import GetCurrentUser
-from app.application.use_cases.user.login import LoginUser, LoginUserDTO
-from app.application.use_cases.user.register import (
+    GetCurrentUser,
+    LoginUser,
+    LoginUserDTO,
     RegisterUser,
     RegisterUserDTO,
-)
-from app.application.use_cases.user.update_current import (
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
 )

@@ -3,23 +3,15 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 from fastapi.params import Depends
 
-from app.application.use_cases.organization.create import (
+from app.application.use_cases.organization import (
     CreateOrganization,
     CreateOrganizationDTO,
-)
-from app.application.use_cases.organization.get_all import GetAllOrganizations
-from app.application.use_cases.organization.get_current import (
+    GetAllOrganizations,
     GetCurrentOrganization,
-)
-from app.application.use_cases.organization.get_current_org_all_members import (
     GetCurrentOrganizationAllMembers,
-)
-from app.application.use_cases.organization.get_current_org_member import (
     GetCurrentOrganizationMember,
-)
-from app.application.use_cases.organization.get_my import GetMyOrganizations
-from app.application.use_cases.organization.join import JoinOrganization
-from app.application.use_cases.organization.update_member import (
+    GetMyOrganizations,
+    JoinOrganization,
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
 )

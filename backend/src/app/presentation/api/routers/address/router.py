@@ -2,16 +2,12 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from app.application.use_cases.address.create import (
+from app.application.use_cases.address import (
     CreateAddress,
     CreateAddressDTO,
-)
-from app.application.use_cases.address.delete import (
     DeleteAddress,
     DeleteAddressDTO,
-)
-from app.application.use_cases.address.get_all import GetAllAddresses
-from app.application.use_cases.address.update import (
+    GetAllAddresses,
     UpdateAddress,
     UpdateAddressDTO,
 )

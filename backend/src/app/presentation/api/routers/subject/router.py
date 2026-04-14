@@ -2,16 +2,12 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from app.application.use_cases.subject.create import (
+from app.application.use_cases.subject import (
     CreateSubject,
     CreateSubjectDTO,
-)
-from app.application.use_cases.subject.delete import (
     DeleteSubject,
     DeleteSubjectDTO,
-)
-from app.application.use_cases.subject.get_all import GetAllSubjects
-from app.application.use_cases.subject.update import (
+    GetAllSubjects,
     UpdateSubject,
     UpdateSubjectDTO,
 )

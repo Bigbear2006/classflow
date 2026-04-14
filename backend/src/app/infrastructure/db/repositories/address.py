@@ -31,7 +31,7 @@ class AddressRepositoryImpl(AddressRepository):
 
     async def get_all(self) -> list[Address]:
         rows = await self.session.scalars(
-            select(Address).options(joinedload(Address.cabinets)),
+            select(Address).options(joinedload(Address.cabinets)),  # type: ignore[arg-type]
         )
         return cast(list[Address], rows.unique().all())
 

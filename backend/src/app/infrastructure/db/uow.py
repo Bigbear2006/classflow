@@ -29,5 +29,9 @@ class SqlalchemyUnitOfWork(UnitOfWork):
     ) -> None:
         try:
             await self.commit()
-        except:
+        except Exception as e:
+            print(
+                f'Unexpected exception during commit: '
+                f'{e.__class__.__name__}: {e}',
+            )
             await self.rollback()

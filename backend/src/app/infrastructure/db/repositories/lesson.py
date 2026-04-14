@@ -1,10 +1,12 @@
 from datetime import date, datetime
+from typing import cast
 
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.repositories.lesson import LessonRepository
-from app.domain.entities import Group, Lesson, UserGroup
+from app.domain.entities import Group, Lesson
+from app.infrastructure.db.models import lessons_table, user_groups_table
 
 
 class LessonRepositoryImpl(LessonRepository):
@@ -39,31 +41,34 @@ class LessonRepositoryImpl(LessonRepository):
         end_date: date,
     ) -> list[Lesson]:
         stmt = select(Lesson).where(
-            Lesson.start_date >= start_date,
-            Lesson.end_date <= end_date,
+            lessons_table.c.start_date >= start_date,
+            lessons_table.c.end_date <= end_date,
         )
         rows = await self.session.scalars(stmt)
-        return rows.all()
+        return cast(list[Lesson], rows.all())
 
     async def get_student_lessons(self, user_id: int) -> list[Lesson]:
         stmt = (
             select(Lesson)
-            .join(Lesson.group_id == UserGroup.group_id)
+            .join(
+                user_groups_table,
+                lessons_table.c.group_id == user_groups_table.c.group_id,
+            )
             .where(
                 or_(
-                    Lesson.student_id == user_id,
-                    UserGroup.user_id == user_id,
+                    lessons_table.c.student_id == user_id,
+                    user_groups_table.c.user_id == user_id,
                 ),
             )
         )
         rows = await self.session.scalars(stmt)
-        return rows.unique().all()
+        return cast(list[Lesson], rows.unique().all())
 
     async def get_teacher_lessons(self, user_id: int) -> list[Lesson]:
         stmt = (
             select(Lesson)
-            .join(Lesson.group_id == Group.id)
-            .where(Lesson.teacher_id == user_id)
+            .join(lessons_table.c.group_id == Group.id)
+            .where(lessons_table.c.teacher_id == user_id)
         )
         rows = await self.session.scalars(stmt)
-        return rows.unique().all()
+        return cast(list[Lesson], rows.unique().all())

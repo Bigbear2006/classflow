@@ -2,11 +2,9 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from app.application.use_cases.cabinet.create import (
+from app.application.use_cases.cabinet import (
     CreateCabinet,
     CreateCabinetDTO,
-)
-from app.application.use_cases.cabinet.delete import (
     DeleteCabinet,
     DeleteCabinetDTO,
 )

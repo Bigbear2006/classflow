@@ -1,9 +1,11 @@
 from typing import cast
 
 from sqlalchemy import or_, select, update
+from sqlalchemy.orm import InstrumentedAttribute
 
 from app.application.repositories.organization import OrganizationRepository
 from app.domain.entities import Organization, OrganizationMember
+from app.domain.enums import UserRole
 from app.infrastructure.db.models import (
     RawSession,
     organization_members_table,
@@ -76,7 +78,10 @@ class OrganizationRepositoryImpl(OrganizationRepository):
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
         stmt = (
-            select(Organization, OrganizationMember.role)
+            select(
+                Organization,
+                cast(InstrumentedAttribute[UserRole], OrganizationMember.role),
+            )
             .join(
                 organization_members_table,
                 organizations_table.c.id

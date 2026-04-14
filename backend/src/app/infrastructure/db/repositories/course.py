@@ -59,7 +59,7 @@ class CourseRepositoryImpl(CourseRepository):
         return rows.scalar_one()
 
     async def get_all(self) -> list[Course]:
-        stmt = select(Course).options(joinedload(Course.subject))
+        stmt = select(Course).options(joinedload(Course.subject))  # type: ignore[arg-type]
         rows = await self.session.scalars(stmt)
         return cast(list[Course], rows.all())
 
@@ -79,7 +79,7 @@ class CourseRepositoryImpl(CourseRepository):
     async def get_student_courses(self, user_id: int) -> list[Course]:
         stmt = (
             select(Course, User)
-            .options(joinedload(Course.subject))
+            .options(joinedload(Course.subject))  # type: ignore[arg-type]
             .join(
                 course_teachers_table,
                 courses_table.c.id == course_teachers_table.c.course_id,
@@ -124,7 +124,7 @@ class CourseRepositoryImpl(CourseRepository):
     async def get_teacher_courses(self, user_id: int) -> list[Course]:
         stmt = (
             select(Course)
-            .options(joinedload(Course.subject))
+            .options(joinedload(Course.subject))  # type: ignore[arg-type]
             .join(
                 course_teachers_table,
                 courses_table.c.id == course_teachers_table.c.course_id,

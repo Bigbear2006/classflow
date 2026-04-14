@@ -51,8 +51,8 @@ class GroupRepositoryImpl(GroupRepository):
         stmt = (
             select(Group)
             .options(
-                joinedload(Group.course).joinedload(Course.subject),
-                joinedload(Group.default_cabinet).joinedload(Cabinet.address),
+                joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
+                joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
             )
             .where(groups_table.c.id == id)
         )
@@ -61,8 +61,8 @@ class GroupRepositoryImpl(GroupRepository):
 
     async def get_all(self) -> list[Group]:
         stmt = select(Group).options(
-            joinedload(Group.course).joinedload(Course.subject),
-            joinedload(Group.default_cabinet).joinedload(Cabinet.address),
+            joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
+            joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
         )
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())

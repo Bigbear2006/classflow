@@ -1,3 +1,5 @@
+from typing import cast
+
 from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -35,8 +37,8 @@ class SubjectRepositoryImpl(SubjectRepository):
     async def get_all(self) -> list[Subject]:
         stmt = select(Subject)
         rows = await self.session.scalars(stmt)
-        return rows.all()
+        return cast(list[Subject], rows.all())
 
-    async def delete(self, id: int) -> Subject:
+    async def delete(self, id: int) -> None:
         stmt = delete(Subject).where(subjects_table.c.id == id)
         await self.session.execute(stmt)

@@ -221,7 +221,7 @@ def main() -> None:
             json={'address_id': address_id, 'number': '101'},
             cookies=owner_cookies,
         )
-        cabinet_id = rsp.json().get('id')
+        # cabinet_id = rsp.json().get('id')
         assert rsp.status_code == 201
 
         rsp = client.get('/addresses/', cookies=owner_cookies)
@@ -239,10 +239,16 @@ def main() -> None:
         rsp = client.delete(f'/addresses/{address_id}/', cookies=owner_cookies)
         assert rsp.status_code == 409
 
-        # rsp = client.delete(f'/cabinets/{cabinet_id}/', cookies=owner_cookies)
+        # rsp = client.delete(
+        #     f'/cabinets/{cabinet_id}/',
+        #     cookies=owner_cookies,
+        # )
         # assert rsp.status_code == 204
         #
-        # rsp = client.delete(f'/addresses/{address_id}/', cookies=owner_cookies)
+        # rsp = client.delete(
+        #     f'/addresses/{address_id}/',
+        #     cookies=owner_cookies,
+        # )
         # assert rsp.status_code == 204
         #
         # rsp = client.get('/addresses/', cookies=owner_cookies)

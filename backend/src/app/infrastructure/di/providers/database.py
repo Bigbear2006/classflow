@@ -50,5 +50,6 @@ class DatabaseProvider(Provider):
         org_id_provider: OrganizationIdProvider,
     ) -> AsyncIterable[AsyncSession]:
         org_id = await org_id_provider.try_get_current_organization_id()
-        await set_current_org_id(raw_session, org_id)
+        if org_id:
+            await set_current_org_id(raw_session, org_id)
         yield raw_session
