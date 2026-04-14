@@ -21,6 +21,15 @@ from app.application.use_cases.course.get_students import (
 )
 from app.application.use_cases.course.get_teachers import GetCourseTeachers
 from app.application.use_cases.course.update import UpdateCourse
+from app.application.use_cases.group import (
+    AddUserToGroup,
+    CreateGroup,
+    GetAllGroups,
+    GetGroupById,
+    GetGroupUsers,
+    RemoveUserFromGroup,
+    UpdateGroup,
+)
 from app.application.use_cases.organization.create import CreateOrganization
 from app.application.use_cases.organization.get_all import GetAllOrganizations
 from app.application.use_cases.organization.get_current import (
@@ -91,4 +100,13 @@ class UseCasesProvider(Provider):
         UpdateCourse,
         GetCourseTeacherStudents,
         GetCourseTeachers,
+    )
+    group = provide_all(
+        CreateGroup,
+        GetAllGroups,
+        GetGroupById,
+        UpdateGroup,
+        GetGroupUsers,
+        AddUserToGroup,
+        RemoveUserFromGroup,
     )

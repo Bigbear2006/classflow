@@ -7,5 +7,12 @@ class CabinetResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class CabinetDetailResponse(CabinetResponse):
-    address_id: int
+# Duplicate class to avoid circular import
+class _AddressResponse(BaseModel):
+    id: int
+    address: str
+    model_config = ConfigDict(from_attributes=True)
+
+
+class DetailCabinetResponse(CabinetResponse):
+    address: _AddressResponse

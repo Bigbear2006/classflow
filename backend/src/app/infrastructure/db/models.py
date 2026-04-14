@@ -312,11 +312,22 @@ mapper_registry.map_imperatively(
 mapper_registry.map_imperatively(
     Address,
     addresses_table,
-    properties={'cabinets': relationship(Cabinet)},
+    properties={'cabinets': relationship(Cabinet, back_populates='address')},
 )
-mapper_registry.map_imperatively(Cabinet, cabinets_table)
+mapper_registry.map_imperatively(
+    Cabinet,
+    cabinets_table,
+    properties={'address': relationship(Address, back_populates='cabinets')},
+)
 
-mapper_registry.map_imperatively(Group, groups_table)
+mapper_registry.map_imperatively(
+    Group,
+    groups_table,
+    properties={
+        'course': relationship(Course),
+        'default_cabinet': relationship(Cabinet),
+    },
+)
 mapper_registry.map_imperatively(UserGroup, user_groups_table)
 
 mapper_registry.map_imperatively(Lesson, lessons_table)

@@ -7,14 +7,15 @@ from app.domain.entities import Group
 
 
 @dataclass
-class CreateGroupDTO:
+class UpdateGroupDTO:
+    id: int
     name: str
     course_id: int
     max_users_count: int
     default_cabinet_id: int | None = None
 
 
-class CreateGroup:
+class UpdateGroup:
     def __init__(
         self,
         group_repository: GroupRepository,
@@ -25,8 +26,7 @@ class CreateGroup:
         self.permission_service = permission_service
         self.uow = uow
 
-    async def __call__(self, data: CreateGroupDTO) -> Group:
+    async def __call__(self, data: UpdateGroupDTO) -> Group:
         await self.permission_service.ensure_admin_or_more()
         async with self.uow:
-            group = Group(**asdict(data))
-            return await self.group_repository.create(group)
+            return await self.group_repository.update(**asdict(data))

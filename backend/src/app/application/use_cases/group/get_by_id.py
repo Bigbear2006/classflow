@@ -1,32 +1,24 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
-from app.application.common.uow import UnitOfWork
 from app.application.repositories.group import GroupRepository
 from app.application.services.permission import PermissionService
 from app.domain.entities import Group
 
 
 @dataclass
-class CreateGroupDTO:
-    name: str
-    course_id: int
-    max_users_count: int
-    default_cabinet_id: int | None = None
+class GetGroupByIdDTO:
+    id: int
 
 
-class CreateGroup:
+class GetGroupById:
     def __init__(
         self,
         group_repository: GroupRepository,
         permission_service: PermissionService,
-        uow: UnitOfWork,
     ) -> None:
         self.group_repository = group_repository
         self.permission_service = permission_service
-        self.uow = uow
 
-    async def __call__(self, data: CreateGroupDTO) -> Group:
+    async def __call__(self, data: GetGroupByIdDTO) -> Group:
         await self.permission_service.ensure_admin_or_more()
-        async with self.uow:
-            group = Group(**asdict(data))
-            return await self.group_repository.create(group)
+        return await self.group_repository.get_by_id(data.id)

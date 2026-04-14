@@ -1,11 +1,16 @@
 from typing import Protocol
 
-from app.domain.entities import Group
+from app.domain.entities import Group, User
 
 
 class GroupRepository(Protocol):
-    async def create(
+    async def create(self, group: Group) -> Group:
+        pass
+
+    async def update(
         self,
+        id: int,
+        *,
         name: str,
         course_id: int,
         max_users_count: int,
@@ -16,11 +21,8 @@ class GroupRepository(Protocol):
     async def get_by_id(self, id: int) -> Group:
         pass
 
-    async def get_all(self, id: int) -> list[Group]:
+    async def get_all(self) -> list[Group]:
         pass
 
-    async def add_user(self, group_id: int, user_id: int) -> None:
-        pass
-
-    async def remove_user(self, group_id: int, user_id: int) -> None:
+    async def get_users(self, group_id: int) -> list[User]:
         pass

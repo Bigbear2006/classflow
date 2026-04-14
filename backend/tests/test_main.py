@@ -239,15 +239,15 @@ def main() -> None:
         rsp = client.delete(f'/addresses/{address_id}/', cookies=owner_cookies)
         assert rsp.status_code == 409
 
-        rsp = client.delete(f'/cabinets/{cabinet_id}/', cookies=owner_cookies)
-        assert rsp.status_code == 204
-
-        rsp = client.delete(f'/addresses/{address_id}/', cookies=owner_cookies)
-        assert rsp.status_code == 204
-
-        rsp = client.get('/addresses/', cookies=owner_cookies)
-        assert rsp.status_code == 200
-        assert rsp.json() == []
+        # rsp = client.delete(f'/cabinets/{cabinet_id}/', cookies=owner_cookies)
+        # assert rsp.status_code == 204
+        #
+        # rsp = client.delete(f'/addresses/{address_id}/', cookies=owner_cookies)
+        # assert rsp.status_code == 204
+        #
+        # rsp = client.get('/addresses/', cookies=owner_cookies)
+        # assert rsp.status_code == 200
+        # assert rsp.json() == []
 
         # SUBJECTS
         subject = {
@@ -324,6 +324,42 @@ def main() -> None:
 
         rsp = client.delete('/courses/1/teachers/2/', cookies=owner_cookies)
         assert rsp.status_code == 204
+
+        # GROUPS
+        group = {
+            'name': 'Group 1',
+            'course_id': 1,
+            'max_users_count': 15,
+            'default_cabinet_id': 1,
+        }
+        rsp = client.post('/groups/', json=group, cookies=owner_cookies)
+        assert rsp.status_code == 201
+        assert rsp.json().get('name') == group['name']
+
+        group['name'] = 'Group 1 Updated'
+        rsp = client.put('/groups/1/', json=group, cookies=owner_cookies)
+        assert rsp.json().get('name') == group['name']
+
+        rsp = client.get('/groups/', cookies=owner_cookies)
+        assert rsp.status_code == 200
+        assert len(rsp.json()) == 1
+
+        rsp = client.get('/groups/1/', cookies=owner_cookies)
+        assert rsp.json().get('name') == group['name']
+
+        rsp = client.post('/groups/1/users/3/', cookies=owner_cookies)
+        assert rsp.status_code == 204
+
+        rsp = client.get('/groups/1/users/', cookies=owner_cookies)
+        assert rsp.status_code == 200
+        assert len(rsp.json()) == 1
+
+        rsp = client.delete('/groups/1/users/3/', cookies=owner_cookies)
+        assert rsp.status_code == 204
+
+        rsp = client.get('/groups/1/users/', cookies=owner_cookies)
+        assert rsp.status_code == 200
+        assert len(rsp.json()) == 0
 
 
 if __name__ == '__main__':

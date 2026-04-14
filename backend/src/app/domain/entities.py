@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from typing import Optional
 
 from app.domain.enums import (
     AttendanceStatus,
@@ -88,6 +89,7 @@ class CourseTeacherStudent:
 class Cabinet:
     id: int = field(init=False)
     address_id: int
+    address: Optional['Address'] = field(init=False, default=None)
     number: str
 
 
@@ -104,8 +106,10 @@ class Group:
     id: int = field(init=False)
     name: str
     course_id: int
+    course: Course | None = field(init=False, default=None)
     max_users_count: int
     default_cabinet_id: int | None = None
+    default_cabinet: Cabinet | None = field(init=False, default=None)
     created_at: datetime = field(init=False)
 
 
