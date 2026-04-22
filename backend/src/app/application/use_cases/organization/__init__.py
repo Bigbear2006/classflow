@@ -4,7 +4,8 @@ from app.application.use_cases.organization.create import (
 )
 from app.application.use_cases.organization.get_all import GetAllOrganizations
 from app.application.use_cases.organization.get_all_members import (
-    GetCurrentOrganizationAllMembers,
+    GetAllCurrentOrganizationMembers,
+    GetAllCurrentOrganizationMembersDTO,
 )
 from app.application.use_cases.organization.get_current import (
     GetCurrentOrganization,
@@ -23,9 +24,10 @@ from app.application.use_cases.organization.update_member import (
 __all__ = (
     'CreateOrganization',
     'CreateOrganizationDTO',
+    'GetAllCurrentOrganizationMembers',
+    'GetAllCurrentOrganizationMembersDTO',
     'GetAllOrganizations',
     'GetCurrentOrganization',
-    'GetCurrentOrganizationAllMembers',
     'GetCurrentOrganizationMember',
     'GetCurrentOrganizationMemberDTO',
     'GetMyOrganizations',

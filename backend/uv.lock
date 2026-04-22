@@ -385,6 +385,63 @@ wheels = [
 ]
 
 [[package]]
+name = "classflow"
+version = "0.3.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "aioboto3" },
+    { name = "alembic" },
+    { name = "argon2-cffi" },
+    { name = "asyncpg" },
+    { name = "dishka" },
+    { name = "environs" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "pyjwt" },
+    { name = "sqlalchemy" },
+    { name = "uvicorn" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "asyncpg-stubs" },
+    { name = "mypy" },
+    { name = "ruff" },
+    { name = "types-aioboto3", extra = ["essential"] },
+]
+test = [
+    { name = "httpx" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aioboto3", specifier = ">=15.5.0" },
+    { name = "alembic", specifier = ">=1.18.4" },
+    { name = "argon2-cffi", specifier = ">=25.1.0" },
+    { name = "asyncpg", specifier = ">=0.31.0" },
+    { name = "dishka", specifier = ">=1.9.1" },
+    { name = "environs", specifier = ">=14.6.0" },
+    { name = "fastapi", specifier = ">=0.135.1" },
+    { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "pyjwt", specifier = ">=2.12.1" },
+    { name = "sqlalchemy", specifier = ">=2.0.48" },
+    { name = "uvicorn", specifier = ">=0.42.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "asyncpg-stubs", specifier = ">=0.31.2" },
+    { name = "mypy", specifier = ">=1.19.1" },
+    { name = "ruff", specifier = ">=0.15.6" },
+    { name = "types-aioboto3", extras = ["essential"], specifier = ">=15.5.0" },
+]
+test = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pytest", specifier = ">=9.0.2" },
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1174,63 +1231,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c4/68/79977123bb7be889ad680d79a40f339082c1978b5cfcf62c2d8d196873ac/starlette-0.52.1.tar.gz", hash = "sha256:834edd1b0a23167694292e94f597773bc3f89f362be6effee198165a35d62933", size = 2653702, upload-time = "2026-01-18T13:34:11.062Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/0d/13d1d239a25cbfb19e740db83143e95c772a1fe10202dda4b76792b114dd/starlette-0.52.1-py3-none-any.whl", hash = "sha256:0029d43eb3d273bc4f83a08720b4912ea4b071087a3b48db01b7c839f7954d74", size = 74272, upload-time = "2026-01-18T13:34:09.188Z" },
-]
-
-[[package]]
-name = "supplementary-education-system"
-version = "0.3.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "aioboto3" },
-    { name = "alembic" },
-    { name = "argon2-cffi" },
-    { name = "asyncpg" },
-    { name = "dishka" },
-    { name = "environs" },
-    { name = "fastapi" },
-    { name = "pydantic" },
-    { name = "pyjwt" },
-    { name = "sqlalchemy" },
-    { name = "uvicorn" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "asyncpg-stubs" },
-    { name = "mypy" },
-    { name = "ruff" },
-    { name = "types-aioboto3", extra = ["essential"] },
-]
-test = [
-    { name = "httpx" },
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aioboto3", specifier = ">=15.5.0" },
-    { name = "alembic", specifier = ">=1.18.4" },
-    { name = "argon2-cffi", specifier = ">=25.1.0" },
-    { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "dishka", specifier = ">=1.9.1" },
-    { name = "environs", specifier = ">=14.6.0" },
-    { name = "fastapi", specifier = ">=0.135.1" },
-    { name = "pydantic", specifier = ">=2.12.5" },
-    { name = "pyjwt", specifier = ">=2.12.1" },
-    { name = "sqlalchemy", specifier = ">=2.0.48" },
-    { name = "uvicorn", specifier = ">=0.42.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "asyncpg-stubs", specifier = ">=0.31.2" },
-    { name = "mypy", specifier = ">=1.19.1" },
-    { name = "ruff", specifier = ">=0.15.6" },
-    { name = "types-aioboto3", extras = ["essential"], specifier = ">=15.5.0" },
-]
-test = [
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "pytest", specifier = ">=9.0.2" },
 ]
 
 [[package]]

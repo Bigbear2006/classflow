@@ -27,5 +27,8 @@ class OrganizationMemberRepository(Protocol):
     async def get_organization_members(
         self,
         org_id: int,
+        *,
+        query: str | None = None,
+        roles: list[UserRole] | None = None,
     ) -> list[OrganizationMember]:
         pass

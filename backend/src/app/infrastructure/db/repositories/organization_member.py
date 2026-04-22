@@ -1,17 +1,20 @@
 from typing import cast
 
 from asyncpg import UniqueViolationError
-from sqlalchemy import select, update
+from sqlalchemy import or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import InstrumentedAttribute, joinedload
+from sqlalchemy.orm import contains_eager
 
 from app.application.repositories.organization_member import (
     OrganizationMemberRepository,
 )
-from app.domain.entities import OrganizationMember, User
+from app.domain.entities import OrganizationMember
 from app.domain.enums import UserRole
 from app.domain.exceptions import AlreadyExistsError
-from app.infrastructure.db.models import organization_members_table
+from app.infrastructure.db.models import (
+    organization_members_table,
+    users_table,
+)
 from app.infrastructure.db.repositories.base import create
 
 
@@ -63,17 +66,32 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
     async def get_organization_members(
         self,
         org_id: int,
+        *,
+        query: str | None = None,
+        roles: list[UserRole] | None = None,
     ) -> list[OrganizationMember]:
         stmt = (
             select(OrganizationMember)
+            .join(
+                users_table,
+                organization_members_table.c.user_id == users_table.c.id,
+            )
             .where(
                 organization_members_table.c.organization_id == org_id,
             )
-            .options(
-                joinedload(
-                    cast(InstrumentedAttribute[User], OrganizationMember.user),
+            .options(contains_eager(OrganizationMember.user))  # type: ignore[arg-type]
+        )
+
+        if query:
+            stmt = stmt.where(
+                or_(
+                    users_table.c.fullname.ilike(f'%{query}%'),
+                    users_table.c.email.ilike(f'%{query}%'),
                 ),
             )
-        )
+
+        if roles:
+            stmt = stmt.where(organization_members_table.c.role.in_(roles))
+
         rows = await self.session.scalars(stmt)
         return cast(list[OrganizationMember], rows.all())

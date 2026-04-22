@@ -30,9 +30,9 @@ from app.application.use_cases.group import (
 from app.application.use_cases.lesson import CreateLesson, GetMyLessons
 from app.application.use_cases.organization import (
     CreateOrganization,
+    GetAllCurrentOrganizationMembers,
     GetAllOrganizations,
     GetCurrentOrganization,
-    GetCurrentOrganizationAllMembers,
     GetCurrentOrganizationMember,
     GetMyOrganizations,
     JoinOrganization,
@@ -70,7 +70,7 @@ class UseCasesProvider(Provider):
         GetCurrentOrganization,
         GetCurrentOrganizationMember,
         GetMyOrganizations,
-        GetCurrentOrganizationAllMembers,
+        GetAllCurrentOrganizationMembers,
         UpdateOrganizationMember,
     )
     address = provide_all(

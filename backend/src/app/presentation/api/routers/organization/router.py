@@ -1,20 +1,24 @@
+from typing import Annotated
+
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
-from fastapi.params import Depends
+from fastapi.params import Depends, Query
 
 from app.application.use_cases.organization import (
     CreateOrganization,
     CreateOrganizationDTO,
+    GetAllCurrentOrganizationMembers,
+    GetAllCurrentOrganizationMembersDTO,
     GetAllOrganizations,
     GetCurrentOrganization,
-    GetCurrentOrganizationAllMembers,
     GetCurrentOrganizationMember,
     GetMyOrganizations,
     JoinOrganization,
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
 )
+from app.domain.enums import UserRole
 from app.presentation.api.common.cookie import cookie_scheme
 from app.presentation.api.routers.organization.models import (
     MyOrganizationResponse,
@@ -78,9 +82,12 @@ async def join_organization_router(
 
 @organization_router.get('/current/members/')
 async def get_current_organization_members_router(
-    get_all_organization_members: FromDishka[GetCurrentOrganizationAllMembers],
+    get_all_organization_members: FromDishka[GetAllCurrentOrganizationMembers],
+    query: str | None = None,
+    roles: Annotated[list[UserRole] | None, Query()] = None,
 ) -> list[OrganizationMemberDetailResponse]:
-    members = await get_all_organization_members()
+    dto = GetAllCurrentOrganizationMembersDTO(query=query, roles=roles)
+    members = await get_all_organization_members(dto)
     return [
         OrganizationMemberDetailResponse.model_validate(member)
         for member in members
