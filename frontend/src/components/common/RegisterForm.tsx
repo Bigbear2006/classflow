@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerUser } from '../../api/user.ts';
+import { registerUser } from '../../api/users/requests.ts';
 import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 
@@ -66,14 +66,9 @@ export const RegisterForm = () => {
       <ErrorsBlock errors={Object.values(errors)} />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            ФИО
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">ФИО</label>
           <div className="relative">
-            <User
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('fullname')}
               placeholder="Иванов Иван Иванович"
@@ -83,14 +78,9 @@ export const RegisterForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Почта
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Почта</label>
           <div className="relative">
-            <Mail
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('email')}
               type="email"
@@ -101,14 +91,9 @@ export const RegisterForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Телефон
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Телефон</label>
           <div className="relative">
-            <Phone
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('phone')}
               placeholder="+79990001122"
@@ -118,14 +103,9 @@ export const RegisterForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Пароль
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Пароль</label>
           <div className="relative">
-            <Lock
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
@@ -147,10 +127,7 @@ export const RegisterForm = () => {
             Подтвердить пароль
           </label>
           <div className="relative">
-            <Lock
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('confirmPassword')}
               type={showPassword ? 'text' : 'password'}
@@ -171,10 +148,7 @@ export const RegisterForm = () => {
 
       <p className="text-center text-sm text-slate-500 mt-5">
         Уже есть аккаунт?{' '}
-        <Link
-          to="/login"
-          className="text-indigo-600 hover:underline font-medium"
-        >
+        <Link to="/login" className="text-indigo-600 hover:underline font-medium">
           Войти
         </Link>
       </p>

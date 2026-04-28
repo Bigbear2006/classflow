@@ -1,16 +1,14 @@
 import { DoorOpen, X } from 'lucide-react';
-import { deleteCabinet } from '../../../api/cabinet.ts';
 import type { Cabinet } from '../../../types.ts';
+import { useDeleteCabinetMutation } from '../../../hooks/mutations/cabinet.ts';
 
 interface CabinetCardProps {
   cabinet: Cabinet;
-  refreshAddresses: () => void;
 }
 
-export const CabinetCard = ({
-  cabinet,
-  refreshAddresses,
-}: CabinetCardProps) => {
+export const CabinetCard = ({ cabinet }: CabinetCardProps) => {
+  const mutation = useDeleteCabinetMutation();
+
   return (
     <div
       key={cabinet.id}
@@ -19,7 +17,7 @@ export const CabinetCard = ({
       <DoorOpen size={14} className="text-slate-400" />
       <span className="text-slate-700 font-medium">{cabinet.number}</span>
       <button
-        onClick={() => deleteCabinet(cabinet.id).then(refreshAddresses)}
+        onClick={() => mutation.mutate(cabinet.id)}
         className="text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 ml-1"
       >
         <X size={12} />

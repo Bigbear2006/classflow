@@ -1,6 +1,6 @@
 import { Lock, Save } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { changeUserPassword } from '../../api/user.ts';
+import { changeUserPassword } from '../../api/users/requests.ts';
 import { toast } from 'sonner';
 
 interface ChangeUserPasswordFields {
@@ -26,9 +26,7 @@ export const ChangeUserPassword = () => {
       <div className="space-y-3">
         {passwordFields.map(field => (
           <div key={field.value}>
-            <label className="block text-sm text-slate-600 mb-1.5">
-              {field.label}
-            </label>
+            <label className="block text-sm text-slate-600 mb-1.5">{field.label}</label>
             <input
               {...register(field.value as keyof ChangeUserPasswordFields)}
               placeholder="••••••••"

@@ -1,36 +1,18 @@
 import { Clock, DollarSign, UserCheck, Users, X } from 'lucide-react';
 import { coursePaymentTypeDisplay } from '../../../utils.ts';
-import { useEffect, useState } from 'react';
-import type { CourseDetail } from '../../../types.ts';
-import { getCourse } from '../../../api/course.ts';
+import type { Course } from '../../../types.ts';
+import { useAppContext } from '../../../context.tsx';
+import { useCourseGroups, useCourseTeachers } from '../../../hooks/queries/course.ts';
 
 interface CourseDetailCardProps {
-  courseId: number;
+  course: Course;
   closeModal: () => void;
 }
 
-export const CourseDetailCard = ({
-  courseId,
-  closeModal,
-}: CourseDetailCardProps) => {
-  const [course, setCourse] = useState<CourseDetail>({
-    id: 0,
-    organizationId: 0,
-    subject: { id: 0, name: '', description: '', image: '' },
-    type: 'GROUP',
-    price: 0,
-    paymentType: 'EVERY_LESSON',
-    lessonType: 'ONLINE',
-    lessonDuration: 0,
-    teachersCount: 0,
-    studentsCount: 0,
-    groups: [],
-    teachers: [],
-  });
-
-  useEffect(() => {
-    getCourse(courseId).then(setCourse);
-  }, [courseId]);
+export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) => {
+  const { isAdminOrOwner } = useAppContext();
+  const { data: groups } = useCourseGroups({ courseId: course.id });
+  const { data: teachers } = useCourseTeachers({ courseId: course.id });
 
   return (
     <div
@@ -42,13 +24,8 @@ export const CourseDetailCard = ({
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h2 className="font-semibold text-slate-900">
-            {course.subject.name}
-          </h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <h2 className="font-semibold text-slate-900">{course.subject.name}</h2>
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
@@ -60,27 +37,23 @@ export const CourseDetailCard = ({
               className="w-full h-40 object-cover rounded-xl"
             />
           )}
-          <p className="text-slate-600 text-sm">
-            {course.subject.description}
-          </p>
+          <p className="text-slate-600 text-sm">{course.subject.description}</p>
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-slate-50 rounded-xl p-3 text-center">
               <DollarSign size={16} className="mx-auto text-slate-400 mb-1" />
-              <div className="font-semibold">
-                {course.price.toLocaleString('ru')} ₽
-              </div>
+              <div className="font-semibold">{course.price.toLocaleString('ru')} ₽</div>
               <div className="text-xs text-slate-400">
                 {coursePaymentTypeDisplay(course.paymentType)}
               </div>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center">
               <Clock size={16} className="mx-auto text-slate-400 mb-1" />
-              <div className="font-semibold">{course.duration} мин</div>
+              <div className="font-semibold">{course.duration?.as('minutes')} мин</div>
               <div className="text-xs text-slate-400">длительность</div>
             </div>
             <div className="bg-slate-50 rounded-xl p-3 text-center">
               <Users size={16} className="mx-auto text-slate-400 mb-1" />
-              <div className="font-semibold">{course.groups.length}</div>
+              <div className="font-semibold">{groups.length}</div>
               <div className="text-xs text-slate-400">групп</div>
             </div>
           </div>
@@ -90,29 +63,31 @@ export const CourseDetailCard = ({
               <h3 className="font-medium text-slate-900 flex items-center gap-2">
                 <UserCheck size={16} /> Преподаватели
               </h3>
-              <select
-                // onChange={e => {
-                //   if (e.target.value) {
-                //     addCourseTeacher(
-                //       course.id.toString(),
-                //       e.target.value,
-                //     );
-                //     e.target.value = '';
-                //   }
-                // }}
-                className="text-xs px-2 py-1.5 border border-slate-200 rounded-lg focus:outline-none"
-              >
-                <option value="">+ Добавить</option>
-                {/*TODO: add teachers search*/}
-                {course.teachers.map(t => (
-                  <option key={t.id} value={t.id}>
-                    {t.fullname}
-                  </option>
-                ))}
-              </select>
+              {isAdminOrOwner && (
+                <select
+                  // onChange={e => {
+                  //   if (e.target.value) {
+                  //     addCourseTeacher(
+                  //       course.id.toString(),
+                  //       e.target.value,
+                  //     );
+                  //     e.target.value = '';
+                  //   }
+                  // }}
+                  className="text-xs px-2 py-1.5 border border-slate-200 rounded-lg focus:outline-none"
+                >
+                  <option value="">+ Добавить</option>
+                  {/*TODO: add teachers search*/}
+                  {teachers.map(t => (
+                    <option key={t.id} value={t.id}>
+                      {t.fullname}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div className="space-y-2">
-              {course.teachers.map(teacher => (
+              {teachers.map(teacher => (
                 <div
                   key={teacher.id}
                   className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
@@ -129,9 +104,7 @@ export const CourseDetailCard = ({
                         teacher.fullname.charAt(0)
                       )}
                     </div>
-                    <span className="text-sm text-slate-800">
-                      {teacher.fullname}
-                    </span>
+                    <span className="text-sm text-slate-800">{teacher.fullname}</span>
                   </div>
                   <button
                     onClick={() => () => {}}
@@ -141,37 +114,34 @@ export const CourseDetailCard = ({
                   </button>
                 </div>
               ))}
-              {course.teachers.length === 0 && (
-                <p className="text-sm text-slate-400">
-                  Преподаватели не назначены
-                </p>
+              {teachers.length === 0 && (
+                <p className="text-sm text-slate-400">Преподаватели не назначены</p>
               )}
             </div>
           </div>
 
-          <div>
-            <h3 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-              <Users size={16} /> Группы
-            </h3>
-            <div className="space-y-2">
-              {course.groups.map(g => {
-                return (
+          {isAdminOrOwner && (
+            <div>
+              <h3 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
+                <Users size={16} /> Группы
+              </h3>
+              <div className="space-y-2">
+                {groups.map(g => (
                   <div
                     key={g.id}
                     className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
                   >
                     <span className="text-sm text-slate-800">{g.name}</span>
-                    <span className="text-xs text-slate-500">
-                      {g.studentsCount || 0}/{g.maxUsersCount} уч.
-                    </span>
+                    // TODO: add
+                    {/*<span className="text-xs text-slate-500">*/}
+                    {/*  {g.studentsCount || 0}/{g.maxUsersCount} уч.*/}
+                    {/*</span>*/}
                   </div>
-                );
-              })}
-              {course.groups.length === 0 && (
-                <p className="text-sm text-slate-400">Групп нет</p>
-              )}
+                ))}
+                {groups.length === 0 && <p className="text-sm text-slate-400">Групп нет</p>}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

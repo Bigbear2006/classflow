@@ -10,8 +10,6 @@ export const navigateToOrganization = (slug: string) => {
   window.location.href = `${window.location.protocol}//${slug}.${host}${window.location.pathname}`;
 };
 
-export const coursePaymentTypeDisplay = (
-  paymentType: CoursePaymentType,
-): string => {
+export const coursePaymentTypeDisplay = (paymentType: CoursePaymentType): string => {
   return paymentType == 'EVERY_LESSON' ? 'за занятие' : 'за курс';
 };

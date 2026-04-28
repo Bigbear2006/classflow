@@ -1,3 +1,5 @@
+import type { Duration } from 'luxon';
+
 export type UserRole = 'OWNER' | 'ADMIN' | 'TEACHER' | 'STUDENT';
 export type LessonType = 'ONLINE' | 'OFFLINE' | 'MIXED';
 export type CourseType = 'GROUP' | 'INDIVIDUAL';
@@ -82,42 +84,42 @@ export interface Subject {
 
 export interface Course {
   id: number;
-  organizationId: number;
   subject: Subject;
   type: CourseType;
   price: number;
   paymentType: CoursePaymentType;
   lessonType: LessonType;
-  lessonDuration: number;
+  lessonDuration: Duration;
   lessonsCount?: number;
-  duration?: number;
+  duration?: Duration;
   selectedTeacher?: User;
   teachersCount: number;
   studentsCount: number;
 }
 
 export interface CourseDetail extends Course {
-  groups: Group[];
+  groups: GroupDetail[];
   teachers: User[];
 }
 
-export interface CourseTeacher {
+export interface CourseTeacherDetail {
   id: number;
   course: Course;
   teacher: User;
   isActive: boolean;
+  createdAt: Date;
 }
 
 export interface CourseTeacherStudent {
   id: number;
-  courseTeacher: CourseTeacher;
+  courseTeacher: CourseTeacherDetail;
   student: User;
   createdAt: Date;
   // status: 'active' | 'pending' | 'cancelled';
 }
 
 export interface CourseTeacherStudentWithLessons extends CourseTeacherStudent {
-  lessons: Lesson[];
+  lessons: LessonDetail[];
 }
 
 export interface Address {
@@ -134,22 +136,31 @@ export interface Cabinet {
   number: string;
 }
 
-export interface Group {
-  id: number;
-  courseId: number;
-  course: Course;
-  name: string;
-  defaultCabinet?: Cabinet;
-  maxUsersCount: number;
-  createdAt: Date;
-  studentsCount?: number;
-  students: User[];
+export interface CabinetDetail extends Cabinet {
+  address: Address;
 }
 
-export interface GroupWithPayments extends Group {
+interface BaseGroup {
+  id: number;
+  name: string;
+  maxUsersCount: number;
+  createdAt: Date;
+}
+
+export interface Group extends BaseGroup {
+  courseId: number;
+  defaultCabinetId?: number;
+}
+
+export interface GroupDetail extends BaseGroup {
+  course: Course;
+  defaultCabinet?: Cabinet;
+}
+
+export interface GroupWithPayments extends GroupDetail {
   totalPaid: number;
   students: UserWithPayment[];
-  lessons: Lesson[];
+  lessons: LessonDetail[];
 }
 
 export interface UserGroup {
@@ -159,19 +170,29 @@ export interface UserGroup {
   createdAt: string;
 }
 
-export interface Lesson {
+interface BaseLesson {
   id: number;
-  group: Group | null;
-  studentTeacherCourse: CourseTeacherStudent | null;
-  cabinetId: number;
-  cabinet: Cabinet;
-  conductedById: number;
-  conductedBy: User;
   startDate: Date;
   endDate: Date;
-  // status: LessonStatus;
+  url?: string;
   createdAt: Date;
+  // status: LessonStatus;
+  // TODO: add
   paymentId?: number;
+}
+
+export interface Lesson extends BaseLesson {
+  conductedById: number;
+  cabinetId?: number;
+  grouId?: number;
+  courseTeacherStudentId?: number;
+}
+
+export interface LessonDetail extends BaseLesson {
+  conductedBy: User;
+  cabinet?: Cabinet;
+  group?: GroupDetail;
+  courseTeacherStudent?: CourseTeacherStudent;
 }
 
 export interface Attendance {

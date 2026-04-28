@@ -1,29 +1,44 @@
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 import type {
   CoursePaymentType,
   LessonType,
+  CourseType,
   ModalAction,
+  Course,
 } from '../../../types.ts';
+import { Duration } from 'luxon';
+import { type OutputCourseFields, useCourseForm } from '../../../hooks/forms/course.ts';
+import { useCourseMutation } from '../../../hooks/mutations/course.ts';
+import { useSubjects } from '../../../hooks/queries/subject.ts';
 
 interface CourseFormProps {
   action: ModalAction;
+  course?: Course;
   closeModal: () => void;
 }
 
-interface CreateCourseFields {
-  subjectId: number;
-  type: CoursePaymentType;
-  price: number;
-  paymentType: CoursePaymentType;
-  lessonType: LessonType;
-  lessonDuration: number;
-  lessonsCount?: number;
-  duration?: number;
-}
+export const CourseForm = ({ action, course, closeModal }: CourseFormProps) => {
+  const { register, handleSubmit } = useCourseForm({ initialValues: course });
+  const mutation = useCourseMutation({
+    action: action,
+    courseId: course?.id,
+    closeModal: closeModal,
+  });
+  const { data: subjects } = useSubjects();
 
-export const CourseForm = ({ action, closeModal }: CourseFormProps) => {
-  const { register, handleSubmit } = useForm<CreateCourseFields>();
+  const onSubmit = (data: OutputCourseFields) =>
+    mutation.mutate({
+      subject_id: data.subjectId,
+      type: data.type as CourseType,
+      price: data.price,
+      payment_type: data.paymentType as CoursePaymentType,
+      lesson_type: data.lessonType as LessonType,
+      lesson_duration: Duration.fromObject({
+        minutes: data.lessonDuration,
+      }).as('seconds'),
+      lessons_count: data.lessonsCount,
+      duration: Duration.fromObject({ months: data.duration }).as('seconds'),
+    });
 
   return (
     <div
@@ -38,50 +53,49 @@ export const CourseForm = ({ action, closeModal }: CourseFormProps) => {
           <h2 className="font-semibold text-slate-900">
             {action === 'CREATE' ? 'Новый курс' : 'Редактировать курс'}
           </h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(console.log)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Предмет
-            </label>
-            <input
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Предмет</label>
+            <select
               {...register('subjectId')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            >
+              {subjects.map(subject => (
+                <option key={subject.id} value={subject.id}>
+                  {subject.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Описание
-            </label>
-            <input
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Тип</label>
+            <select
               {...register('type')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            >
+              <option value="GROUP">Групповой</option>
+              <option value="INDIVIDUAL">Индивидуальный</option>
+            </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Оплата
-            </label>
-            <input
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Оплата</label>
+            <select
               {...register('paymentType')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            >
+              <option value="EVERY_LESSON">За каждое занятие</option>
+              <option value="FULL_COURSE">За весь курс</option>
+            </select>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Цена (₽)
-              </label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Цена (₽)</label>
               <input
                 {...register('price')}
-                type="number"
-                min="0"
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -99,9 +113,7 @@ export const CourseForm = ({ action, closeModal }: CourseFormProps) => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Формат
-              </label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Формат</label>
               <select
                 {...register('lessonType')}
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -113,15 +125,12 @@ export const CourseForm = ({ action, closeModal }: CourseFormProps) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Оплата
+                Длительность курса (месяцев)
               </label>
-              <select
+              <input
                 {...register('duration')}
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="EVERY_LESSON">За каждое занятие</option>
-                <option value="FULL_COURSE">За весь курс</option>
-              </select>
+              />
             </div>
           </div>
           <div>
@@ -131,7 +140,6 @@ export const CourseForm = ({ action, closeModal }: CourseFormProps) => {
             <input
               {...register('lessonsCount')}
               type="number"
-              min="1"
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

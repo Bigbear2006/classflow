@@ -1,26 +1,20 @@
 import { MapPin, Plus, Trash2 } from 'lucide-react';
-import { deleteAddress } from '../../../api/address.ts';
 import { CabinetForm } from './CabinetForm.tsx';
 import type { AddressDetail } from '../../../types.ts';
 import { useState } from 'react';
 import { CabinetCard } from './CabinetCard.tsx';
+import { useDeleteAddressMutation } from '../../../hooks/mutations/address.ts';
 
 interface AddressCardProps {
   address: AddressDetail;
-  refreshAddresses: () => void;
 }
 
-export const AddressCard = ({
-  address,
-  refreshAddresses,
-}: AddressCardProps) => {
+export const AddressCard = ({ address }: AddressCardProps) => {
+  const mutation = useDeleteAddressMutation();
   const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
 
   return (
-    <div
-      key={address.id}
-      className="bg-white rounded-2xl border border-slate-200 overflow-hidden"
-    >
+    <div key={address.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center">
@@ -28,14 +22,12 @@ export const AddressCard = ({
           </div>
           <div>
             <div className="font-medium text-slate-900">{address.address}</div>
-            <div className="text-xs text-slate-400">
-              {address.cabinets.length} кабинет(ов)
-            </div>
+            <div className="text-xs text-slate-400">{address.cabinets.length} кабинет(ов)</div>
           </div>
         </div>
         {address.cabinets.length === 0 && (
           <button
-            onClick={() => deleteAddress(address.id).then(refreshAddresses)}
+            onClick={() => mutation.mutate(address.id)}
             className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
           >
             <Trash2 size={16} />
@@ -46,17 +38,11 @@ export const AddressCard = ({
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {address.cabinets.map(cabinet => (
-            <CabinetCard
-              cabinet={cabinet}
-              refreshAddresses={refreshAddresses}
-            />
+            <CabinetCard cabinet={cabinet} />
           ))}
 
           {selectedAddress === address.id ? (
-            <CabinetForm
-              addressId={address.id}
-              refreshAddresses={refreshAddresses}
-            />
+            <CabinetForm addressId={address.id} />
           ) : (
             <button
               onClick={() => setSelectedAddress(address.id)}

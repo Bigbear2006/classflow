@@ -1,29 +1,15 @@
-import {
-  createAddress,
-  type CreateAddressData,
-} from '../../../api/address.ts';
 import { MapPin, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useAddressMutation } from '../../../hooks/mutations/address.ts';
+import { useAddressForm } from '../../../hooks/forms/address.ts';
 
-interface AddressFormProps {
-  refreshAddresses: () => void;
-}
-
-export const AddressForm = ({ refreshAddresses }: AddressFormProps) => {
-  const { register, handleSubmit } = useForm<CreateAddressData>();
+export const AddressForm = () => {
+  const { register, handleSubmit } = useAddressForm();
+  const mutation = useAddressMutation();
 
   return (
-    <form
-      onSubmit={handleSubmit(data =>
-        createAddress(data).then(() => refreshAddresses()),
-      )}
-      className="flex gap-3"
-    >
+    <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="flex gap-3">
       <div className="relative flex-1">
-        <MapPin
-          size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-        />
+        <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           {...register('address')}
           placeholder="Добавить новый адрес..."

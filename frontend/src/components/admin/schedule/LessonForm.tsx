@@ -1,43 +1,41 @@
-import type {
-  Cabinet,
-  CourseTeacherStudent,
-  FormAction,
-  Group,
-  User,
-} from '../../../types.ts';
+import type { CourseTeacherStudent, FormAction, LessonDetail } from '../../../types.ts';
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { getGroups } from '../../../api/group.ts';
+import { type OutputLessonFields, useLessonForm } from '../../../hooks/forms/lesson.ts';
+import { useGroups } from '../../../hooks/queries/group.ts';
+import { useCabinets } from '../../../hooks/queries/cabinet.ts';
+import { useCurrentOrganizationTeachers } from '../../../hooks/queries/organization.ts';
+import { useLessonMutation } from '../../../hooks/mutations/lesson.ts';
 
 interface LessonFormProps {
   action: FormAction;
+  lesson?: LessonDetail;
   closeModal: () => void;
 }
 
-interface LessonFields {
-  groupId?: number;
-  studentTeacherCourseId?: number;
-  conductedById: number;
-  cabinetId: number;
-  startDate: Date;
-  duration: number;
-}
+export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
+  const { register, getValues, handleSubmit } = useLessonForm({ initialValues: lesson });
+  const { data: groups } = useGroups();
+  const [courseTeacherStudents, setCourseTeacherStudents] = useState<CourseTeacherStudent[]>([]);
+  const { data: teachers } = useCurrentOrganizationTeachers();
+  const { data: cabinets } = useCabinets();
 
-export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
-  const { register, getValues, handleSubmit } = useForm<LessonFields>();
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [courseTeacherStudents, setCourseTeacherStudents] = useState<
-    CourseTeacherStudent[]
-  >([]);
-  const [teachers, setTeachers] = useState<User[]>([]);
-  const [cabinets, setCabinets] = useState<Cabinet[]>([]);
+  const mutation = useLessonMutation({ action, lessonId: lesson?.id, closeModal });
+  const onSubmit = (data: OutputLessonFields) => {
+    console.log(data)
+    mutation.mutate({
+      conducted_by_id: data.conductedById,
+      start_date: data.startDate.toISOString(),
+      end_date: data.endDate.toISOString(),
+      cabinet_id: data.cabinetId,
+      url: data.url || undefined,
+      group_id: data.groupId,
+      course_teacher_student_id: data.courseTeacherStudentId,
+    });
+  }
 
   useEffect(() => {
-    getGroups().then(setGroups);
     setCourseTeacherStudents([]);
-    setTeachers([]);
-    setCabinets([]);
   }, []);
 
   return (
@@ -53,21 +51,13 @@ export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
           <h2 className="font-semibold text-slate-900">
             {action === 'CREATE' ? 'Новое занятие' : 'Редактировать занятие'}
           </h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
-        <form
-          onSubmit={handleSubmit(data => console.log(data))}
-          className="p-5 space-y-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Группа
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Группа</label>
             <select
               {...register('groupId')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -86,14 +76,13 @@ export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
                 Индивидуальная запись
               </label>
               <select
-                {...register('studentTeacherCourseId')}
+                {...register('courseTeacherStudentId')}
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Выберите</option>
                 {courseTeacherStudents.map(student => (
                   <option key={student.id} value={student.id}>
-                    {student.courseTeacher.course.subject.name} —{' '}
-                    {student.student.fullname}
+                    {student.courseTeacher.course.subject.name} — {student.student.fullname}
                   </option>
                 ))}
               </select>
@@ -109,19 +98,16 @@ export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
             >
               <option value="">Выберите</option>
               {teachers.map(teacher => (
-                <option key={teacher.id} value={teacher.id}>
-                  {teacher.fullname}
+                <option key={teacher.user.id} value={teacher.user.id}>
+                  {teacher.user.fullname}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Кабинет
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Кабинет</label>
             <select
               {...register('cabinetId')}
-              required
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Выберите</option>
@@ -135,10 +121,20 @@ export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Дата
+                Дата начала
               </label>
               <input
                 {...register('startDate')}
+                type="datetime-local"
+                className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Дата окончания
+              </label>
+              <input
+                {...register('endDate')}
                 type="datetime-local"
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
@@ -153,30 +149,30 @@ export const LessonForm = ({ action, closeModal }: LessonFormProps) => {
             {/*  />*/}
             {/*</div>*/}
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Длительность (мин)
-              </label>
-              <input
-                {...register('duration')}
-                type="number"
-                className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-            {/*<div>*/}
-            {/*  <label className="block text-sm font-medium text-slate-700 mb-1.5">*/}
-            {/*    Статус*/}
-            {/*  </label>*/}
-            {/*  <select*/}
-            {/*    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"*/}
-            {/*  >*/}
-            {/*    <option value="SCHEDULED">Запланировано</option>*/}
-            {/*    <option value="COMPLETED">Проведено</option>*/}
-            {/*    <option value="CANCELLED">Отменено</option>*/}
-            {/*  </select>*/}
-            {/*</div>*/}
-          </div>
+          {/*<div className="grid grid-cols-2 gap-4">*/}
+          {/*  <div>*/}
+          {/*    <label className="block text-sm font-medium text-slate-700 mb-1.5">*/}
+          {/*      Длительность (мин)*/}
+          {/*    </label>*/}
+          {/*    <input*/}
+          {/*      {...register('duration')}*/}
+          {/*      type="number"*/}
+          {/*      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*  <div>*/}
+          {/*    <label className="block text-sm font-medium text-slate-700 mb-1.5">*/}
+          {/*      Статус*/}
+          {/*    </label>*/}
+          {/*    <select*/}
+          {/*      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"*/}
+          {/*    >*/}
+          {/*      <option value="SCHEDULED">Запланировано</option>*/}
+          {/*      <option value="COMPLETED">Проведено</option>*/}
+          {/*      <option value="CANCELLED">Отменено</option>*/}
+          {/*    </select>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
           {/*<div>*/}
           {/*  <label className="block text-sm font-medium text-slate-700 mb-1.5">*/}
           {/*    Тема (необязательно)*/}

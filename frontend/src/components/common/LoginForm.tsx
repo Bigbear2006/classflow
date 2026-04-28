@@ -1,7 +1,7 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import { loginUser } from '../../api/user.ts';
+import { loginUser } from '../../api/users/requests.ts';
 import { useState } from 'react';
 import { ErrorsBlock } from './ErrorsBlock.tsx';
 import { z } from 'zod';
@@ -38,14 +38,9 @@ export const LoginForm = () => {
       <ErrorsBlock errors={Object.values(errors)} />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Почта
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Почта</label>
           <div className="relative">
-            <Mail
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('email')}
               type="email"
@@ -56,14 +51,9 @@ export const LoginForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Пароль
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Пароль</label>
           <div className="relative">
-            <Lock
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
+            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
@@ -91,10 +81,7 @@ export const LoginForm = () => {
 
       <p className="text-center text-sm text-slate-500 mt-5">
         Нет аккаунта?{' '}
-        <Link
-          to="/register"
-          className="text-indigo-600 hover:underline font-medium"
-        >
+        <Link to="/register" className="text-indigo-600 hover:underline font-medium">
           Зарегистрироваться
         </Link>
       </p>

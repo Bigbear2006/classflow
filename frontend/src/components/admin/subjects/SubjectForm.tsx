@@ -1,26 +1,26 @@
-import { useForm } from 'react-hook-form';
-import { createSubject } from '../../../api/subject.ts';
-import type { FormAction } from '../../../types.ts';
+import type { FormAction, Subject } from '../../../types.ts';
 import { X } from 'lucide-react';
+import { useSubjectForm } from '../../../hooks/forms/subject.ts';
+import { useSubjectMutation } from '../../../hooks/mutations/subject.ts';
 
 interface SubjectFormProps {
   action: FormAction;
+  subject?: Subject;
   closeModal: () => void;
-  refreshSubjects: () => void;
 }
 
-interface SubjectFields {
-  name: string;
-  description: string;
-  image: string;
-}
+export const SubjectForm = ({ action, subject, closeModal }: SubjectFormProps) => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useSubjectForm();
 
-export const SubjectForm = ({
-  action,
-  closeModal,
-  refreshSubjects,
-}: SubjectFormProps) => {
-  const { register, handleSubmit } = useForm<SubjectFields>();
+  const mutation = useSubjectMutation({
+    action: action,
+    subjectId: subject?.id,
+    closeModal: closeModal,
+  });
 
   return (
     <div
@@ -35,35 +35,20 @@ export const SubjectForm = ({
           <h2 className="font-semibold text-slate-900">
             {action === 'CREATE' ? 'Новый предмет' : 'Редактировать предмет'}
           </h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
-        <form
-          onSubmit={handleSubmit(data =>
-            createSubject(data).finally(() => {
-              refreshSubjects();
-              closeModal();
-            }),
-          )}
-          className="p-6 space-y-4"
-        >
+        <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Название
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Название</label>
             <input
-              {...register('name', { required: 'Обязательное поле' })}
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              {...register('name')}
+              className={`w-full px-3 py-2.5 border ${errors.name ? 'border-red-200' : 'border-slate-200'} rounded-xl text-sm focus:outline-none focus:ring-2 ${errors.name ? 'focus:ring-red-500' : 'focus:ring-indigo-500'}`}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Описание
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Описание</label>
             <textarea
               {...register('description')}
               rows={3}

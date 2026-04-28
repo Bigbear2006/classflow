@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react';
-import type {
-  OrganizationMemberDetail,
-  RoleCount,
-  UserRole,
-} from '../../types.ts';
+import type { OrganizationMemberDetail, RoleCount, UserRole } from '../../types.ts';
 import { Users, UserPlus, Search } from 'lucide-react';
-import {
-  getOrganizationMembers,
-  getRoleCounts,
-} from '../../api/organization.ts';
+import { getOrganizationMembers, getRoleCounts } from '../../api/organizations/requests.ts';
 import { InviteOrgMemberForm } from '../../components/admin/org_members/InviteOrgMemberForm.tsx';
 import { roleConfig } from '../../labels.tsx';
 import { MemberCard } from '../../components/admin/org_members/MemberCard.tsx';
@@ -21,7 +14,7 @@ export default function OrganizationMembersPage() {
 
   const [members, setMembers] = useState<OrganizationMemberDetail[]>([]);
   const [roleCounts, setRoleCounts] = useState<RoleCount[]>([]);
-  const { user, member } = useAppContext();
+  const { user, member: currentMember } = useAppContext();
 
   useEffect(() => {
     getOrganizationMembers().then(setMembers);
@@ -33,11 +26,9 @@ export default function OrganizationMembersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-slate-900 text-2xl font-semibold">Участники</h1>
-          <p className="text-slate-500 text-sm mt-0.5">
-            Управление пользователями и их ролями
-          </p>
+          <p className="text-slate-500 text-sm mt-0.5">Управление пользователями и их ролями</p>
         </div>
-        {member.role == 'OWNER' && (
+        {currentMember.role == 'OWNER' && (
           <button
             onClick={() => setShowInvite(!showInvite)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
@@ -49,10 +40,7 @@ export default function OrganizationMembersPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {roleCounts.map(({ role, count }) => (
-          <div
-            key={role}
-            className="bg-white rounded-xl border border-slate-200 p-4"
-          >
+          <div key={role} className="bg-white rounded-xl border border-slate-200 p-4">
             <div
               className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium ${roleConfig[role].color} mb-2`}
             >
@@ -62,15 +50,11 @@ export default function OrganizationMembersPage() {
           </div>
         ))}
       </div>
-
-      {showInvite && member.role == 'OWNER' && <InviteOrgMemberForm />}
+      {showInvite && currentMember.role == 'OWNER' && <InviteOrgMemberForm />}
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-          />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -79,21 +63,19 @@ export default function OrganizationMembersPage() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {(['ALL', 'OWNER', 'ADMIN', 'TEACHER', 'STUDENT'] as const).map(
-            r => (
-              <button
-                key={r}
-                onClick={() => setRoleFilter(r)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium border transition-colors ${
-                  roleFilter === r
-                    ? 'bg-indigo-600 text-white border-indigo-600'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                {r === 'ALL' ? 'Все' : roleConfig[r].label}
-              </button>
-            ),
-          )}
+          {(['ALL', 'OWNER', 'ADMIN', 'TEACHER', 'STUDENT'] as const).map(r => (
+            <button
+              key={r}
+              onClick={() => setRoleFilter(r)}
+              className={`px-3 py-2 rounded-xl text-xs font-medium border transition-colors ${
+                roleFilter === r
+                  ? 'bg-indigo-600 text-white border-indigo-600'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              {r === 'ALL' ? 'Все' : roleConfig[r].label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -113,12 +95,16 @@ export default function OrganizationMembersPage() {
               <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden md:table-cell">
                 Добавлен
               </th>
-              {member.role == 'OWNER' && <th className="px-5 py-3 w-10"></th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
             {members.map(member => (
-              <MemberCard key={member.id} currentUser={user} member={member} />
+              <MemberCard
+                key={member.user.id}
+                currentUser={user}
+                currentMember={currentMember}
+                member={member}
+              />
             ))}
           </tbody>
         </table>

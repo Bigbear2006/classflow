@@ -1,47 +1,14 @@
 import { UserMinus, X } from 'lucide-react';
-import type { Group } from '../../../types.ts';
-import { useEffect, useState } from 'react';
-import { getGroup } from '../../../api/group.ts';
+import type { GroupDetail } from '../../../types.ts';
+import { useGroupStudents } from '../../../hooks/queries/group.ts';
 
 interface GroupDetailCardProps {
-  groupId: number;
+  group: GroupDetail;
   closeModal: () => void;
 }
 
-export const GroupDetailCard = ({
-  groupId,
-  closeModal,
-}: GroupDetailCardProps) => {
-  const [group, setGroup] = useState<Group>({
-    id: 0,
-    courseId: 0,
-    course: {
-      id: 1,
-      organizationId: 1,
-      subject: {
-        id: 1,
-        name: 'Предмет',
-        description: 'Описание предмета',
-        image: 'placehold.co/400x600.png',
-      },
-      type: 'GROUP',
-      price: 1200,
-      paymentType: 'EVERY_LESSON',
-      lessonType: 'ONLINE',
-      lessonDuration: 45,
-      lessonsCount: 10,
-      teachersCount: 2,
-      studentsCount: 10,
-    },
-    name: '',
-    maxUsersCount: 0,
-    createdAt: new Date(),
-    students: [],
-  });
-
-  useEffect(() => {
-    getGroup(groupId).then(setGroup);
-  }, []);
+export const GroupDetailCard = ({ group, closeModal }: GroupDetailCardProps) => {
+  const { data: groupStudents } = useGroupStudents({ groupId: group.id });
 
   return (
     <div
@@ -56,26 +23,19 @@ export const GroupDetailCard = ({
           <div>
             <h2 className="font-semibold text-slate-900">{group.name}</h2>
             <p className="text-xs text-slate-400">
-              {group.students.length}/{group.maxUsersCount} учеников
+              {groupStudents.length}/{group.maxUsersCount} учеников
             </p>
           </div>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           <div>
-            <h3 className="text-xs font-semibold text-slate-500 uppercase mb-2">
-              В группе
-            </h3>
-            {group.students.length === 0 && (
-              <p className="text-sm text-slate-400">Учеников нет</p>
-            )}
+            <h3 className="text-xs font-semibold text-slate-500 uppercase mb-2">В группе</h3>
+            {groupStudents.length === 0 && <p className="text-sm text-slate-400">Учеников нет</p>}
             <div className="space-y-2">
-              {group.students.map(student => (
+              {groupStudents.map(student => (
                 <div
                   key={student.id}
                   className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
@@ -85,12 +45,8 @@ export const GroupDetailCard = ({
                       {student.fullname.charAt(0)}
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-slate-900">
-                        {student.fullname}
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        {student.email}
-                      </div>
+                      <div className="text-sm font-medium text-slate-900">{student.fullname}</div>
+                      <div className="text-xs text-slate-400">{student.email}</div>
                     </div>
                   </div>
                   <button

@@ -10,12 +10,8 @@ export default function RegisterPage() {
           <School size={22} className="text-white" />
         </div>
         <div>
-          <div className="text-white font-semibold text-lg leading-tight">
-            ClassFlow
-          </div>
-          <div className="text-slate-400 text-xs">
-            Платформа дополнительного образования
-          </div>
+          <div className="text-white font-semibold text-lg leading-tight">ClassFlow</div>
+          <div className="text-slate-400 text-xs">Платформа дополнительного образования</div>
         </div>
         <Link
           to="/landing"
@@ -27,9 +23,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-white text-3xl font-bold mb-2">
-              Создать аккаунт
-            </h1>
+            <h1 className="text-white text-3xl font-bold mb-2">Создать аккаунт</h1>
             <p className="text-slate-400">Зарегистрируйтесь, чтобы начать</p>
           </div>
           <RegisterForm />

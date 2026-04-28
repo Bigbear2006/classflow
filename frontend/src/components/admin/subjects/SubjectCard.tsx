@@ -1,19 +1,17 @@
 import { Edit2, Trash2 } from 'lucide-react';
-import { deleteSubject } from '../../../api/subject.ts';
 import type { FormAction, Subject } from '../../../types.ts';
 import type { Dispatch, SetStateAction } from 'react';
+import { useDeleteSubjectMutation } from '../../../hooks/mutations/subject.ts';
 
 interface SubjectCardProps {
   subject: Subject;
+  setSelectedSubject: Dispatch<SetStateAction<Subject | undefined>>;
   setAction: Dispatch<SetStateAction<FormAction | null>>;
-  refreshSubjects: () => void;
 }
 
-export const SubjectCard = ({
-  subject,
-  setAction,
-  refreshSubjects,
-}: SubjectCardProps) => {
+export const SubjectCard = ({ subject, setSelectedSubject, setAction }: SubjectCardProps) => {
+  const mutation = useDeleteSubjectMutation();
+
   return (
     <div
       key={subject.id}
@@ -21,11 +19,7 @@ export const SubjectCard = ({
     >
       {subject.image && (
         <div className="h-36 overflow-hidden cursor-pointer">
-          <img
-            src={subject.image}
-            alt={subject.name}
-            className="w-full h-full object-cover"
-          />
+          <img src={subject.image} alt={subject.name} className="w-full h-full object-cover" />
         </div>
       )}
       <div className="p-5">
@@ -35,24 +29,23 @@ export const SubjectCard = ({
           </h3>
           <div className="flex gap-1 flex-shrink-0">
             <button
-              onClick={() => setAction('EDIT')}
+              onClick={() => {
+                setSelectedSubject(subject);
+                setAction('EDIT');
+              }}
               className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
             >
               <Edit2 size={14} />
             </button>
             <button
-              onClick={() =>
-                deleteSubject(subject.id).finally(refreshSubjects)
-              }
+              onClick={() => mutation.mutate(subject.id)}
               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
             >
               <Trash2 size={14} />
             </button>
           </div>
         </div>
-        <p className="text-slate-500 text-xs line-clamp-2 mb-3">
-          {subject.description}
-        </p>
+        <p className="text-slate-500 text-xs line-clamp-2 mb-3">{subject.description}</p>
       </div>
     </div>
   );

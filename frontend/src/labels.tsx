@@ -1,11 +1,8 @@
-import type { UserRole } from './types.ts';
+import type { CoursePaymentType, LessonStatus, LessonType, UserRole } from './types.ts';
 import { Crown, GraduationCap, Shield, UserCheck } from 'lucide-react';
-import type { JSX } from 'react';
+import { type JSX } from 'react';
 
-export const roleConfig: Record<
-  UserRole,
-  { label: string; color: string; icon: JSX.Element }
-> = {
+export const roleConfig: Record<UserRole, { label: string; color: string; icon: JSX.Element }> = {
   OWNER: {
     label: 'Владелец',
     color: 'bg-violet-100 text-violet-700',
@@ -43,8 +40,42 @@ export const roleColors: Record<string, string> = {
   STUDENT: 'bg-amber-500',
 };
 
-export const lessonTypeLabel: Record<string, string> = {
+export const lessonTypeLabels: Record<LessonType, string> = {
   ONLINE: 'Онлайн',
   OFFLINE: 'Офлайн',
   MIXED: 'Смешанный',
 };
+
+export const paymentTypeLabels: Record<CoursePaymentType, string> = {
+  FULL_COURSE: 'За весь курс',
+  EVERY_LESSON: 'За каждое занятие',
+};
+
+export const statusConfig: Record<LessonStatus, { label: string; color: string; dot: string }> = {
+  SCHEDULED: {
+    label: 'Запланировано',
+    color: 'bg-blue-100 text-blue-700',
+    dot: 'bg-blue-500',
+  },
+  COMPLETED: {
+    label: 'Проведено',
+    color: 'bg-emerald-100 text-emerald-700',
+    dot: 'bg-emerald-500',
+  },
+  CANCELLED: {
+    label: 'Отменено',
+    color: 'bg-red-100 text-red-700',
+    dot: 'bg-red-400',
+  },
+};
+
+export const DAY_NAMES_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+export const DAY_NAMES_FULL = [
+  'Понедельник',
+  'Вторник',
+  'Среда',
+  'Четверг',
+  'Пятница',
+  'Суббота',
+  'Воскресенье',
+];

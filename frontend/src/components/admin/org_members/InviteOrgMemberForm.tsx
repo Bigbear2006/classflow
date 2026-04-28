@@ -1,5 +1,5 @@
 import { AlertCircle, Mail, UserPlus } from 'lucide-react';
-import { inviteOrganizationMember } from '../../../api/organization.ts';
+import { inviteOrganizationMember } from '../../../api/organizations/requests.ts';
 import { useForm } from 'react-hook-form';
 import type { UserRole } from '../../../types.ts';
 
@@ -25,10 +25,7 @@ export const InviteOrgMemberForm = () => {
       </p>
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Mail
-            size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400"
-          />
+          <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400" />
           <input
             {...register('email')}
             type="email"
@@ -57,9 +54,7 @@ export const InviteOrgMemberForm = () => {
           {error.message}
         </p>
       ))}
-      {true && (
-        <p className="text-emerald-600 text-xs mt-2">✓ {'ENIDNEINDIE'}</p>
-      )}
+      {true && <p className="text-emerald-600 text-xs mt-2">✓ {'ENIDNEINDIE'}</p>}
     </div>
   );
 };

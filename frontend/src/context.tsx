@@ -5,17 +5,21 @@ import { useCurrentInfo } from './hooks/useCurrentInfo.ts';
 interface AppContextType {
   user: User;
   member: OrganizationMember;
-  organization: Organization | null;
+  organization?: Organization;
+  isLoading: boolean;
+  isAdminOrOwner: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const { user, member, org } = useCurrentInfo();
+  const { user, member, organization, isLoading } = useCurrentInfo();
   const ctx: AppContextType = {
     user: user,
     member: member,
-    organization: org,
+    organization: organization,
+    isLoading: isLoading,
+    isAdminOrOwner: member?.role === 'ADMIN' || member?.role === 'OWNER',
   };
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;
 };

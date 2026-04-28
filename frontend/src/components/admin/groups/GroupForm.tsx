@@ -1,60 +1,52 @@
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import type { Cabinet, Course, ModalAction } from '../../../types.ts';
-import { useEffect, useState } from 'react';
-import { getCourses } from '../../../api/course.ts';
-import { getCabinets } from '../../../api/cabinet.ts';
+import type { GroupDetail, ModalAction } from '../../../types.ts';
+import { type OutputGroupFields, useGroupForm } from '../../../hooks/forms/group.ts';
+import { useCourses } from '../../../hooks/queries/course.ts';
+import { useCabinets } from '../../../hooks/queries/cabinet.ts';
+import { useGroupMutation } from '../../../hooks/mutations/group.ts';
 
 interface GroupFormProps {
   action: ModalAction;
+  group?: GroupDetail;
   closeModal: () => void;
 }
 
-interface GroupFields {
-  courseId: number;
-  name: string;
-  defaultCabinetId: number;
-  maxUsersCount: number;
-}
+export const GroupForm = ({ action, group, closeModal }: GroupFormProps) => {
+  const { register, handleSubmit } = useGroupForm({ initialValues: group });
 
-export const GroupForm = ({ action, closeModal }: GroupFormProps) => {
-  const { register, handleSubmit } = useForm<GroupFields>();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [cabinets, setCabinets] = useState<Cabinet[]>([]);
+  const { data: courses } = useCourses();
+  const { data: cabinets } = useCabinets();
+  const mutation = useGroupMutation({
+    action: action,
+    groupId: group?.id,
+    closeModal: closeModal,
+  });
 
-  useEffect(() => {
-    getCourses().then(setCourses);
-    getCabinets().then(setCabinets);
-  }, []);
+  const onSubmit = (data: OutputGroupFields) =>
+    mutation.mutate({
+      name: data.name,
+      course_id: data.courseId,
+      max_users_count: data.maxUsersCount,
+      default_cabinet_id: data.defaultCabinetId !== 0 ? data.defaultCabinetId : undefined,
+    });
 
   return (
     <div
       className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
       onClick={closeModal}
     >
-      <div
-        className="bg-white rounded-2xl w-full max-w-md"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="bg-white rounded-2xl w-full max-w-md" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
           <h2 className="font-semibold text-slate-900">
             {action === 'CREATE' ? 'Новая группа' : 'Редактировать группу'}
           </h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
-        <form
-          onSubmit={handleSubmit(data => console.log(data))}
-          className="p-6 space-y-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Курс
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Курс</label>
             <select
               {...register('courseId')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -100,7 +92,6 @@ export const GroupForm = ({ action, closeModal }: GroupFormProps) => {
             <input
               {...register('maxUsersCount')}
               type="number"
-              min="1"
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

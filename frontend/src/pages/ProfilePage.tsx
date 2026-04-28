@@ -2,7 +2,7 @@ import { Building2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { EditUserForm } from '../components/profile/EditUserForm.tsx';
 import { ChangeUserPassword } from '../components/profile/ChangeUserPassword.tsx';
-import { logoutUser } from '../api/user.ts';
+import { logoutUser } from '../api/users/requests.ts';
 import { roleColors, roleLabels } from '../labels.tsx';
 import { useAppContext } from '../context.tsx';
 
@@ -30,9 +30,7 @@ export default function ProfilePage() {
             {user.fullname.charAt(0) || '?'}
           </div>
           <div>
-            <h2 className="text-slate-900 font-semibold text-xl">
-              {user.fullname}
-            </h2>
+            <h2 className="text-slate-900 font-semibold text-xl">{user.fullname}</h2>
             <div className="flex items-center gap-2 mt-1">
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${roleColors[member.role]}`}

@@ -1,21 +1,19 @@
 import { BookOpen, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { FormAction, Subject } from '../../types.ts';
-import { getSubjects } from '../../api/subject.ts';
 import { SubjectForm } from '../../components/admin/subjects/SubjectForm.tsx';
 import { SubjectCard } from '../../components/admin/subjects/SubjectCard.tsx';
+import { useSubjects } from '../../hooks/queries/subject.ts';
 
 export const SubjectsPage = () => {
+  const { data: subjects } = useSubjects();
+  const [selectedSubject, setSelectedSubject] = useState<Subject>();
   const [action, setAction] = useState<FormAction | null>(null);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  const closeModal = () => setAction(null);
-
-  const refreshSubjects = () => {
-    getSubjects().then(setSubjects);
+  const closeModal = () => {
+    setSelectedSubject(undefined);
+    setAction(null);
   };
-
-  useEffect(() => refreshSubjects(), []);
 
   return (
     <div className="p-6 space-y-6">
@@ -38,8 +36,8 @@ export const SubjectsPage = () => {
         {subjects.map(subject => (
           <SubjectCard
             subject={subject}
+            setSelectedSubject={setSelectedSubject}
             setAction={setAction}
-            refreshSubjects={refreshSubjects}
           />
         ))}
         {subjects.length === 0 && (
@@ -51,11 +49,7 @@ export const SubjectsPage = () => {
       </div>
 
       {(action === 'CREATE' || action === 'EDIT') && (
-        <SubjectForm
-          action={action}
-          closeModal={closeModal}
-          refreshSubjects={refreshSubjects}
-        />
+        <SubjectForm action={action} subject={selectedSubject} closeModal={closeModal} />
       )}
     </div>
   );

@@ -8,8 +8,7 @@ export const ErrorsBlock = ({ errors }: ErrorsBlockProps) => {
   return (
     <>
       {Object.values(errors).map(
-        (error, index) =>
-          error.message && <ErrorCard key={index} message={error.message} />,
+        (error, index) => error.message && <ErrorCard key={index} message={error.message} />,
       )}
     </>
   );

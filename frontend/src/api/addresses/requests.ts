@@ -1,14 +1,9 @@
-import { axiosInstance } from './base.ts';
-import type { Address, AddressDetail } from '../types.ts';
-
-export interface CreateAddressData {
-  address: string;
-}
+import { axiosInstance } from '../base.ts';
+import type { Address, AddressDetail } from '../../types.ts';
+import type { CreateAddressData } from './types.ts';
 
 export const getAddresses = async () => {
-  return axiosInstance
-    .get<AddressDetail[]>('addresses/')
-    .then(rsp => rsp.data);
+  return axiosInstance.get<AddressDetail[]>('addresses/').then(rsp => rsp.data);
 };
 
 export const createAddress = async (data: CreateAddressData) => {

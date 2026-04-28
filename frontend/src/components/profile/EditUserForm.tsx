@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
-import { updateUser, type UpdateUserData } from '../../api/user.ts';
+import { updateUser } from '../../api/users/requests.ts';
+import { type UpdateUserData } from '../../api/users/types.ts';
 import { Phone, Save, User as UserIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import type { User } from '../../types.ts';

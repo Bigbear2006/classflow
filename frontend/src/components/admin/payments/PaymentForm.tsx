@@ -22,24 +22,16 @@ export const PaymentForm = ({ closeModal }: PaymentFormProps) => {
       className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
       onClick={closeModal}
     >
-      <div
-        className="bg-white rounded-2xl w-full max-w-sm p-6"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="bg-white rounded-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-slate-900">Добавить платёж</h2>
-          <button
-            onClick={closeModal}
-            className="p-1.5 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={closeModal} className="p-1.5 rounded-lg hover:bg-slate-100">
             <X size={18} />
           </button>
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Сумма (₽)
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Сумма (₽)</label>
             <input
               {...register('amount')}
               type="number"
@@ -50,9 +42,7 @@ export const PaymentForm = ({ closeModal }: PaymentFormProps) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Комментарий
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Комментарий</label>
             <input
               {...register('comment')}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"

@@ -23,11 +23,11 @@ import {
   BookText,
 } from 'lucide-react';
 import type { Organization, OrganizationMember, User } from '../../types.ts';
-import { getUser, logoutUser } from '../../api/user.ts';
+import { getCurrentUser, logoutUser } from '../../api/users/requests.ts';
 import {
   getCurrentOrganization,
-  getOrganizationMember,
-} from '../../api/organization.ts';
+  getCurrentOrganizationMember,
+} from '../../api/organizations/requests.ts';
 
 interface NavItem {
   label: string;
@@ -156,10 +156,7 @@ function getNavItems(role: string | null): NavItem[] {
   ];
 }
 
-const roleConfig: Record<
-  string,
-  { label: string; color: string; icon: ReactNode }
-> = {
+const roleConfig: Record<string, { label: string; color: string; icon: ReactNode }> = {
   OWNER: {
     label: 'Владелец',
     color: 'bg-violet-500',
@@ -219,8 +216,8 @@ export function AppLayout() {
   };
 
   useEffect(() => {
-    getUser().then(setUser);
-    getOrganizationMember().then(setMember);
+    getCurrentUser().then(setUser);
+    getCurrentOrganizationMember().then(setMember);
     getCurrentOrganization().then(setOrg);
   }, []);
 
@@ -250,9 +247,7 @@ export function AppLayout() {
             >
               {roleCfg.icon}
             </div>
-            <span className="text-white text-xs font-medium">
-              {roleCfg.label}
-            </span>
+            <span className="text-white text-xs font-medium">{roleCfg.label}</span>
           </div>
         </div>
       )}
@@ -357,9 +352,7 @@ export function AppLayout() {
             </div>
           )}
           <div className="min-w-0">
-            <div className="text-white text-xs font-medium truncate">
-              {user.fullname}
-            </div>
+            <div className="text-white text-xs font-medium truncate">{user.fullname}</div>
             <div className="text-slate-400 text-xs truncate">{user.email}</div>
           </div>
         </div>
@@ -375,10 +368,7 @@ export function AppLayout() {
 
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={() => setSidebarOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
           <aside className="absolute left-0 top-0 bottom-0 w-64 bg-slate-900 z-50">
             <SidebarContent />
           </aside>
@@ -413,11 +403,7 @@ export function AppLayout() {
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
           >
             {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt=""
-                className="w-7 h-7 rounded-full object-cover"
-              />
+              <img src={user.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
             ) : (
               <div
                 className={`w-7 h-7 rounded-full ${
@@ -430,10 +416,7 @@ export function AppLayout() {
             <span className="text-sm text-slate-700 hidden sm:block">
               {user.fullname.split(' ')[1] || user.fullname}
             </span>
-            <ChevronDown
-              size={14}
-              className="text-slate-400 hidden sm:block"
-            />
+            <ChevronDown size={14} className="text-slate-400 hidden sm:block" />
           </button>
         </header>
 
