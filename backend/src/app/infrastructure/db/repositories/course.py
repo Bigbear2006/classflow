@@ -1,12 +1,12 @@
 from datetime import timedelta
 from typing import cast
 
-from sqlalchemy import or_, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.application.repositories.course import CourseRepository
-from app.domain.entities import Course, User
+from app.domain.entities import Course, Group, User
 from app.domain.enums import CoursePaymentType, CourseType, LessonType
 from app.infrastructure.db.models import (
     course_teacher_students_table,
@@ -17,6 +17,7 @@ from app.infrastructure.db.models import (
     users_table,
 )
 from app.infrastructure.db.repositories.base import create
+from app.infrastructure.db.repositories.group import set_group_joins
 
 
 class CourseRepositoryImpl(CourseRepository):
@@ -59,14 +60,64 @@ class CourseRepositoryImpl(CourseRepository):
         return rows.scalar_one()
 
     async def get_all(self) -> list[Course]:
-        stmt = select(Course).options(joinedload(Course.subject))  # type: ignore[arg-type]
+        teachers_count_subquery = (
+            select(func.count(course_teachers_table.c.id))
+            .where(course_teachers_table.c.course_id == courses_table.c.id)
+            .scalar_subquery()
+        )
+
+        group_students_count_subquery = (
+            select(func.count(user_groups_table.c.id))
+            .join(
+                groups_table,
+                user_groups_table.c.group_id == groups_table.c.id,
+            )
+            .where(groups_table.c.course_id == courses_table.c.id)
+            .scalar_subquery()
+        )
+
+        individual_students_count_subquery = (
+            select(func.count(course_teacher_students_table.c.id))
+            .join(
+                course_teachers_table,
+                course_teacher_students_table.c.course_teacher_id
+                == course_teachers_table.c.id,
+            )
+            .where(course_teachers_table.c.course_id == courses_table.c.id)
+            .scalar_subquery()
+        )
+
+        stmt = select(
+            Course,
+            teachers_count_subquery,
+            group_students_count_subquery,
+            individual_students_count_subquery,
+        ).options(joinedload(Course.subject))  # type: ignore[arg-type]
+
+        rows = await self.session.execute(stmt)
+        result = []
+        for (
+            course,
+            teachers_count,
+            group_students,
+            individual_students,
+        ) in rows:
+            course.teachers_count = teachers_count
+            course.students_count = group_students + individual_students
+            result.append(course)
+        return result
+
+    async def get_groups(self, course_id: int) -> list[Group]:
+        stmt = set_group_joins(select(Group)).where(
+            groups_table.c.course_id == course_id,
+        )
         rows = await self.session.scalars(stmt)
-        return cast(list[Course], rows.all())
+        return cast(list[Group], rows.all())
 
     async def get_teachers(self, course_id: int) -> list[User]:
         stmt = (
             select(User)
-            .join(
+            .outerjoin(
                 course_teachers_table,
                 users_table.c.id == course_teachers_table.c.teacher_id,
             )

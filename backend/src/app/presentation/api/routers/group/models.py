@@ -3,7 +3,9 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from app.presentation.api.routers.cabinet.models import DetailCabinetResponse
-from app.presentation.api.routers.course.models import DetailCourseResponse
+from app.presentation.api.routers.course.models import (
+    CourseWithSubjectResponse,
+)
 
 
 class UpdateGroupRequest(BaseModel):
@@ -27,5 +29,5 @@ class GroupResponse(BaseGroupResponse):
 
 
 class DetailGroupResponse(BaseGroupResponse):
-    course: DetailCourseResponse
+    course: CourseWithSubjectResponse
     default_cabinet: DetailCabinetResponse | None = None

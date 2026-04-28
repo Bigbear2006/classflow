@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Protocol
 
-from app.domain.entities import Course, User
+from app.domain.entities import Course, Group, User
 from app.domain.enums import CoursePaymentType, CourseType, LessonType
 
 
@@ -25,6 +25,9 @@ class CourseRepository(Protocol):
         pass
 
     async def get_all(self) -> list[Course]:
+        pass
+
+    async def get_groups(self, course_id: int) -> list[Group]:
         pass
 
     async def get_teachers(self, course_id: int) -> list[User]:

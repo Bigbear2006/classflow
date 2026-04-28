@@ -346,6 +346,7 @@ mapper_registry.map_imperatively(
     Lesson,
     lessons_table,
     properties={
+        'conducted_by': relationship(User),
         'cabinet': relationship(Cabinet),
         'group': relationship(Group),
         'course_teacher_student': relationship(CourseTeacherStudent),

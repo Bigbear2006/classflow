@@ -30,7 +30,9 @@ async def cors_middleware(request: Request, call_next: Any) -> Response:
         rsp.headers['Access-Control-Allow-Origin'] = origin
         rsp.headers['Access-Control-Allow-Credentials'] = 'true'
         rsp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        rsp.headers['Access-Control-Allow-Methods'] = '*'
+        rsp.headers['Access-Control-Allow-Methods'] = (
+            'GET,POST,OPTIONS,PUT,PATCH,DELETE'
+        )
     return rsp
 
 

@@ -6,13 +6,18 @@ from app.application.use_cases.address import (
     GetAllAddresses,
     UpdateAddress,
 )
-from app.application.use_cases.cabinet import CreateCabinet, DeleteCabinet
+from app.application.use_cases.cabinet import (
+    CreateCabinet,
+    DeleteCabinet,
+    GetAllCabinets,
+)
 from app.application.use_cases.course import (
     AddCurrentStudentToCourse,
     AddTeacherToCourse,
     CreateCourse,
     DeleteTeacherFromCourse,
     GetAllCourses,
+    GetCourseGroups,
     GetCourseTeachers,
     GetCourseTeacherStudents,
     GetMyCourses,
@@ -27,7 +32,13 @@ from app.application.use_cases.group import (
     RemoveUserFromGroup,
     UpdateGroup,
 )
-from app.application.use_cases.lesson import CreateLesson, GetMyLessons
+from app.application.use_cases.lesson import (
+    CreateLesson,
+    DeleteLesson,
+    GetAllLessons,
+    GetMyLessons,
+    UpdateLesson,
+)
 from app.application.use_cases.organization import (
     CreateOrganization,
     GetAllCurrentOrganizationMembers,
@@ -79,7 +90,7 @@ class UseCasesProvider(Provider):
         UpdateAddress,
         DeleteAddress,
     )
-    cabinet = provide_all(CreateCabinet, DeleteCabinet)
+    cabinet = provide_all(CreateCabinet, GetAllCabinets, DeleteCabinet)
     subject = provide_all(
         CreateSubject,
         GetAllSubjects,
@@ -95,6 +106,7 @@ class UseCasesProvider(Provider):
         GetMyCourses,
         UpdateCourse,
         GetCourseTeacherStudents,
+        GetCourseGroups,
         GetCourseTeachers,
     )
     group = provide_all(
@@ -106,4 +118,10 @@ class UseCasesProvider(Provider):
         AddUserToGroup,
         RemoveUserFromGroup,
     )
-    lesson = provide_all(CreateLesson, GetMyLessons)
+    lesson = provide_all(
+        CreateLesson,
+        UpdateLesson,
+        GetAllLessons,
+        GetMyLessons,
+        DeleteLesson,
+    )

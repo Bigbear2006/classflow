@@ -1,7 +1,7 @@
-from datetime import date
+from datetime import date, datetime
 from typing import cast
 
-from sqlalchemy import Select, or_, select
+from sqlalchemy import Date, Select, delete, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -29,15 +29,51 @@ class LessonRepositoryImpl(LessonRepository):
     async def create(self, lesson: Lesson) -> Lesson:
         return await create(self.session, lesson)
 
-    async def get_by_date_range(
+    async def update(
         self,
-        start_date: date,
-        end_date: date,
-    ) -> list[Lesson]:
-        stmt = select(Lesson).where(
-            lessons_table.c.start_date >= start_date,
-            lessons_table.c.end_date <= end_date,
+        id: int,
+        *,
+        conducted_by_id: int,
+        start_date: datetime,
+        end_date: datetime,
+        cabinet_id: int | None = None,
+        url: str | None = None,
+        group_id: int | None = None,
+        course_teacher_student_id: int | None = None,
+    ) -> Lesson:
+        data = {
+            'conducted_by_id': conducted_by_id,
+            'start_date': start_date,
+            'end_date': end_date,
+            'cabinet_id': cabinet_id,
+            'url': url,
+            'group_id': group_id,
+            'course_teacher_student_id': course_teacher_student_id,
+        }
+        stmt = (
+            update(Lesson)
+            .where(lessons_table.c.id == id)
+            .values(data)
+            .returning(Lesson)
         )
+        rows = await self.session.execute(stmt)
+        return rows.scalar_one()
+
+    async def get_all(
+        self,
+        *,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[Lesson]:
+        stmt = _set_lessons_joins(select(Lesson))
+
+        if start_date:
+            stmt = stmt.where(
+                lessons_table.c.start_date.cast(Date) >= start_date,
+            )
+        if end_date:
+            stmt = stmt.where(lessons_table.c.end_date.cast(Date) <= end_date)
+
         rows = await self.session.scalars(stmt)
         return cast(list[Lesson], rows.all())
 
@@ -72,10 +108,15 @@ class LessonRepositoryImpl(LessonRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[Lesson], rows.unique().all())
 
+    async def delete(self, id: int) -> None:
+        stmt = delete(Lesson).where(lessons_table.c.id == id)
+        await self.session.execute(stmt)
+
 
 def _set_lessons_joins(stmt: Select[tuple[Lesson]]) -> Select[tuple[Lesson]]:
     return (
         stmt.options(joinedload(Lesson.cabinet).joinedload(Cabinet.address))  # type: ignore[arg-type]
+        .options(joinedload(Lesson.conducted_by))  # type: ignore[arg-type]
         .options(
             joinedload(Lesson.group)  # type: ignore[arg-type]
             .joinedload(Group.course)  # type: ignore[arg-type]

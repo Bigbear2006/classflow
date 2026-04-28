@@ -12,6 +12,8 @@ from app.application.use_cases.course import (
     DeleteTeacherFromCourse,
     DeleteTeacherFromCourseDTO,
     GetAllCourses,
+    GetCourseGroups,
+    GetCourseGroupsDTO,
     GetCourseTeachers,
     GetCourseTeachersDTO,
     GetCourseTeacherStudents,
@@ -21,12 +23,14 @@ from app.application.use_cases.course import (
     UpdateCourseDTO,
 )
 from app.presentation.api.routers.course.models import (
+    CourseDetailResponse,
     CourseResponse,
     CourseTeacherResponse,
     CourseTeacherStudentResponse,
-    DetailCourseResponse,
+    CourseWithSubjectResponse,
     UpdateCourseRequest,
 )
+from app.presentation.api.routers.group.models import DetailGroupResponse
 from app.presentation.api.routers.user.models import UserResponse
 
 course_router = APIRouter(
@@ -48,9 +52,9 @@ async def create_course_router(
 @course_router.get('/')
 async def get_courses_router(
     get_all_courses: FromDishka[GetAllCourses],
-) -> list[DetailCourseResponse]:
+) -> list[CourseDetailResponse]:
     courses = await get_all_courses()
-    return [DetailCourseResponse.model_validate(course) for course in courses]
+    return [CourseDetailResponse.model_validate(course) for course in courses]
 
 
 @course_router.put('/{course_id}/')
@@ -67,9 +71,21 @@ async def update_course_router(
 @course_router.get('/my/')
 async def get_my_courses_router(
     get_my_courses: FromDishka[GetMyCourses],
-) -> list[DetailCourseResponse]:
+) -> list[CourseWithSubjectResponse]:
     courses = await get_my_courses()
-    return [DetailCourseResponse.model_validate(course) for course in courses]
+    return [
+        CourseWithSubjectResponse.model_validate(course) for course in courses
+    ]
+
+
+@course_router.get('/{course_id}/groups/')
+async def get_course_groups_router(
+    course_id: int,
+    get_course_groups: FromDishka[GetCourseGroups],
+) -> list[DetailGroupResponse]:
+    dto = GetCourseGroupsDTO(course_id=course_id)
+    groups = await get_course_groups(dto)
+    return [DetailGroupResponse.model_validate(group) for group in groups]
 
 
 @course_router.post('/{course_id}/teachers/{teacher_id}/', status_code=201)

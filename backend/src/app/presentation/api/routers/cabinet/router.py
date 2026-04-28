@@ -7,8 +7,12 @@ from app.application.use_cases.cabinet import (
     CreateCabinetDTO,
     DeleteCabinet,
     DeleteCabinetDTO,
+    GetAllCabinets,
 )
-from app.presentation.api.common.models import IdResponse
+from app.presentation.api.routers.cabinet.models import (
+    CabinetResponse,
+    DetailCabinetResponse,
+)
 
 cabinet_router = APIRouter(
     prefix='/cabinets',
@@ -21,9 +25,19 @@ cabinet_router = APIRouter(
 async def create_cabinet_router(
     data: CreateCabinetDTO,
     create_cabinet: FromDishka[CreateCabinet],
-) -> IdResponse:
+) -> CabinetResponse:
     cabinet = await create_cabinet(data)
-    return IdResponse(id=cabinet.id)
+    return CabinetResponse.model_validate(cabinet)
+
+
+@cabinet_router.get('/')
+async def get_all_cabinets_router(
+    get_all_cabinets: FromDishka[GetAllCabinets],
+) -> list[CabinetResponse]:
+    cabinets = await get_all_cabinets()
+    return [
+        DetailCabinetResponse.model_validate(cabinet) for cabinet in cabinets
+    ]
 
 
 @cabinet_router.delete('/{cabinet_id}/', status_code=204)

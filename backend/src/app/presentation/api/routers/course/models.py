@@ -31,8 +31,14 @@ class CourseResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class DetailCourseResponse(CourseResponse):
+class CourseWithSubjectResponse(CourseResponse):
     subject: SubjectResponse
+
+
+class CourseDetailResponse(CourseWithSubjectResponse):
+    # TODO: remove default values
+    teachers_count: int = 111
+    students_count: int = 111
 
 
 class BaseCourseTeacherResponse(BaseModel):
@@ -47,8 +53,13 @@ class CourseTeacherResponse(BaseCourseTeacherResponse):
     teacher_id: int
 
 
+class CourseTeacherDetailResponse(BaseCourseTeacherResponse):
+    course: CourseWithSubjectResponse
+    teacher: UserResponse
+
+
 class DetailCourseTeacherResponse(BaseCourseTeacherResponse):
-    course: DetailCourseResponse
+    course: CourseWithSubjectResponse
     teacher: UserResponse
 
 
@@ -64,5 +75,5 @@ class CourseTeacherStudentResponse(BaseCourseTeacherStudentResponse):
 
 
 class DetailCourseTeacherStudentResponse(BaseCourseTeacherStudentResponse):
-    course_teacher: CourseTeacherResponse
+    course_teacher: CourseTeacherDetailResponse
     student: UserResponse

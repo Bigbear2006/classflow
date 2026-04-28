@@ -69,7 +69,7 @@ async def get_group_router(
     return DetailGroupResponse.model_validate(group)
 
 
-@group_router.get('/{group_id}/users/')
+@group_router.get('/{group_id}/students/')
 async def get_group_users_router(
     group_id: int,
     get_group_users: FromDishka[GetGroupUsers],

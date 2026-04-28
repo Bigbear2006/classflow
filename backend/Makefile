@@ -1,7 +1,7 @@
 all: run
 
 run:
-	python -m src.app.presentation.api.main
+	python -m app.presentation.api.main
 
 test:
 	python tests/test_main.py

@@ -12,4 +12,7 @@ __all__ = (
     'CreateCabinetDTO',
     'DeleteCabinet',
     'DeleteCabinetDTO',
+    'GetAllCabinets',
 )
+
+from app.application.use_cases.cabinet.get_all import GetAllCabinets

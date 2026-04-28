@@ -64,8 +64,10 @@ class Course:
     lessons_count: int | None = None
     duration: timedelta | None = None
     created_at: datetime = field(init=False)
-    # Manually set this attribute
-    selected_teacher: User | None = None
+    # Manually set these attributes
+    selected_teacher: User | None = field(init=False, default=None)
+    teachers_count: int | None = field(init=False, default=None)
+    students_count: int | None = field(init=False, default=None)
 
 
 @dataclass
@@ -130,6 +132,7 @@ class UserGroup:
 class Lesson:
     id: int = field(init=False)
     conducted_by_id: int
+    conducted_by: User | None = field(init=False, default=None)
     start_date: datetime
     end_date: datetime
     cabinet_id: int | None = None

@@ -1,6 +1,6 @@
-from typing import cast
+from typing import Any, cast
 
-from sqlalchemy import and_, select, update
+from sqlalchemy import Select, and_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import (
     joinedload,
@@ -48,22 +48,12 @@ class GroupRepositoryImpl(GroupRepository):
         return rows.scalar_one()
 
     async def get_by_id(self, id: int) -> Group:
-        stmt = (
-            select(Group)
-            .options(
-                joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
-                joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
-            )
-            .where(groups_table.c.id == id)
-        )
+        stmt = set_group_joins(select(Group)).where(groups_table.c.id == id)
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
 
     async def get_all(self) -> list[Group]:
-        stmt = select(Group).options(
-            joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
-            joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
-        )
+        stmt = set_group_joins(select(Group))
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())
 
@@ -82,3 +72,10 @@ class GroupRepositoryImpl(GroupRepository):
         )
         rows = await self.session.scalars(stmt)
         return cast(list[User], rows.all())
+
+
+def set_group_joins[T: tuple[Any, ...]](stmt: Select[T]) -> Select[T]:
+    return stmt.options(
+        joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
+        joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
+    )

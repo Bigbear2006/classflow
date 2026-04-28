@@ -15,6 +15,10 @@ from app.application.use_cases.course.delete_teacher import (
     DeleteTeacherFromCourseDTO,
 )
 from app.application.use_cases.course.get_all import GetAllCourses
+from app.application.use_cases.course.get_groups import (
+    GetCourseGroups,
+    GetCourseGroupsDTO,
+)
 from app.application.use_cases.course.get_my import GetMyCourses
 from app.application.use_cases.course.get_students import (
     GetCourseTeacherStudents,
@@ -41,6 +45,8 @@ __all__ = (
     'DeleteTeacherFromCourse',
     'DeleteTeacherFromCourseDTO',
     'GetAllCourses',
+    'GetCourseGroups',
+    'GetCourseGroupsDTO',
     'GetCourseTeacherStudents',
     'GetCourseTeacherStudentsDTO',
     'GetCourseTeachers',
