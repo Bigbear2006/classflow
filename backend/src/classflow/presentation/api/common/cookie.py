@@ -19,7 +19,7 @@ def set_refresh_cookie(response: Response, refresh: str) -> None:
     response.set_cookie(
         'refresh',
         refresh,
-        path='/api/v1/user/refresh-token/',
+        path='/api/v1/users/refresh-token/',
         # domain='localhost.ru',
         secure=True,
         httponly=True,

@@ -1,6 +1,6 @@
 [project]
 name = "classflow"
-version = "0.3.1"
+version = "0.4.1"
 description = "Supplementary education management system"
 readme = "README.md"
 requires-python = ">=3.13"

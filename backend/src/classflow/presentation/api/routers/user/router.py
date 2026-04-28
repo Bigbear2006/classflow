@@ -16,7 +16,7 @@ from classflow.application.use_cases.user import (
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
 )
-from classflow.infrastructure.auth.token_processor import JWTTokenProcessor
+from classflow.infrastructure.auth.token_processor import JWTTokenProcessor, TokenType
 from classflow.presentation.api.common.cookie import (
     cookie_scheme,
     set_access_cookie,
@@ -59,10 +59,9 @@ async def refresh_token_router(
     token_processor: FromDishka[JWTTokenProcessor],
     response: Response,
 ) -> None:
-    token_processor.validate_refresh_token(refresh)
-    user_id = token_processor.extract_user_id(refresh)
+    user_id = token_processor.extract_user_id(refresh, token_type=TokenType.REFRESH)
     access = token_processor.create_access_token(user_id)
-    set_refresh_cookie(response, access)
+    set_access_cookie(response, access)
 
 
 @user_router.post('/logout/', status_code=204)

@@ -22,7 +22,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
 
   const mutation = useLessonMutation({ action, lessonId: lesson?.id, closeModal });
   const onSubmit = (data: OutputLessonFields) => {
-    console.log(data)
+    console.log(data);
     mutation.mutate({
       conducted_by_id: data.conductedById,
       start_date: data.startDate.toISOString(),
@@ -32,7 +32,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
       group_id: data.groupId,
       course_teacher_student_id: data.courseTeacherStudentId,
     });
-  }
+  };
 
   useEffect(() => {
     setCourseTeacherStudents([]);

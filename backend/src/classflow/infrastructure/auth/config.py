@@ -19,5 +19,6 @@ Algorithm = Literal[
 @dataclass
 class JWTConfig:
     SECRET_KEY: str = field(default_factory=lambda: env('JWT_SECRET_KEY'))
-    EXPIRATION: timedelta = timedelta(days=7)
+    ACCESS_TOKEN_LIFETIME: timedelta = timedelta(minutes=5)
+    REFRESH_TOKEN_LIFETIME: timedelta = timedelta(days=7)
     ALGORITHM: Algorithm = 'HS256'

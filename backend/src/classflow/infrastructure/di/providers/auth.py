@@ -33,9 +33,10 @@ class AuthProvider(Provider):
         jwt_config: JWTConfig,
     ) -> JWTTokenProcessor:
         return JWTTokenProcessor(
-            jwt_config.SECRET_KEY,
-            expires=jwt_config.EXPIRATION,
+            secret_key=jwt_config.SECRET_KEY,
             algorithm=jwt_config.ALGORITHM,
+            access_token_lifetime=jwt_config.ACCESS_TOKEN_LIFETIME,
+            refresh_token_lifetime=jwt_config.REFRESH_TOKEN_LIFETIME,
         )
 
     @provide(scope=Scope.REQUEST)

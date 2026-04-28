@@ -2,12 +2,12 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import type { LessonDetail } from '../../types.ts';
 import { useEffect } from 'react';
-import {zodResolver} from "@hookform/resolvers/zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const LessonSchema = z.object({
   groupId: z.coerce.number<string>().int().optional(),
   courseTeacherStudentId: z.preprocess(
-    (val: string) => (val !== "" ? +val : undefined),
+    (val: string) => (val !== '' ? +val : undefined),
     z.coerce.number<string>().int().optional(),
   ),
   conductedById: z.coerce.number<string>().int(),
@@ -25,7 +25,9 @@ interface UseLessonFormProps {
 }
 
 export const useLessonForm = (props?: UseLessonFormProps) => {
-  const { setValue, ...rest } = useForm<InputLessonFields, any, OutputLessonFields>({resolver: zodResolver(LessonSchema)});
+  const { setValue, ...rest } = useForm<InputLessonFields, any, OutputLessonFields>({
+    resolver: zodResolver(LessonSchema),
+  });
 
   useEffect(() => {
     const lesson = props?.initialValues;
