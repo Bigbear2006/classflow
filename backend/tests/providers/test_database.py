@@ -1,4 +1,4 @@
-from app.infrastructure.db.config import DatabaseConfig
+from classflow.infrastructure.db.config import DatabaseConfig
 from dishka import Provider, Scope, provide
 
 

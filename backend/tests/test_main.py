@@ -7,15 +7,15 @@ from typing import Any
 import httpx
 from alembic import command
 from alembic.config import Config
-from app.domain.enums import (
+from classflow.domain.enums import (
     CoursePaymentType,
     CourseType,
     LessonType,
     UserRole,
 )
-from app.infrastructure.db.config import DatabaseConfig
-from app.infrastructure.di.container import providers
-from app.presentation.api.main import create_app
+from classflow.infrastructure.db.config import DatabaseConfig
+from classflow.infrastructure.di.container import providers
+from classflow.presentation.api.main import create_app
 from dishka import AsyncContainer, make_async_container
 from fastapi.testclient import TestClient
 from httpx import URL
