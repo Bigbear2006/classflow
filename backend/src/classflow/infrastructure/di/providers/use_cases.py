@@ -46,6 +46,8 @@ from classflow.application.use_cases.organization import (
     GetCurrentOrganization,
     GetCurrentOrganizationMember,
     GetMyOrganizations,
+    GetOrganizationStats,
+    GetRoleCounts,
     JoinOrganization,
     UpdateOrganizationMember,
 )
@@ -82,6 +84,8 @@ class UseCasesProvider(Provider):
         GetCurrentOrganizationMember,
         GetMyOrganizations,
         GetAllCurrentOrganizationMembers,
+        GetRoleCounts,
+        GetOrganizationStats,
         UpdateOrganizationMember,
     )
     address = provide_all(

@@ -14,10 +14,13 @@ from classflow.application.use_cases.organization import (
     GetCurrentOrganization,
     GetCurrentOrganizationMember,
     GetMyOrganizations,
+    GetOrganizationStats,
+    GetRoleCounts,
     JoinOrganization,
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
 )
+from classflow.domain.entities import OrganizationStats, RoleCount
 from classflow.domain.enums import UserRole
 from classflow.presentation.api.common.cookie import cookie_scheme
 from classflow.presentation.api.routers.organization.models import (
@@ -62,6 +65,20 @@ async def get_current_organization_router(
 ) -> OrganizationResponse:
     org = await get_current_organization()
     return OrganizationResponse.model_validate(org)
+
+
+@organization_router.get('/current/roles/')
+async def get_current_organization_role_counts_router(
+    get_role_counts: FromDishka[GetRoleCounts],
+) -> list[RoleCount]:
+    return await get_role_counts()
+
+
+@organization_router.get('/current/stats/')
+async def get_current_organization_stats_router(
+    get_stats: FromDishka[GetOrganizationStats],
+) -> OrganizationStats:
+    return await get_stats()
 
 
 @organization_router.get('/my/', dependencies=[Depends(cookie_scheme)])

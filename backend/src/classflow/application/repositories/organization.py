@@ -1,6 +1,10 @@
 from typing import Protocol
 
-from classflow.domain.entities import Organization
+from classflow.domain.entities import (
+    Organization,
+    OrganizationStats,
+    RoleCount,
+)
 
 
 class OrganizationRepository(Protocol):
@@ -28,4 +32,10 @@ class OrganizationRepository(Protocol):
         pass
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
+        pass
+
+    async def get_role_counts(self, org_id: int) -> list[RoleCount]:
+        pass
+
+    async def get_stats(self, org_id: int) -> OrganizationStats:
         pass
