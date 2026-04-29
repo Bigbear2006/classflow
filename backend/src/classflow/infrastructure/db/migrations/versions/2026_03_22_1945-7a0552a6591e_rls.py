@@ -9,7 +9,6 @@ Create Date: 2026-03-22 19:45:37.621461
 from collections.abc import Sequence
 
 from alembic import op, context
-from classflow.infrastructure.db.config import DatabaseConfig
 
 # revision identifiers, used by Alembic.
 revision: str = '7a0552a6591e'
@@ -17,10 +16,16 @@ down_revision: str | Sequence[str] | None = '22c75be5848e'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
-section = context.config.config_ini_section
-DB_NAME = context.config.get_section_option(section, 'DB_NAME')
-APP_USER = context.config.get_section_option(section, 'APP_USER')
-APP_PASSWORD = context.config.get_section_option(section, 'APP_PASSWORD')
+if hasattr(context, 'config'):
+    section = context.config.config_ini_section
+    DB_NAME = context.config.get_section_option(section, 'DB_NAME')
+    APP_USER = context.config.get_section_option(section, 'APP_USER')
+    APP_PASSWORD = context.config.get_section_option(section, 'APP_PASSWORD')
+else:
+    DB_NAME = ''
+    DB_USER = ''
+    DB_PASSWORD = ''
+
 
 TABLES = [
     'organizations',

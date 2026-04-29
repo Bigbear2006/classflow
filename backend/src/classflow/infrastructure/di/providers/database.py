@@ -11,8 +11,8 @@ from sqlalchemy.ext.asyncio import (
 
 from classflow.application.common.org_id_provider import OrganizationIdProvider
 from classflow.infrastructure.db.config import DatabaseConfig
-from classflow.infrastructure.db.models import RawSession
 from classflow.infrastructure.db.repositories.base import set_current_org_id
+from classflow.infrastructure.db.tables import RawSession
 
 
 class DatabaseProvider(Provider):

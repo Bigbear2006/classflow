@@ -33,7 +33,12 @@ class JWTTokenProcessor:
         self.access_token_lifetime = access_token_lifetime
         self.refresh_token_lifetime = refresh_token_lifetime
 
-    def _create_token(self, user_id: int, token_type: TokenType, lifetime: timedelta) -> str:
+    def _create_token(
+        self,
+        user_id: int,
+        token_type: TokenType,
+        lifetime: timedelta,
+    ) -> str:
         payload = {
             'sub': str(user_id),
             'type': token_type.value,
@@ -42,10 +47,18 @@ class JWTTokenProcessor:
         return jwt.encode(payload, self.secret_key, self.algorithm)
 
     def create_access_token(self, user_id: int) -> str:
-        return self._create_token(user_id, TokenType.ACCESS, self.access_token_lifetime)
+        return self._create_token(
+            user_id,
+            TokenType.ACCESS,
+            self.access_token_lifetime,
+        )
 
     def create_refresh_token(self, user_id: int) -> str:
-        return self._create_token(user_id, TokenType.REFRESH, self.refresh_token_lifetime)
+        return self._create_token(
+            user_id,
+            TokenType.REFRESH,
+            self.refresh_token_lifetime,
+        )
 
     def create_token_pair(self, user_id: int) -> TokenPair:
         access = self.create_access_token(user_id)
@@ -73,6 +86,11 @@ class JWTTokenProcessor:
     def validate_refresh_token(self, token: str) -> dict[str, Any]:
         return self.validate_token(token, token_type=TokenType.REFRESH)
 
-    def extract_user_id(self, token: str, *, token_type: TokenType | None = None) -> int:
+    def extract_user_id(
+        self,
+        token: str,
+        *,
+        token_type: TokenType | None = None,
+    ) -> int:
         payload = self.validate_token(token, token_type=token_type)
         return int(payload['sub'])

@@ -14,12 +14,12 @@ from classflow.domain.entities import (
     Group,
     Lesson,
 )
-from classflow.infrastructure.db.models import (
+from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     lessons_table,
     user_groups_table,
 )
-from classflow.infrastructure.db.repositories.base import create
 
 
 class LessonRepositoryImpl(LessonRepository):

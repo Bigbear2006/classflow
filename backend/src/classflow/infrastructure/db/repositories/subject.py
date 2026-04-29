@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.subject import SubjectRepository
 from classflow.domain.entities import Subject
-from classflow.infrastructure.db.models import subjects_table
 from classflow.infrastructure.db.repositories.base import create, exclude_none
+from classflow.infrastructure.db.tables import subjects_table
 
 
 class SubjectRepositoryImpl(SubjectRepository):

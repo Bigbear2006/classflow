@@ -28,7 +28,7 @@ async def cors_middleware(request: Request, call_next: Any) -> Response:
         rsp = await call_next(request)
 
     origin = request.headers.get('origin')
-    if origin in ['http://localhost:5173', 'http://my-org.localhost:5173']:
+    if origin and 'localhost:5173' in origin:
         rsp.headers['Access-Control-Allow-Origin'] = origin
         rsp.headers['Access-Control-Allow-Credentials'] = 'true'
         rsp.headers['Access-Control-Allow-Headers'] = 'Content-Type'

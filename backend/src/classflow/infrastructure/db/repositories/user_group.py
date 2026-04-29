@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.user_group import UserGroupRepository
 from classflow.domain.entities import UserGroup
-from classflow.infrastructure.db.models import user_groups_table
 from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import user_groups_table
 
 
 class UserGroupRepositoryImpl(UserGroupRepository):

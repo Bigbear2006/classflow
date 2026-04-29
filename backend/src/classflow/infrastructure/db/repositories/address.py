@@ -8,8 +8,8 @@ from sqlalchemy.orm import joinedload
 from classflow.application.repositories.address import AddressRepository
 from classflow.domain.entities import Address
 from classflow.domain.exceptions import CannotDeleteEntityError
-from classflow.infrastructure.db.models import addresses_table
 from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import addresses_table
 
 
 class AddressRepositoryImpl(AddressRepository):

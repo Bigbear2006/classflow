@@ -1,7 +1,7 @@
 from typing import cast
 
 from asyncpg import UniqueViolationError
-from sqlalchemy import or_, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager
 
@@ -11,11 +11,11 @@ from classflow.application.repositories.organization_member import (
 from classflow.domain.entities import OrganizationMember
 from classflow.domain.enums import UserRole
 from classflow.domain.exceptions import AlreadyExistsError
-from classflow.infrastructure.db.models import (
+from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import (
     organization_members_table,
     users_table,
 )
-from classflow.infrastructure.db.repositories.base import create
 
 
 class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
@@ -80,15 +80,16 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
                 organization_members_table.c.organization_id == org_id,
             )
             .options(contains_eager(OrganizationMember.user))  # type: ignore[arg-type]
+            .limit(10)
         )
 
         if query:
+            fullname_sml = func.similarity(users_table.c.fullname, query)
+            email_sml = func.similarity(users_table.c.email, query)
+
             stmt = stmt.where(
-                or_(
-                    users_table.c.fullname.ilike(f'%{query}%'),
-                    users_table.c.email.ilike(f'%{query}%'),
-                ),
-            )
+                or_(fullname_sml >= 0.3, email_sml >= 0.3),
+            ).order_by(func.greatest(fullname_sml, email_sml).desc())
 
         if roles:
             stmt = stmt.where(organization_members_table.c.role.in_(roles))

@@ -8,12 +8,12 @@ from sqlalchemy.orm import (
 
 from classflow.application.repositories.group import GroupRepository
 from classflow.domain.entities import Cabinet, Course, Group, User
-from classflow.infrastructure.db.models import (
+from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import (
     groups_table,
     user_groups_table,
     users_table,
 )
-from classflow.infrastructure.db.repositories.base import create
 
 
 class GroupRepositoryImpl(GroupRepository):

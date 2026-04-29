@@ -8,7 +8,9 @@ from sqlalchemy.orm import joinedload
 from classflow.application.repositories.course import CourseRepository
 from classflow.domain.entities import Course, Group, User
 from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
-from classflow.infrastructure.db.models import (
+from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.group import set_group_joins
+from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     course_teachers_table,
     courses_table,
@@ -16,8 +18,6 @@ from classflow.infrastructure.db.models import (
     user_groups_table,
     users_table,
 )
-from classflow.infrastructure.db.repositories.base import create
-from classflow.infrastructure.db.repositories.group import set_group_joins
 
 
 class CourseRepositoryImpl(CourseRepository):

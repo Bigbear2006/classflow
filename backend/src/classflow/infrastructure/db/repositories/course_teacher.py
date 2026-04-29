@@ -7,12 +7,12 @@ from classflow.application.repositories.course_teacher import (
     CourseTeacherRepository,
 )
 from classflow.domain.entities import CourseTeacher, User
-from classflow.infrastructure.db.models import (
+from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     course_teachers_table,
     users_table,
 )
-from classflow.infrastructure.db.repositories.base import create
 
 
 class CourseTeacherRepositoryImpl(CourseTeacherRepository):

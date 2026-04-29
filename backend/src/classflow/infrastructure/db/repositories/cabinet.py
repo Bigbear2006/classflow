@@ -6,8 +6,8 @@ from sqlalchemy.orm import joinedload
 
 from classflow.application.repositories.cabinet import CabinetRepository
 from classflow.domain.entities import Cabinet
-from classflow.infrastructure.db.models import cabinets_table
 from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.tables import cabinets_table
 
 
 class CabinetRepositoryImpl(CabinetRepository):

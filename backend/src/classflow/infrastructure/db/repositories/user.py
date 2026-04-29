@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from classflow.application.repositories.user import UserRepository
 from classflow.domain.entities import User
 from classflow.domain.exceptions import AlreadyExistsError
-from classflow.infrastructure.db.models import users_table
 from classflow.infrastructure.db.repositories.base import create, exclude_none
+from classflow.infrastructure.db.tables import users_table
 
 
 class UserRepositoryImpl(UserRepository):

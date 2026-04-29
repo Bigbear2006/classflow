@@ -3,7 +3,7 @@ from logging.config import fileConfig
 
 from alembic import context
 from classflow.infrastructure.db.config import DatabaseConfig
-from classflow.infrastructure.db.models import metadata
+from classflow.infrastructure.db.tables.base import metadata
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
