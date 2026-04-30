@@ -15,6 +15,7 @@ config = context.config
 database_config = DatabaseConfig()
 section = config.config_ini_section
 
+
 def _set_option_if_none(name: str, value: str) -> None:
     if not config.get_section_option(section, name):
         config.set_section_option(section, name, value)

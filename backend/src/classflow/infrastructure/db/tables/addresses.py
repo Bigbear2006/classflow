@@ -1,7 +1,7 @@
 from sqlalchemy import (
     BIGINT,
     Column,
-    ForeignKey,
+    ForeignKeyConstraint,
     String,
     Table,
     Text,
@@ -22,19 +22,23 @@ addresses_table = Table(
     Column('id', BIGINT, primary_key=True),
     organization_id_fk(),
     Column('address', Text, nullable=False),
+    UniqueConstraint('organization_id', 'id'),
+    UniqueConstraint('organization_id', 'address'),
 )
 
 cabinets_table = Table(
     'cabinets',
     metadata,
     Column('id', BIGINT, primary_key=True),
-    Column('address_id', BIGINT, ForeignKey('addresses.id'), nullable=False),
+    organization_id_fk(),
+    Column('address_id', BIGINT, nullable=False),
     Column('number', String(10), nullable=False),
-    UniqueConstraint(
-        'address_id',
-        'number',
-        name='uq_cabinets_address_number',
+    ForeignKeyConstraint(
+        ['organization_id', 'address_id'],
+        ['addresses.organization_id', 'addresses.id'],
     ),
+    UniqueConstraint('organization_id', 'id'),
+    UniqueConstraint('address_id', 'number'),
 )
 
 mapper_registry.map_imperatively(

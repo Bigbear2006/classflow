@@ -7,6 +7,7 @@ from classflow.domain.exceptions import ValidationError
 @dataclass
 class Payment:
     id: int = field(init=False)
+    organization_id: int = field(init=False)
     amount: int
     created_by_id: int
     date: datetime

@@ -15,7 +15,7 @@ from classflow.infrastructure.db.tables import (
     course_teachers_table,
     courses_table,
     groups_table,
-    user_groups_table,
+    student_groups_table,
     users_table,
 )
 
@@ -67,10 +67,10 @@ class CourseRepositoryImpl(CourseRepository):
         )
 
         group_students_count_subquery = (
-            select(func.count(user_groups_table.c.id))
+            select(func.count(student_groups_table.c.id))
             .join(
                 groups_table,
-                user_groups_table.c.group_id == groups_table.c.id,
+                student_groups_table.c.group_id == groups_table.c.id,
             )
             .where(groups_table.c.course_id == courses_table.c.id)
             .scalar_subquery()
@@ -153,14 +153,14 @@ class CourseRepositoryImpl(CourseRepository):
                 isouter=True,
             )
             .join(
-                user_groups_table,
-                groups_table.c.id == user_groups_table.c.group_id,
+                student_groups_table,
+                groups_table.c.id == student_groups_table.c.group_id,
                 isouter=True,
             )
             .where(
                 or_(
                     course_teacher_students_table.c.student_id == user_id,
-                    user_groups_table.c.user_id == user_id,
+                    student_groups_table.c.student_id == user_id,
                 ),
             )
             .distinct()

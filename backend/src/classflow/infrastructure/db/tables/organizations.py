@@ -47,7 +47,8 @@ organization_members_table = Table(
     ),
     Column('role', user_role_enum, nullable=False),
     created_at_column(),
-    UniqueConstraint('organization_id', 'user_id', name='uq_org_user'),
+    UniqueConstraint('organization_id', 'id'),
+    UniqueConstraint('organization_id', 'user_id'),
 )
 
 mapper_registry.map_imperatively(Organization, organizations_table)

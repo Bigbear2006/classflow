@@ -84,12 +84,17 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
         )
 
         if query:
-            fullname_sml = func.similarity(users_table.c.fullname, query)
-            email_sml = func.similarity(users_table.c.email, query)
-
             stmt = stmt.where(
-                or_(fullname_sml >= 0.3, email_sml >= 0.3),
-            ).order_by(func.greatest(fullname_sml, email_sml).desc())
+                or_(
+                    users_table.c.fullname.op('%')(query),
+                    users_table.c.email.op('%')(query),
+                ),
+            ).order_by(
+                func.greatest(
+                    func.similarity(users_table.c.fullname, query),
+                    func.similarity(users_table.c.email, query),
+                ).desc(),
+            )
 
         if roles:
             stmt = stmt.where(organization_members_table.c.role.in_(roles))

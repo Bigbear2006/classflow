@@ -12,6 +12,7 @@ class Address:
 @dataclass
 class Cabinet:
     id: int = field(init=False)
+    organization_id: int = field(init=False)
     address_id: int
     address: Address | None = field(init=False, default=None)
     number: str

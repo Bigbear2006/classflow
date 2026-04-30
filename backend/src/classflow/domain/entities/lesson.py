@@ -4,15 +4,16 @@ from datetime import datetime
 from classflow.domain.entities.address import Cabinet
 from classflow.domain.entities.course import CourseTeacherStudent
 from classflow.domain.entities.group import Group
-from classflow.domain.entities.user import User
+from classflow.domain.entities.organization import OrganizationMember
 from classflow.domain.exceptions import ValidationError
 
 
 @dataclass
 class Lesson:
     id: int = field(init=False)
+    organization_id: int = field(init=False)
     conducted_by_id: int
-    conducted_by: User | None = field(init=False, default=None)
+    conducted_by: OrganizationMember | None = field(init=False, default=None)
     start_date: datetime
     end_date: datetime
     cabinet_id: int | None = None

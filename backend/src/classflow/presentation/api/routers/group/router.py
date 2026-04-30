@@ -79,21 +79,21 @@ async def get_group_users_router(
     return [UserResponse.model_validate(user) for user in users]
 
 
-@group_router.post('/{group_id}/users/{user_id}/', status_code=204)
+@group_router.post('/{group_id}/students/{student_id}/', status_code=204)
 async def add_user_to_group_router(
     group_id: int,
-    user_id: int,
+    student_id: int,
     add_user_to_group: FromDishka[AddUserToGroup],
 ) -> None:
-    dto = AddUserToGroupDTO(user_id=user_id, group_id=group_id)
+    dto = AddUserToGroupDTO(student_id=student_id, group_id=group_id)
     await add_user_to_group(dto)
 
 
-@group_router.delete('/{group_id}/users/{user_id}/', status_code=204)
+@group_router.delete('/{group_id}/students/{student_id}/', status_code=204)
 async def remove_user_from_group_router(
     group_id: int,
-    user_id: int,
+    student_id: int,
     remove_user_from_group: FromDishka[RemoveUserFromGroup],
 ) -> None:
-    dto = RemoveUserFromGroupDTO(user_id=user_id, group_id=group_id)
+    dto = RemoveUserFromGroupDTO(student_id=student_id, group_id=group_id)
     await remove_user_from_group(dto)

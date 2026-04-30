@@ -112,16 +112,18 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         return cast(list[Organization], orgs)
 
     async def get_role_counts(self, org_id: int) -> list[RoleCount]:
+        await set_current_org_id(self.session, org_id)
         stmt = (
             select(OrganizationMember.role, func.count('*'))
             .select_from(OrganizationMember)
-            .where(organization_members_table.c.organization_id == org_id)
             .group_by(organization_members_table.c.role)
         )
         rows = await self.session.execute(stmt)
         return [RoleCount(role=role, count=count) for (role, count) in rows]
 
     async def get_stats(self, org_id: int) -> OrganizationStats:
+        await set_current_org_id(self.session, org_id)
+
         courses_subquery = (
             select(func.count('*')).select_from(Course).scalar_subquery()
         )

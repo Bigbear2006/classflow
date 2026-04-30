@@ -22,7 +22,7 @@ from classflow.application.repositories.organization_member import (
 from classflow.application.repositories.payment import PaymentRepository
 from classflow.application.repositories.subject import SubjectRepository
 from classflow.application.repositories.user import UserRepository
-from classflow.application.repositories.user_group import UserGroupRepository
+from classflow.application.repositories.student_group import StudentGroupRepository
 from classflow.infrastructure.db.repositories.address import (
     AddressRepositoryImpl,
 )
@@ -61,8 +61,8 @@ from classflow.infrastructure.db.repositories.subject import (
     SubjectRepositoryImpl,
 )
 from classflow.infrastructure.db.repositories.user import UserRepositoryImpl
-from classflow.infrastructure.db.repositories.user_group import (
-    UserGroupRepositoryImpl,
+from classflow.infrastructure.db.repositories.student_group import (
+    StudentGroupRepositoryImpl,
 )
 
 
@@ -70,7 +70,7 @@ class RepositoriesProvider(Provider):
     scope = Scope.REQUEST
 
     user_repository = provide(UserRepositoryImpl, provides=UserRepository)
-    user_group = provide(UserGroupRepositoryImpl, provides=UserGroupRepository)
+    user_group = provide(StudentGroupRepositoryImpl, provides=StudentGroupRepository)
     organization_repository = provide(
         OrganizationRepositoryImpl,
         provides=OrganizationRepository,

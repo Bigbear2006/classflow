@@ -18,7 +18,7 @@ from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     lessons_table,
-    user_groups_table,
+    student_groups_table,
 )
 
 
@@ -81,8 +81,8 @@ class LessonRepositoryImpl(LessonRepository):
         stmt = (
             _set_lessons_joins(select(Lesson))
             .join(
-                user_groups_table,
-                lessons_table.c.group_id == user_groups_table.c.group_id,
+                student_groups_table,
+                lessons_table.c.group_id == student_groups_table.c.group_id,
                 isouter=True,
             )
             .join(
@@ -94,7 +94,7 @@ class LessonRepositoryImpl(LessonRepository):
             .where(
                 or_(
                     course_teacher_students_table.c.student_id == user_id,
-                    user_groups_table.c.user_id == user_id,
+                    student_groups_table.c.student_id == user_id,
                 ),
             )
         )

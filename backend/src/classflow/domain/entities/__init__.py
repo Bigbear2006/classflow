@@ -6,7 +6,7 @@ from classflow.domain.entities.course import (
     CourseTeacherStudent,
 )
 from classflow.domain.entities.feedback import Feedback
-from classflow.domain.entities.group import Group, UserGroup
+from classflow.domain.entities.group import Group, StudentGroup
 from classflow.domain.entities.lesson import Lesson
 from classflow.domain.entities.organization import (
     Organization,
@@ -35,5 +35,5 @@ __all__ = (
     'RoleCount',
     'Subject',
     'User',
-    'UserGroup',
+    'StudentGroup',
 )

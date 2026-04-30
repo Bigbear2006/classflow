@@ -11,7 +11,7 @@ from classflow.domain.entities import Cabinet, Course, Group, User
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
     groups_table,
-    user_groups_table,
+    student_groups_table,
     users_table,
 )
 
@@ -61,13 +61,13 @@ class GroupRepositoryImpl(GroupRepository):
         stmt = (
             select(User)
             .join(
-                user_groups_table,
+                student_groups_table,
                 and_(
-                    user_groups_table.c.group_id == group_id,
-                    user_groups_table.c.user_id == users_table.c.id,
+                    student_groups_table.c.group_id == group_id,
+                    student_groups_table.c.student_id == users_table.c.id,
                 ),
             )
-            .where(user_groups_table.c.is_active.is_(True))
+            .where(student_groups_table.c.is_active.is_(True))
             .distinct()
         )
         rows = await self.session.scalars(stmt)

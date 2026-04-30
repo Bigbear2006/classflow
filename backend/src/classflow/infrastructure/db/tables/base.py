@@ -19,12 +19,15 @@ metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
 
 
-def organization_id_fk(nullable: bool = False) -> Column[Any]:
+def organization_id_fk() -> Column[Any]:
     return Column(
         'organization_id',
         BIGINT,
         ForeignKey('organizations.id'),
-        nullable=nullable,
+        nullable=False,
+        server_default=text(
+            "current_setting('app.current_org_id', true)::bigint",
+        ),
     )
 
 

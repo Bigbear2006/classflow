@@ -8,6 +8,7 @@ from classflow.domain.entities.course import Course
 @dataclass
 class Group:
     id: int = field(init=False)
+    organization_id: int = field(init=False)
     name: str
     course_id: int
     course: Course | None = field(init=False, default=None)
@@ -18,9 +19,10 @@ class Group:
 
 
 @dataclass
-class UserGroup:
+class StudentGroup:
     id: int = field(init=False)
-    user_id: int
+    organization_id: int = field(init=False)
+    student_id: int
     group_id: int
     is_active: bool = True
     created_at: datetime = field(init=False)

@@ -61,21 +61,44 @@ def upgrade() -> None:
     op.create_table(
         'addresses',
         sa.Column('id', sa.BIGINT(), nullable=False),
-        sa.Column('organization_id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('address', sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(
             ['organization_id'],
             ['organizations.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('organization_id', 'address'),
     )
     op.create_table(
         'subjects',
         sa.Column('id', sa.BIGINT(), nullable=False),
-        sa.Column('organization_id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('image', sa.Text(), nullable=False),
-        sa.Column('description', sa.Text(), nullable=False, server_default=sa.text("''")),
+        sa.Column(
+            'description',
+            sa.Text(),
+            nullable=False,
+            server_default=sa.text("''"),
+        ),
         sa.Column(
             'created_at',
             sa.DateTime(timezone=True),
@@ -87,11 +110,21 @@ def upgrade() -> None:
             ['organizations.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint('organization_id', 'name', name='uq_subjects_org_name'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('organization_id', 'name'),
     )
     op.create_table(
         'courses',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('subject_id', sa.BIGINT(), nullable=False),
         sa.Column(
             'type',
@@ -118,13 +151,25 @@ def upgrade() -> None:
             server_default=sa.text('NOW()'),
             nullable=False,
         ),
-        sa.ForeignKeyConstraint(['subject_id'],['subjects.id']),
+        sa.ForeignKeyConstraint(
+            ['organization_id', 'subject_id'],
+            ['subjects.organization_id', 'subjects.id'],
+        ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
     )
     op.create_table(
         'organization_members',
         sa.Column('id', sa.BIGINT(), nullable=False),
-        sa.Column('organization_id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('user_id', sa.BIGINT(), nullable=False),
         sa.Column(
             'role',
@@ -146,25 +191,43 @@ def upgrade() -> None:
             ['users.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint('organization_id', 'user_id', name='uq_org_user'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('organization_id', 'user_id'),
     )
     op.create_table(
         'cabinets',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('address_id', sa.BIGINT(), nullable=False),
         sa.Column('number', sa.String(length=10), nullable=False),
         sa.ForeignKeyConstraint(
-            ['address_id'],
-            ['addresses.id'],
+            ['organization_id', 'address_id'],
+            ['addresses.organization_id', 'addresses.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint(
-            'address_id', 'number', name='uq_cabinets_address_number',
-        ),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('address_id', 'number'),
     )
     op.create_table(
         'course_teachers',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('course_id', sa.BIGINT(), nullable=False),
         sa.Column('teacher_id', sa.BIGINT(), nullable=False),
         sa.Column(
@@ -180,24 +243,41 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['course_id'],
-            ['courses.id'],
+            ['organization_id', 'course_id'],
+            ['courses.organization_id', 'courses.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['teacher_id'],
-            ['users.id'],
+            ['organization_id', 'teacher_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('course_id', 'teacher_id'),
     )
     op.create_table(
         'feedback',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('author_id', sa.BIGINT(), nullable=False),
         sa.Column('teacher_id', sa.BIGINT(), nullable=True),
         sa.Column('course_id', sa.BIGINT(), nullable=True),
         sa.Column('rating', sa.Integer(), nullable=False),
         sa.Column(
-            'text', sa.Text(), server_default=sa.text("''"), nullable=False,
+            'text',
+            sa.Text(),
+            server_default=sa.text("''"),
+            nullable=False,
         ),
         sa.Column(
             'is_active',
@@ -212,22 +292,38 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['author_id'],
-            ['users.id'],
+            ['organization_id', 'author_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.ForeignKeyConstraint(
-            ['course_id'],
-            ['courses.id'],
+            ['organization_id', 'teacher_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.ForeignKeyConstraint(
-            ['teacher_id'],
-            ['users.id'],
+            ['organization_id', 'course_id'],
+            ['courses.organization_id', 'courses.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('author_id', 'teacher_id', 'course_id'),
     )
     op.create_table(
         'groups',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('course_id', sa.BIGINT(), nullable=False),
         sa.Column('default_cabinet_id', sa.BIGINT(), nullable=True),
@@ -239,18 +335,29 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['course_id'],
-            ['courses.id'],
+            ['organization_id', 'course_id'],
+            ['courses.organization_id', 'courses.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['default_cabinet_id'],
-            ['cabinets.id'],
+            ['organization_id', 'default_cabinet_id'],
+            ['cabinets.organization_id', 'cabinets.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('organization_id', 'name'),
     )
     op.create_table(
         'course_teacher_students',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('course_teacher_id', sa.BIGINT(), nullable=False),
         sa.Column('student_id', sa.BIGINT(), nullable=False),
         sa.Column(
@@ -260,18 +367,32 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['course_teacher_id'],
-            ['course_teachers.id'],
+            ['organization_id', 'course_teacher_id'],
+            ['course_teachers.organization_id', 'course_teachers.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['student_id'],
-            ['users.id'],
+            ['organization_id', 'student_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('course_teacher_id', 'student_id'),
     )
     op.create_table(
         'lessons',
         sa.Column('id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('group_id', sa.BIGINT(), nullable=True),
         sa.Column('course_teacher_student_id', sa.BIGINT(), nullable=True),
         sa.Column('cabinet_id', sa.BIGINT(), nullable=True),
@@ -286,27 +407,43 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['cabinet_id'],
-            ['cabinets.id'],
+            ['organization_id', 'group_id'],
+            ['groups.organization_id', 'groups.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['conducted_by_id'],
-            ['users.id'],
+            ['organization_id', 'course_teacher_student_id'],
+            [
+                'course_teacher_students.organization_id',
+                'course_teacher_students.id',
+            ],
         ),
         sa.ForeignKeyConstraint(
-            ['group_id'],
-            ['groups.id'],
+            ['organization_id', 'cabinet_id'],
+            ['cabinets.organization_id', 'cabinets.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['course_teacher_student_id'],
-            ['course_teacher_students.id'],
+            ['organization_id', 'conducted_by_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
     )
     op.create_table(
-        'user_groups',
+        'student_groups',
         sa.Column('id', sa.BIGINT(), nullable=False),
-        sa.Column('user_id', sa.BIGINT(), nullable=False),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
+        sa.Column('student_id', sa.BIGINT(), nullable=False),
         sa.Column('group_id', sa.BIGINT(), nullable=False),
         sa.Column(
             'is_active',
@@ -321,43 +458,72 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['group_id'],
-            ['groups.id'],
+            ['organization_id', 'student_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.ForeignKeyConstraint(
-            ['user_id'],
-            ['users.id'],
+            ['organization_id', 'group_id'],
+            ['groups.organization_id', 'groups.id'],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('organization_id', 'id'),
+        sa.UniqueConstraint('student_id', 'group_id'),
     )
     op.create_table(
         'attendance',
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
         sa.Column('id', sa.BIGINT(), nullable=False),
         sa.Column('lesson_id', sa.BIGINT(), nullable=False),
-        sa.Column('user_id', sa.BIGINT(), nullable=False),
+        sa.Column('student_id', sa.BIGINT(), nullable=False),
         sa.Column(
             'status',
             sa.Enum('PRESENT', 'ABSENT', 'EXCUSED', name='attendance_status'),
             nullable=False,
         ),
         sa.Column(
-            'comment', sa.Text(), server_default=sa.text("''"), nullable=False,
+            'comment',
+            sa.Text(),
+            server_default=sa.text("''"),
+            nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['lesson_id'],
-            ['lessons.id'],
+            ['organization_id', 'lesson_id'],
+            ['lessons.organization_id', 'lessons.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['user_id'],
-            ['users.id'],
+            ['organization_id', 'student_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('lesson_id', 'student_id'),
     )
     op.create_table(
         'payments',
         sa.Column('id', sa.BIGINT(), nullable=False),
-        sa.Column('group_id', sa.BIGINT(), nullable=True),
-        sa.Column('user_id', sa.BIGINT(), nullable=True),
+        sa.Column(
+            'organization_id',
+            sa.BIGINT(),
+            sa.ForeignKey('organizations.id'),
+            nullable=False,
+            server_default=sa.text(
+                "current_setting('app.current_org_id', true)::bigint",
+            ),
+        ),
+        sa.Column('student_group_id', sa.BIGINT(), nullable=True),
         sa.Column('lesson_id', sa.BIGINT(), nullable=True),
         sa.Column('amount', sa.Integer(), nullable=False),
         sa.Column('created_by_id', sa.BIGINT(), nullable=False),
@@ -368,20 +534,19 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ['created_by_id'],
-            ['users.id'],
+            ['organization_id', 'student_group_id'],
+            ['student_groups.organization_id', 'student_groups.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['group_id'],
-            ['groups.id'],
+            ['organization_id', 'lesson_id'],
+            ['lessons.organization_id', 'lessons.id'],
         ),
         sa.ForeignKeyConstraint(
-            ['lesson_id'],
-            ['lessons.id'],
-        ),
-        sa.ForeignKeyConstraint(
-            ['user_id'],
-            ['users.id'],
+            ['organization_id', 'created_by_id'],
+            [
+                'organization_members.organization_id',
+                'organization_members.id',
+            ],
         ),
         sa.PrimaryKeyConstraint('id'),
     )
@@ -393,7 +558,7 @@ def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('payments')
     op.drop_table('attendance')
-    op.drop_table('user_groups')
+    op.drop_table('student_groups')
     op.drop_table('lessons')
     op.drop_table('course_teacher_students')
     op.drop_table('groups')
@@ -407,8 +572,8 @@ def downgrade() -> None:
     op.drop_table('subjects')
     op.drop_table('organizations')
     # ### end Alembic commands ###
-    op.execute("DROP TYPE IF EXISTS user_role")
-    op.execute("DROP TYPE IF EXISTS course_type")
-    op.execute("DROP TYPE IF EXISTS lesson_type")
-    op.execute("DROP TYPE IF EXISTS course_payment_type")
-    op.execute("DROP TYPE IF EXISTS attendance_status")
+    op.execute('DROP TYPE IF EXISTS user_role')
+    op.execute('DROP TYPE IF EXISTS course_type')
+    op.execute('DROP TYPE IF EXISTS lesson_type')
+    op.execute('DROP TYPE IF EXISTS course_payment_type')
+    op.execute('DROP TYPE IF EXISTS attendance_status')

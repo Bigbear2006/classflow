@@ -7,6 +7,7 @@ from classflow.domain.exceptions import ValidationError
 @dataclass
 class Feedback:
     id: int = field(init=False)
+    organization_id: int = field(init=False)
     author_id: int
     rating: int
     teacher_id: int | None = None

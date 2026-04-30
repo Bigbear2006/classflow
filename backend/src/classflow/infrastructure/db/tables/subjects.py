@@ -25,7 +25,8 @@ subjects_table = Table(
     Column('image', Text, nullable=False),
     Column('description', Text, nullable=False, server_default=text("''")),
     created_at_column(),
-    UniqueConstraint('organization_id', 'name', name='uq_subjects_org_name'),
+    UniqueConstraint('organization_id', 'id'),
+    UniqueConstraint('organization_id', 'name'),
 )
 
 mapper_registry.map_imperatively(Subject, subjects_table)

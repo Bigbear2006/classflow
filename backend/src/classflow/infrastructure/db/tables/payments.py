@@ -2,37 +2,33 @@ from sqlalchemy import (
     BIGINT,
     Column,
     DateTime,
-    ForeignKey,
+    ForeignKeyConstraint,
     Integer,
     Table,
     text,
 )
 
 from classflow.domain.entities import Payment
-from classflow.infrastructure.db.tables.base import mapper_registry, metadata
+from classflow.infrastructure.db.tables.base import (
+    mapper_registry,
+    metadata,
+    organization_id_fk,
+)
 
 payments_table = Table(
     'payments',
     metadata,
     Column('id', BIGINT, primary_key=True),
+    organization_id_fk(),
     Column(
-        'group_id',
+        'student_group_id',
         BIGINT,
-        ForeignKey('groups.id'),
-        nullable=True,
-        index=True,
-    ),
-    Column(
-        'user_id',
-        BIGINT,
-        ForeignKey('users.id'),
         nullable=True,
         index=True,
     ),
     Column(
         'lesson_id',
         BIGINT,
-        ForeignKey('lessons.id'),
         nullable=True,
         index=True,
     ),
@@ -40,7 +36,6 @@ payments_table = Table(
     Column(
         'created_by_id',
         BIGINT,
-        ForeignKey('users.id'),
         nullable=False,
         index=True,
     ),
@@ -49,6 +44,18 @@ payments_table = Table(
         DateTime(timezone=True),
         nullable=False,
         server_default=text('NOW()'),
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'student_group_id'],
+        ['student_groups.organization_id', 'student_groups.id'],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'lesson_id'],
+        ['lessons.organization_id', 'lessons.id'],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'created_by_id'],
+        ['organization_members.organization_id', 'organization_members.id'],
     ),
 )
 

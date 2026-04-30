@@ -16,7 +16,7 @@ from classflow.infrastructure.db.tables.courses import (
 from classflow.infrastructure.db.tables.feedback import feedback_table
 from classflow.infrastructure.db.tables.groups import (
     groups_table,
-    user_groups_table,
+    student_groups_table,
 )
 from classflow.infrastructure.db.tables.lessons import (
     lessons_table,
@@ -45,7 +45,7 @@ __all__ = (
     'organization_members_table',
     'organizations_table',
     'payments_table',
+    'student_groups_table',
     'subjects_table',
-    'user_groups_table',
     'users_table',
 )

@@ -2,9 +2,10 @@ from sqlalchemy import (
     BIGINT,
     Column,
     DateTime,
-    ForeignKey,
+    ForeignKeyConstraint,
     String,
     Table,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -19,30 +20,29 @@ from classflow.infrastructure.db.tables.base import (
     created_at_column,
     mapper_registry,
     metadata,
+    organization_id_fk,
 )
 
 lessons_table = Table(
     'lessons',
     metadata,
     Column('id', BIGINT, primary_key=True),
+    organization_id_fk(),
     Column(
         'group_id',
         BIGINT,
-        ForeignKey('groups.id'),
         nullable=True,
         index=True,
     ),
     Column(
         'course_teacher_student_id',
         BIGINT,
-        ForeignKey('course_teacher_students.id'),
         nullable=True,
         index=True,
     ),
     Column(
         'cabinet_id',
         BIGINT,
-        ForeignKey('cabinets.id'),
         nullable=True,
         index=True,
     ),
@@ -50,22 +50,41 @@ lessons_table = Table(
     Column(
         'conducted_by_id',
         BIGINT,
-        ForeignKey('users.id'),
         nullable=False,
         index=True,
     ),
     Column('start_date', DateTime(timezone=True), nullable=False),
     Column('end_date', DateTime(timezone=True), nullable=False),
     created_at_column(),
+    ForeignKeyConstraint(
+        ['organization_id', 'group_id'],
+        ['groups.organization_id', 'groups.id'],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'course_teacher_student_id'],
+        [
+            'course_teacher_students.organization_id',
+            'course_teacher_students.id',
+        ],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'cabinet_id'],
+        ['cabinets.organization_id', 'cabinets.id'],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'conducted_by_id'],
+        ['organization_members.organization_id', 'organization_members.id'],
+    ),
+    UniqueConstraint('organization_id', 'id'),
 )
 
 mapper_registry.map_imperatively(
     Lesson,
     lessons_table,
     properties={
-        'conducted_by': relationship(User),
-        'cabinet': relationship(Cabinet),
         'group': relationship(Group),
         'course_teacher_student': relationship(CourseTeacherStudent),
+        'cabinet': relationship(Cabinet),
+        'conducted_by': relationship(User),
     },
 )
