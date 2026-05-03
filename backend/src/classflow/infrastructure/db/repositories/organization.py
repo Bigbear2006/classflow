@@ -2,7 +2,6 @@ from datetime import UTC, datetime
 from typing import cast
 
 from sqlalchemy import Date, func, or_, select, update
-from sqlalchemy.orm import InstrumentedAttribute
 
 from classflow.application.repositories.organization import (
     OrganizationRepository,
@@ -57,17 +56,22 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
 
-    async def get_all(self) -> list[Organization]:
-        stmt = select(Organization)
-        rows = await self.session.scalars(stmt)
-        return cast(list[Organization], rows.all())
-
-    async def search(self, query: str) -> list[Organization]:
-        stmt = select(Organization).where(
-            or_(
-                organizations_table.c.name.ilike(query),
-                organizations_table.c.slug.ilike(query),
-            ),
+    async def get_all(self, query: str) -> list[Organization]:
+        stmt = (
+            select(Organization)
+            .where(
+                or_(
+                    organizations_table.c.name.op('%')(query),
+                    organizations_table.c.slug.op('%')(query),
+                ),
+            )
+            .order_by(
+                func.greatest(
+                    func.similarity(organizations_table.c.name, query),
+                    func.similarity(organizations_table.c.slug, query),
+                ).desc(),
+            )
+            .limit(10)
         )
         rows = await self.session.scalars(stmt)
         return cast(list[Organization], rows.all())
@@ -77,25 +81,27 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         rows = await self.session.execute(stmt)
         return rows.scalar()
 
-    async def get_user_organization(self, user_id: int) -> Organization | None:
+    async def get_owned_count(self, user_id: int) -> int:
         stmt = (
-            select(Organization)
+            select(func.count('*'))
+            .select_from(Organization)
             .join(
                 organization_members_table,
                 organizations_table.c.id
                 == organization_members_table.c.organization_id,
             )
-            .where(organization_members_table.c.user_id == user_id)
+            .where(
+                organization_members_table.c.user_id == user_id,
+                organization_members_table.c.role == UserRole.OWNER,
+            )
+            .distinct()
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar()
+        return rows.scalar_one()
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
         stmt = (
-            select(
-                Organization,
-                cast(InstrumentedAttribute[UserRole], OrganizationMember.role),
-            )
+            select(Organization, OrganizationMember.role)
             .join(
                 organization_members_table,
                 organizations_table.c.id

@@ -20,6 +20,7 @@ class MyOrganizationResponse(OrganizationResponse):
 
 
 class OrganizationMemberResponse(BaseModel):
+    id: int
     organization_id: int
     user_id: int
     role: UserRole
@@ -28,6 +29,7 @@ class OrganizationMemberResponse(BaseModel):
 
 
 class OrganizationMemberDetailResponse(BaseModel):
+    id: int
     organization_id: int
     user: UserResponse
     role: UserRole

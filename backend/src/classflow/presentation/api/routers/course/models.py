@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 from pydantic import BaseModel, ConfigDict
 
 from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
+from classflow.presentation.api.routers.organization.models import (
+    OrganizationMemberDetailResponse,
+)
 from classflow.presentation.api.routers.subject.models import SubjectResponse
 from classflow.presentation.api.routers.user.models import UserResponse
 
@@ -36,9 +39,8 @@ class CourseWithSubjectResponse(CourseResponse):
 
 
 class CourseDetailResponse(CourseWithSubjectResponse):
-    # TODO: remove default values
-    teachers_count: int = 111
-    students_count: int = 111
+    teachers_count: int
+    students_count: int
 
 
 class BaseCourseTeacherResponse(BaseModel):
@@ -55,12 +57,7 @@ class CourseTeacherResponse(BaseCourseTeacherResponse):
 
 class CourseTeacherDetailResponse(BaseCourseTeacherResponse):
     course: CourseWithSubjectResponse
-    teacher: UserResponse
-
-
-class DetailCourseTeacherResponse(BaseCourseTeacherResponse):
-    course: CourseWithSubjectResponse
-    teacher: UserResponse
+    teacher: OrganizationMemberDetailResponse
 
 
 class BaseCourseTeacherStudentResponse(BaseModel):
@@ -76,4 +73,4 @@ class CourseTeacherStudentResponse(BaseCourseTeacherStudentResponse):
 
 class DetailCourseTeacherStudentResponse(BaseCourseTeacherStudentResponse):
     course_teacher: CourseTeacherDetailResponse
-    student: UserResponse
+    student: OrganizationMemberDetailResponse

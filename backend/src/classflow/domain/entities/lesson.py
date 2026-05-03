@@ -40,9 +40,6 @@ class Lesson:
         if not self.cabinet_id and not self.url:
             raise ValidationError('cabinet_id or url must be provided')
 
-        if self.cabinet_id and self.url:
-            raise ValidationError('cabinet_id and url cannot both be provided')
-
         if not self.group_id and not self.course_teacher_student_id:
             raise ValidationError(
                 'group_id or course_teacher_student_id must be provided',

@@ -1,7 +1,9 @@
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from classflow.application.repositories.student_group import StudentGroupRepository
+from classflow.application.repositories.student_group import (
+    StudentGroupRepository,
+)
 from classflow.domain.entities import StudentGroup
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import student_groups_table

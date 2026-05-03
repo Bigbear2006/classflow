@@ -9,7 +9,9 @@ from classflow.presentation.api.routers.course.models import (
     DetailCourseTeacherStudentResponse,
 )
 from classflow.presentation.api.routers.group.models import DetailGroupResponse
-from classflow.presentation.api.routers.user.models import UserResponse
+from classflow.presentation.api.routers.organization.models import (
+    OrganizationMemberDetailResponse,
+)
 
 
 class UpdateLessonRequest(BaseModel):
@@ -39,7 +41,7 @@ class LessonResponse(BaseLessonResponse):
 
 
 class DetailLessonResponse(BaseLessonResponse):
-    conducted_by: UserResponse
+    conducted_by: OrganizationMemberDetailResponse
     cabinet: DetailCabinetResponse | None = None
     group: DetailGroupResponse | None = None
     course_teacher_student: DetailCourseTeacherStudentResponse | None = None

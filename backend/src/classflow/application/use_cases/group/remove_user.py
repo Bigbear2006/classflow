@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
 from classflow.application.common.uow import UnitOfWork
-from classflow.application.repositories.student_group import StudentGroupRepository
+from classflow.application.repositories.student_group import (
+    StudentGroupRepository,
+)
 from classflow.application.services.permission import PermissionService
 
 

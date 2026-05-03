@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from classflow.application.repositories.course import CourseRepository
-from classflow.domain.entities import Course, Group, User
+from classflow.domain.entities import Course, Group, OrganizationMember, User
 from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.repositories.group import set_group_joins
@@ -15,6 +15,7 @@ from classflow.infrastructure.db.tables import (
     course_teachers_table,
     courses_table,
     groups_table,
+    organization_members_table,
     student_groups_table,
     users_table,
 )
@@ -114,18 +115,23 @@ class CourseRepositoryImpl(CourseRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())
 
-    async def get_teachers(self, course_id: int) -> list[User]:
+    async def get_teachers(self, course_id: int) -> list[OrganizationMember]:
         stmt = (
-            select(User)
-            .outerjoin(
+            select(OrganizationMember)
+            .join(
                 course_teachers_table,
-                users_table.c.id == course_teachers_table.c.teacher_id,
+                organization_members_table.c.id
+                == course_teachers_table.c.teacher_id,
             )
-            .where(course_teachers_table.c.course_id == course_id)
+            .where(
+                course_teachers_table.c.course_id == course_id,
+                course_teachers_table.c.is_active.is_(True),
+            )
+            .options(joinedload(OrganizationMember.user))
             .distinct()
         )
         rows = await self.session.scalars(stmt)
-        return cast(list[User], rows.all())
+        return cast(list[OrganizationMember], rows.all())
 
     async def get_student_courses(self, user_id: int) -> list[Course]:
         stmt = (

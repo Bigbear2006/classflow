@@ -1,6 +1,7 @@
 from typing import cast
 
 from sqlalchemy import select, update
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.course_teacher import (
@@ -20,7 +21,37 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
         self.session = session
 
     async def create(self, course_teacher: CourseTeacher) -> CourseTeacher:
-        return await create(self.session, course_teacher)
+        try:
+            ct = await self.get(
+                course_teacher.course_id,
+                course_teacher.teacher_id,
+            )
+            return await self.update(
+                ct.course_id,
+                ct.teacher_id,
+                is_active=True,
+            )
+        except NoResultFound:
+            return await create(self.session, course_teacher)
+
+    async def update(
+        self,
+        course_id: int,
+        teacher_id: int,
+        *,
+        is_active: bool,
+    ) -> CourseTeacher:
+        stmt = (
+            update(CourseTeacher)
+            .where(
+                course_teachers_table.c.course_id == course_id,
+                course_teachers_table.c.teacher_id == teacher_id,
+            )
+            .values(is_active=is_active)
+            .returning(CourseTeacher)
+        )
+        rows = await self.session.execute(stmt)
+        return rows.scalar_one()
 
     async def get(self, course_id: int, teacher_id: int) -> CourseTeacher:
         stmt = select(CourseTeacher).where(
@@ -62,12 +93,4 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
         return cast(list[User], rows.all())
 
     async def delete(self, course_id: int, teacher_id: int) -> None:
-        stmt = (
-            update(CourseTeacher)
-            .where(
-                course_teachers_table.c.course_id == course_id,
-                course_teachers_table.c.teacher_id == teacher_id,
-            )
-            .values(is_active=False)
-        )
-        await self.session.execute(stmt)
+        await self.update(course_id, teacher_id, is_active=False)

@@ -16,8 +16,8 @@ from classflow.domain.entities import (
     Course,
     CourseTeacher,
     CourseTeacherStudent,
+    OrganizationMember,
     Subject,
-    User,
 )
 from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
 from classflow.infrastructure.db.tables.base import (
@@ -129,7 +129,7 @@ mapper_registry.map_imperatively(
     course_teachers_table,
     properties={
         'course': relationship(Course),
-        'teacher': relationship(User),
+        'teacher': relationship(OrganizationMember),
     },
 )
 
@@ -138,6 +138,6 @@ mapper_registry.map_imperatively(
     course_teacher_students_table,
     properties={
         'course_teacher': relationship(CourseTeacher),
-        'student': relationship(User),
+        'student': relationship(OrganizationMember),
     },
 )

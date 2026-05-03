@@ -4,6 +4,7 @@ from classflow.application.use_cases.organization.create import (
 )
 from classflow.application.use_cases.organization.get_all import (
     GetAllOrganizations,
+    GetAllOrganizationsDTO,
 )
 from classflow.application.use_cases.organization.get_all_members import (
     GetAllCurrentOrganizationMembers,
@@ -37,6 +38,7 @@ __all__ = (
     'GetAllCurrentOrganizationMembers',
     'GetAllCurrentOrganizationMembersDTO',
     'GetAllOrganizations',
+    'GetAllOrganizationsDTO',
     'GetCurrentOrganization',
     'GetCurrentOrganizationMember',
     'GetCurrentOrganizationMemberDTO',

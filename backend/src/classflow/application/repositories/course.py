@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Protocol
 
-from classflow.domain.entities import Course, Group, User
+from classflow.domain.entities import Course, Group, OrganizationMember
 from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
 
 
@@ -30,7 +30,7 @@ class CourseRepository(Protocol):
     async def get_groups(self, course_id: int) -> list[Group]:
         pass
 
-    async def get_teachers(self, course_id: int) -> list[User]:
+    async def get_teachers(self, course_id: int) -> list[OrganizationMember]:
         pass
 
     async def get_student_courses(self, user_id: int) -> list[Course]:

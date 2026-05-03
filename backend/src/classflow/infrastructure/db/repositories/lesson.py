@@ -13,6 +13,7 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     Group,
     Lesson,
+    OrganizationMember,
 )
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
@@ -116,18 +117,27 @@ class LessonRepositoryImpl(LessonRepository):
 def _set_lessons_joins(stmt: Select[tuple[Lesson]]) -> Select[tuple[Lesson]]:
     return (
         stmt.options(joinedload(Lesson.cabinet).joinedload(Cabinet.address))  # type: ignore[arg-type]
-        .options(joinedload(Lesson.conducted_by))  # type: ignore[arg-type]
         .options(
-            joinedload(Lesson.group)  # type: ignore[arg-type]
-            .joinedload(Group.course)  # type: ignore[arg-type]
-            .joinedload(Course.subject),  # type: ignore[arg-type]
+            joinedload(Lesson.conducted_by).joinedload(
+                OrganizationMember.user,
+            ),
+        )  # type: ignore[arg-type]
+        .options(
+            joinedload(Lesson.group).options(  # type: ignore[arg-type]
+                joinedload(Group.course).joinedload(Course.subject),
+                joinedload(Group.default_cabinet),
+            ),
         )
         .options(
             joinedload(Lesson.course_teacher_student).options(  # type: ignore[arg-type]
-                joinedload(CourseTeacherStudent.student),  # type: ignore[arg-type]
+                joinedload(CourseTeacherStudent.student).joinedload(
+                    OrganizationMember.user,
+                ),  # type: ignore[arg-type]
                 joinedload(CourseTeacherStudent.course_teacher).options(  # type: ignore[arg-type]
                     joinedload(CourseTeacher.course),  # type: ignore[arg-type]
-                    joinedload(CourseTeacher.teacher),  # type: ignore[arg-type]
+                    joinedload(CourseTeacher.teacher).joinedload(
+                        OrganizationMember.user,
+                    ),  # type: ignore[arg-type]
                 ),
             ),
         )

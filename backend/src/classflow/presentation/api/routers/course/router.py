@@ -31,6 +31,9 @@ from classflow.presentation.api.routers.course.models import (
     UpdateCourseRequest,
 )
 from classflow.presentation.api.routers.group.models import DetailGroupResponse
+from classflow.presentation.api.routers.organization.models import (
+    OrganizationMemberDetailResponse,
+)
 from classflow.presentation.api.routers.user.models import UserResponse
 
 course_router = APIRouter(
@@ -103,10 +106,13 @@ async def add_teacher_to_course_router(
 async def get_course_teachers_router(
     course_id: int,
     get_course_teachers: FromDishka[GetCourseTeachers],
-) -> list[UserResponse]:
+) -> list[OrganizationMemberDetailResponse]:
     dto = GetCourseTeachersDTO(course_id=course_id)
     teachers = await get_course_teachers(dto)
-    return [UserResponse.model_validate(teacher) for teacher in teachers]
+    return [
+        OrganizationMemberDetailResponse.model_validate(teacher)
+        for teacher in teachers
+    ]
 
 
 @course_router.delete('/{course_id}/teachers/{teacher_id}/', status_code=204)

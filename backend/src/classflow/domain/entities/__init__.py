@@ -33,7 +33,7 @@ __all__ = (
     'OrganizationStats',
     'Payment',
     'RoleCount',
+    'StudentGroup',
     'Subject',
     'User',
-    'StudentGroup',
 )

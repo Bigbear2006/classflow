@@ -11,6 +11,7 @@ from classflow.application.use_cases.organization import (
     GetAllCurrentOrganizationMembers,
     GetAllCurrentOrganizationMembersDTO,
     GetAllOrganizations,
+    GetAllOrganizationsDTO,
     GetCurrentOrganization,
     GetCurrentOrganizationMember,
     GetMyOrganizations,
@@ -54,8 +55,10 @@ async def create_organization_router(
 @organization_router.get('/')
 async def get_organizations_router(
     get_all_organizations: FromDishka[GetAllOrganizations],
+    query: str | None = None,
 ) -> list[OrganizationResponse]:
-    orgs = await get_all_organizations()
+    dto = GetAllOrganizationsDTO(query=query)
+    orgs = await get_all_organizations(dto)
     return [OrganizationResponse.model_validate(org) for org in orgs]
 
 

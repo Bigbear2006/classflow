@@ -14,7 +14,7 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     Group,
     Lesson,
-    User,
+    OrganizationMember,
 )
 from classflow.infrastructure.db.tables.base import (
     created_at_column,
@@ -85,6 +85,6 @@ mapper_registry.map_imperatively(
         'group': relationship(Group),
         'course_teacher_student': relationship(CourseTeacherStudent),
         'cabinet': relationship(Cabinet),
-        'conducted_by': relationship(User),
+        'conducted_by': relationship(OrganizationMember),
     },
 )

@@ -34,15 +34,13 @@ class CreateOrganization:
 
     async def __call__(self, data: CreateOrganizationDTO) -> Organization:
         current_user_id = self.id_provider.get_current_user_id()
-        existing_org = (
-            await self.organization_repository.get_user_organization(
-                current_user_id,
-            )
+        owned_orgs_count = await self.organization_repository.get_owned_count(
+            current_user_id,
         )
-        if existing_org:
+
+        if owned_orgs_count > 0:
             raise AlreadyExistsError(
                 'You have already created an organization',
-                organization_id=existing_org.id,
             )
 
         async with self.uow:

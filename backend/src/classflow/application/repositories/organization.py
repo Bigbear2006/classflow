@@ -19,16 +19,13 @@ class OrganizationRepository(Protocol):
     ) -> Organization:
         pass
 
-    async def get_all(self) -> list[Organization]:
-        pass
-
-    async def search(self, query: str) -> list[Organization]:
+    async def get_all(self, query: str) -> list[Organization]:
         pass
 
     async def get_by_slug(self, slug: str) -> Organization | None:
         pass
 
-    async def get_user_organization(self, user_id: int) -> Organization | None:
+    async def get_owned_count(self, user_id: int) -> int:
         pass
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
