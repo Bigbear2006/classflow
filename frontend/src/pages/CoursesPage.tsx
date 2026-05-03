@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Course, ModalAction } from '../types.ts';
+import type { Course, ModalAction } from '../entities';
 import { Plus, BookOpen } from 'lucide-react';
 import { CourseDetailCard } from '../components/admin/courses/CourseDetailCard.tsx';
 import { CourseForm } from '../components/admin/courses/CourseForm.tsx';

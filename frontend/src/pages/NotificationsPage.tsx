@@ -1,6 +1,6 @@
 import { Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { LessonDetail, OrganizationMemberDetail, Payment } from '../types.ts';
+import type { LessonDetail, OrganizationMemberDetail, Payment } from '../entities';
 
 export default function NotificationsPage() {
   const [upcomingLessons, setUpcomingLessons] = useState<LessonDetail[]>([]);

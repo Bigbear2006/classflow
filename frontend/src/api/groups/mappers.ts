@@ -1,5 +1,5 @@
 import type { DetailGroupResponse, GroupResponse } from './types.ts';
-import type { Group, GroupDetail } from '../../types.ts';
+import type { Group, GroupDetail } from '../../entities';
 import { mapCourse } from '../courses/mappers.ts';
 
 export const mapGroup = (data: GroupResponse): Group => {

@@ -1,5 +1,5 @@
 import { Edit2, Trash2 } from 'lucide-react';
-import type { FormAction, Subject } from '../../../types.ts';
+import type { FormAction, Subject } from '../../../entities';
 import type { Dispatch, SetStateAction } from 'react';
 import { useDeleteSubjectMutation } from '../../../hooks/mutations/subject.ts';
 

@@ -7,7 +7,7 @@ import type {
   GroupWithPayments,
   OrganizationStats,
   Payment,
-} from '../../types.ts';
+} from '../../entities';
 import { getOrganizationStats } from '../../api/organizations/requests.ts';
 import { PaymentForm } from '../../components/admin/payments/PaymentForm.tsx';
 import { deletePayment } from '../../api/payments/requests.ts';

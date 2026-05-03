@@ -5,37 +5,37 @@ const actions = [
   {
     label: 'Добавить курс',
     icon: <BookOpen size={18} />,
-    path: '/org/courses',
+    path: '/courses',
     color: 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100',
   },
   {
     label: 'Участники',
     icon: <Users size={18} />,
-    path: '/org/members',
+    path: '/members',
     color: 'text-emerald-600 bg-emerald-50 hover:bg-emerald-100',
   },
   {
     label: 'Расписание',
     icon: <Calendar size={18} />,
-    path: '/org/schedule',
+    path: '/schedule',
     color: 'text-violet-600 bg-violet-50 hover:bg-violet-100',
   },
   {
     label: 'Оплаты',
     icon: <DollarSign size={18} />,
-    path: '/org/payments',
+    path: '/payments',
     color: 'text-rose-600 bg-rose-50 hover:bg-rose-100',
   },
   {
     label: 'Группы',
     icon: <TrendingUp size={18} />,
-    path: '/org/groups',
+    path: '/groups',
     color: 'text-amber-600 bg-amber-50 hover:bg-amber-100',
   },
   {
     label: 'Адреса',
     icon: <School size={18} />,
-    path: '/org/addresses',
+    path: '/addresses',
     color: 'text-sky-600 bg-sky-50 hover:bg-sky-100',
   },
 ];

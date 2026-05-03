@@ -1,6 +1,6 @@
 import { MapPin, Plus, Trash2 } from 'lucide-react';
 import { CabinetForm } from './CabinetForm.tsx';
-import type { AddressDetail } from '../../../types.ts';
+import type { AddressDetail } from '../../../entities';
 import { useState } from 'react';
 import { CabinetCard } from './CabinetCard.tsx';
 import { useDeleteAddressMutation } from '../../../hooks/mutations/address.ts';
@@ -38,7 +38,7 @@ export const AddressCard = ({ address }: AddressCardProps) => {
       <div className="p-4">
         <div className="flex flex-wrap gap-2 mb-3">
           {address.cabinets.map(cabinet => (
-            <CabinetCard cabinet={cabinet} />
+            <CabinetCard key={cabinet.id} cabinet={cabinet} />
           ))}
 
           {selectedAddress === address.id ? (

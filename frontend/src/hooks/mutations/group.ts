@@ -1,6 +1,6 @@
 import { useCustomMutation } from '../useCustomMutation.ts';
 import { createGroup, deleteGroup, updateGroup } from '../../api/groups/requests.ts';
-import type { ModalAction } from '../../types.ts';
+import type { ModalAction } from '../../entities';
 import type { GroupData } from '../../api/groups/types.ts';
 
 interface UseGroupMutationOptions {

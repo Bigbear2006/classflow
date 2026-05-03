@@ -3,9 +3,11 @@ import type {
   Organization,
   OrganizationMember,
   OrganizationMemberDetail,
-} from '../../types.ts';
+  OrganizationStats,
+} from '../../entities';
 import type {
   MyOrgResponse,
+  OrganizationStatsResponse,
   OrgMemberDetailResponse,
   OrgMemberResponse,
   OrgResponse,
@@ -52,5 +54,16 @@ export const mapOrgMemberDetail = (data: OrgMemberDetailResponse): OrganizationM
     user: data.user,
     role: data.role,
     createdAt: new Date(data.created_at),
+  };
+};
+
+export const mapOrganizationStats = (data: OrganizationStatsResponse): OrganizationStats => {
+  return {
+    courses: data.courses,
+    teachers: data.teachers,
+    students: data.students,
+    groups: data.groups,
+    todayLessons: data.today_lessons,
+    totalIncome: data.total_income,
   };
 };

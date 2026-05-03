@@ -1,4 +1,4 @@
-import type { Course, CourseTeacherDetail, CourseTeacherStudent } from '../../types.ts';
+import type { Course, CourseTeacherDetail, CourseTeacherStudent } from '../../entities';
 import { Duration } from 'luxon';
 import type {
   CourseResponse,

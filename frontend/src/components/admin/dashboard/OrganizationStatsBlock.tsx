@@ -1,6 +1,6 @@
 import { BookOpen, Calendar, DollarSign, UserCheck, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { OrganizationStats } from '../../../types.ts';
+import type { OrganizationStats } from '../../../entities';
 import { getOrganizationStats } from '../../../api/organizations/requests.ts';
 import { useNavigate } from 'react-router';
 

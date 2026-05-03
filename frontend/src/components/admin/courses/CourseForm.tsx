@@ -5,7 +5,7 @@ import type {
   CourseType,
   ModalAction,
   Course,
-} from '../../../types.ts';
+} from '../../../entities';
 import { Duration } from 'luxon';
 import { type OutputCourseFields, useCourseForm } from '../../../hooks/forms/course.ts';
 import { useCourseMutation } from '../../../hooks/mutations/course.ts';

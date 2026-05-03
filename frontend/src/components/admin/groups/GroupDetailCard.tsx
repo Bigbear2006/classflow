@@ -1,5 +1,5 @@
 import { UserMinus, X } from 'lucide-react';
-import type { GroupDetail } from '../../../types.ts';
+import type { GroupDetail } from '../../../entities';
 import { useGroupStudents } from '../../../hooks/queries/group.ts';
 
 interface GroupDetailCardProps {

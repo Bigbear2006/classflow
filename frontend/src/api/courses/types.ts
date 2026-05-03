@@ -1,4 +1,9 @@
-import type { CoursePaymentType, CourseType, LessonType, Subject, User } from '../../types.ts';
+import type { CoursePaymentType, CourseType, LessonType, Subject, User } from '../../entities';
+
+export interface CourseTeacherParams {
+  course_id: number;
+  teacher_id: number;
+}
 
 export interface CourseData {
   subject_id: number;

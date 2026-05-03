@@ -9,7 +9,7 @@ export const useCourses = () => {
   });
 };
 
-interface UseCourseProps {
+export interface UseCourseProps {
   courseId: number;
 }
 

@@ -1,4 +1,4 @@
-import type { Cabinet, User } from '../../types.ts';
+import type { Cabinet, User } from '../../entities';
 import type { CourseResponse } from '../courses/types.ts';
 
 export interface GroupData {

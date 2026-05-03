@@ -4,7 +4,6 @@ import LoginPage from './pages/LoginPage.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import NotificationsPage from './pages/NotificationsPage.tsx';
-import DashboardPage from './pages/DashboardPage.tsx';
 import OrganizationMembersPage from './pages/admin/OrganizationMembersPage.tsx';
 import CoursesPage from './pages/CoursesPage.tsx';
 import AddressesPage from './pages/admin/AddressesPage.tsx';
@@ -13,8 +12,14 @@ import AdminSchedulePage from './pages/admin/AdminSchedulePage.tsx';
 import AdminPaymentsPage from './pages/admin/AdminPaymentsPage.tsx';
 import { SubjectsPage } from './pages/admin/SubjectsPage.tsx';
 import { OrganizationsPage } from './pages/OrganizationsPage.tsx';
+import LandingPage from './pages/LandingPage.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
 
 export const router = createBrowserRouter([
+  {
+    index: true,
+    Component: LandingPage,
+  },
   {
     path: '/login',
     Component: LoginPage,
@@ -27,7 +32,8 @@ export const router = createBrowserRouter([
     path: '/',
     Component: AppLayout,
     children: [
-      { index: true, Component: DashboardPage },
+      // Available only on the subdomains
+      { path: 'dashboard', Component: DashboardPage },
       { path: 'members', Component: OrganizationMembersPage },
       { path: 'subjects', Component: SubjectsPage },
       { path: 'courses', Component: CoursesPage },
@@ -35,21 +41,10 @@ export const router = createBrowserRouter([
       { path: 'groups', Component: GroupsPage },
       { path: 'schedule', Component: AdminSchedulePage },
       { path: 'payments', Component: AdminPaymentsPage },
+      // Available without subdomain
+      { path: 'orgs', Component: OrganizationsPage },
+      { path: 'profile', Component: ProfilePage },
+      { path: 'notifications', Component: NotificationsPage },
     ],
-  },
-  {
-    path: '/organizations',
-    Component: AppLayout,
-    children: [{ index: true, Component: OrganizationsPage }],
-  },
-  {
-    path: '/profile',
-    Component: AppLayout,
-    children: [{ index: true, Component: ProfilePage }],
-  },
-  {
-    path: '/notifications',
-    Component: AppLayout,
-    children: [{ index: true, Component: NotificationsPage }],
   },
 ]);

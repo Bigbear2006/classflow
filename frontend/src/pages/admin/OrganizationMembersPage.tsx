@@ -1,25 +1,48 @@
 import { useEffect, useState } from 'react';
-import type { OrganizationMemberDetail, RoleCount, UserRole } from '../../types.ts';
-import { Users, UserPlus, Search } from 'lucide-react';
-import { getOrganizationMembers, getRoleCounts } from '../../api/organizations/requests.ts';
-import { InviteOrgMemberForm } from '../../components/admin/org_members/InviteOrgMemberForm.tsx';
-import { roleConfig } from '../../labels.tsx';
-import { MemberCard } from '../../components/admin/org_members/MemberCard.tsx';
+import type { UserRole } from '../../entities';
+import { Users, Search } from 'lucide-react';
+import { roleConfig } from '../../labels/role.tsx';
+import { MemberCard } from '../../components/admin/members/MemberCard.tsx';
 import { useAppContext } from '../../context.tsx';
+import { useOrganizationMembers } from '../../hooks/queries/member.ts';
+import { useRoleCounts } from '../../hooks/queries/organization.ts';
+import { useSearchParams } from 'react-router';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue.ts';
 
 export default function OrganizationMembersPage() {
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<UserRole | 'ALL'>('ALL');
-  const [showInvite, setShowInvite] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams(window.location.search);
+  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [roleFilter, setRoleFilter] = useState<UserRole>();
 
-  const [members, setMembers] = useState<OrganizationMemberDetail[]>([]);
-  const [roleCounts, setRoleCounts] = useState<RoleCount[]>([]);
+  const debouncedSearch = useDebouncedValue(search, 500);
+  const debouncedRoleFilter = useDebouncedValue(roleFilter, 500);
+
+  const { data: members } = useOrganizationMembers({
+    query: debouncedSearch,
+    roles: debouncedRoleFilter ? [debouncedRoleFilter as UserRole] : debouncedRoleFilter,
+  });
+  const { data: roleCounts } = useRoleCounts();
   const { user, member: currentMember } = useAppContext();
 
   useEffect(() => {
-    getOrganizationMembers().then(setMembers);
-    getRoleCounts().then(setRoleCounts);
-  }, []);
+    setSearchParams(
+      prevParams => {
+        const params = new URLSearchParams(prevParams);
+        if (debouncedSearch) {
+          params.set('q', debouncedSearch);
+        } else {
+          params.delete('q');
+        }
+        if (debouncedRoleFilter) {
+          params.set('role', debouncedRoleFilter);
+        } else {
+          params.delete('role');
+        }
+        return params;
+      },
+      { replace: true },
+    );
+  }, [debouncedSearch, debouncedRoleFilter]);
 
   return (
     <div className="p-6 space-y-6 overflow-visible">
@@ -28,14 +51,6 @@ export default function OrganizationMembersPage() {
           <h1 className="text-slate-900 text-2xl font-semibold">Участники</h1>
           <p className="text-slate-500 text-sm mt-0.5">Управление пользователями и их ролями</p>
         </div>
-        {currentMember.role == 'OWNER' && (
-          <button
-            onClick={() => setShowInvite(!showInvite)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
-          >
-            <UserPlus size={16} /> Добавить
-          </button>
-        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -50,7 +65,6 @@ export default function OrganizationMembersPage() {
           </div>
         ))}
       </div>
-      {showInvite && currentMember.role == 'OWNER' && <InviteOrgMemberForm />}
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
@@ -63,9 +77,9 @@ export default function OrganizationMembersPage() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {(['ALL', 'OWNER', 'ADMIN', 'TEACHER', 'STUDENT'] as const).map(r => (
+          {([undefined, 'OWNER', 'ADMIN', 'TEACHER', 'STUDENT'] as const).map(r => (
             <button
-              key={r}
+              key={r || ''}
               onClick={() => setRoleFilter(r)}
               className={`px-3 py-2 rounded-xl text-xs font-medium border transition-colors ${
                 roleFilter === r
@@ -73,7 +87,7 @@ export default function OrganizationMembersPage() {
                   : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
               }`}
             >
-              {r === 'ALL' ? 'Все' : roleConfig[r].label}
+              {r ? roleConfig[r].label : 'Все'}
             </button>
           ))}
         </div>
@@ -101,7 +115,7 @@ export default function OrganizationMembersPage() {
             {members.map(member => (
               <MemberCard
                 key={member.user.id}
-                currentUser={user}
+                currentUser={user!}
                 currentMember={currentMember}
                 member={member}
               />

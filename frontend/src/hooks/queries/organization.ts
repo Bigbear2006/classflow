@@ -2,9 +2,19 @@ import { useQuery } from '@tanstack/react-query';
 import {
   getCurrentOrganization,
   getCurrentOrganizationMember,
+  getOrganizations,
   getOrganizationTeachers,
+  getRoleCounts,
 } from '../../api/organizations/requests.ts';
-import type { UserRole } from '../../types.ts';
+import type { GetOrganizationsParams } from '../../api/organizations/types.ts';
+
+export const useOrganizations = (params: GetOrganizationsParams) => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['organizations', params],
+    queryFn: () => getOrganizations(params),
+  });
+};
 
 export const useCurrentOrganization = () => {
   return useQuery({
@@ -15,13 +25,6 @@ export const useCurrentOrganization = () => {
 
 export const useCurrentOrganizationMember = () => {
   return useQuery({
-    initialData: {
-      id: 0,
-      organizationId: 0,
-      userId: 0,
-      role: 'STUDENT' as UserRole,
-      createdAt: new Date(),
-    },
     queryKey: ['member'],
     queryFn: getCurrentOrganizationMember,
   });
@@ -32,5 +35,13 @@ export const useCurrentOrganizationTeachers = () => {
     initialData: [],
     queryKey: ['organization', 'teachers'],
     queryFn: getOrganizationTeachers,
+  });
+};
+
+export const useRoleCounts = () => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['roleCounts'],
+    queryFn: getRoleCounts,
   });
 };

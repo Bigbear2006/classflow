@@ -1,5 +1,5 @@
 import { axiosInstance } from '../base.ts';
-import type { CabinetDetail } from '../../types.ts';
+import type { CabinetDetail } from '../../entities';
 import type { CabinetDetailResponse, CreateCabinetData } from './types.ts';
 
 export const createCabinet = (data: CreateCabinetData) => {

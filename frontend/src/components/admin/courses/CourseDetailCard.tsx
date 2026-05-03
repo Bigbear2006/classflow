@@ -1,8 +1,15 @@
-import { Clock, DollarSign, UserCheck, Users, X } from 'lucide-react';
-import { coursePaymentTypeDisplay } from '../../../utils.ts';
-import type { Course } from '../../../types.ts';
+import { Clock, DollarSign, Plus, UserCheck, Users, X } from 'lucide-react';
+import type { Course } from '../../../entities';
 import { useAppContext } from '../../../context.tsx';
 import { useCourseGroups, useCourseTeachers } from '../../../hooks/queries/course.ts';
+import { coursePaymentTypeDisplay } from '../../../labels/course.tsx';
+import { useDebouncedValue } from '../../../hooks/useDebouncedValue.ts';
+import { useState } from 'react';
+import { useOrganizationMembers } from '../../../hooks/queries/member.ts';
+import {
+  useAddTeacherToCourseMutation,
+  useDeleteTeacherFromCourseMutation,
+} from '../../../hooks/mutations/course.ts';
 
 interface CourseDetailCardProps {
   course: Course;
@@ -11,8 +18,16 @@ interface CourseDetailCardProps {
 
 export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) => {
   const { isAdminOrOwner } = useAppContext();
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(search, 500);
+
   const { data: groups } = useCourseGroups({ courseId: course.id });
   const { data: teachers } = useCourseTeachers({ courseId: course.id });
+  const teacherIds = teachers.map(t => t.id)
+  const { data: foundTeachers } = useOrganizationMembers({ query: debouncedSearch });
+
+  const addTeacherMutation = useAddTeacherToCourseMutation({ courseId: course.id });
+  const deleteTeacherMutation = useDeleteTeacherFromCourseMutation({ courseId: course.id });
 
   return (
     <div
@@ -58,33 +73,57 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
             </div>
           </div>
 
+          {isAdminOrOwner && (
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-slate-900 flex items-center gap-2">
+                  <Plus size={16} /> Добавить преподавателя
+                </h3>
+              </div>
+              <div className="space-y-2">
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="text-xs w-full min-h-10 px-2 py-1.5 border border-slate-200 rounded-lg focus:outline-none"
+                />
+                {foundTeachers
+                  .filter(t => !teacherIds.includes(t.id))
+                  .map(teacher => (
+                    <div
+                      key={teacher.id}
+                      className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-medium">
+                          {teacher.user.avatar ? (
+                            <img
+                              src={teacher.user.avatar}
+                              alt=""
+                              className="w-7 h-7 rounded-full object-cover"
+                            />
+                          ) : (
+                            teacher.user.fullname.charAt(0)
+                          )}
+                        </div>
+                        <span className="text-sm text-slate-800">{teacher.user.fullname}</span>
+                      </div>
+                      <button
+                        onClick={() => addTeacherMutation.mutate(teacher.id)}
+                        className="text-slate-400 hover:text-red-500 p-1"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
           <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-medium text-slate-900 flex items-center gap-2">
-                <UserCheck size={16} /> Преподаватели
+                <UserCheck size={16} /> Добавленные преподаватели
               </h3>
-              {isAdminOrOwner && (
-                <select
-                  // onChange={e => {
-                  //   if (e.target.value) {
-                  //     addCourseTeacher(
-                  //       course.id.toString(),
-                  //       e.target.value,
-                  //     );
-                  //     e.target.value = '';
-                  //   }
-                  // }}
-                  className="text-xs px-2 py-1.5 border border-slate-200 rounded-lg focus:outline-none"
-                >
-                  <option value="">+ Добавить</option>
-                  {/*TODO: add teachers search*/}
-                  {teachers.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.fullname}
-                    </option>
-                  ))}
-                </select>
-              )}
             </div>
             <div className="space-y-2">
               {teachers.map(teacher => (
@@ -94,20 +133,20 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-medium">
-                      {teacher.avatar ? (
+                      {teacher.user.avatar ? (
                         <img
-                          src={teacher.avatar}
+                          src={teacher.user.avatar}
                           alt=""
                           className="w-7 h-7 rounded-full object-cover"
                         />
                       ) : (
-                        teacher.fullname.charAt(0)
+                        teacher.user.fullname.charAt(0)
                       )}
                     </div>
-                    <span className="text-sm text-slate-800">{teacher.fullname}</span>
+                    <span className="text-sm text-slate-800">{teacher.user.fullname}</span>
                   </div>
                   <button
-                    onClick={() => () => {}}
+                    onClick={() => deleteTeacherMutation.mutate(teacher.id)}
                     className="text-slate-400 hover:text-red-500 p-1"
                   >
                     <X size={14} />
@@ -132,7 +171,7 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
                     className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
                   >
                     <span className="text-sm text-slate-800">{g.name}</span>
-                    // TODO: add
+                    {/* TODO: add */}
                     {/*<span className="text-xs text-slate-500">*/}
                     {/*  {g.studentsCount || 0}/{g.maxUsersCount} уч.*/}
                     {/*</span>*/}

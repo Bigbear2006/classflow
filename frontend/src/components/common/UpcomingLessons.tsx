@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
-import type { LessonDetail } from '../../types.ts';
+import type { LessonDetail } from '../../entities';
 import { getLessons } from '../../api/lessons/requests.ts';
 
 export const UpcomingLessons = () => {

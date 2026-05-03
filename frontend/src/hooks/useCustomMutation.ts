@@ -7,7 +7,7 @@ interface UseCustomMutationOptions<
   TVariables = void,
   TOnMutateResult = unknown,
 > extends UseMutationOptions<TData, TError, TVariables, TOnMutateResult> {
-  invalidateQueryKeyOnSuccess: string[];
+  invalidateQueryKeyOnSuccess: any[];
   toastErrorMessage: string;
 }
 

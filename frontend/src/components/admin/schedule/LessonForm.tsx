@@ -1,4 +1,4 @@
-import type { CourseTeacherStudent, FormAction, LessonDetail } from '../../../types.ts';
+import type { CourseTeacherStudent, FormAction, LessonDetail } from '../../../entities';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { type OutputLessonFields, useLessonForm } from '../../../hooks/forms/lesson.ts';
@@ -98,11 +98,20 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
             >
               <option value="">Выберите</option>
               {teachers.map(teacher => (
-                <option key={teacher.user.id} value={teacher.user.id}>
+                <option key={teacher.id} value={teacher.id}>
                   {teacher.user.fullname}
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Ссылка на занятие
+            </label>
+            <input
+              {...register('url')}
+              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Кабинет</label>

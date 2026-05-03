@@ -2,17 +2,18 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import type { Course } from '../../types.ts';
+import type { Course } from '../../entities';
+import { optionalInt, requiredInt } from './base.ts';
 
 const CourseSchema = z.object({
-  subjectId: z.coerce.number<string>().int(),
+  subjectId: requiredInt(),
   type: z.string(),
-  price: z.coerce.number<string>().int(),
+  price: requiredInt(),
   paymentType: z.string(),
   lessonType: z.string(),
-  lessonDuration: z.coerce.number<string>(),
-  lessonsCount: z.coerce.number<string>().int().optional(),
-  duration: z.coerce.number<string>().int().optional(),
+  lessonDuration: requiredInt(),
+  lessonsCount: optionalInt(),
+  duration: optionalInt(),
 });
 
 type InputCourseFields = z.input<typeof CourseSchema>;
@@ -36,8 +37,8 @@ export const useCourseForm = (props?: UseCourseFormProps) => {
       setValue('paymentType', course.paymentType);
       setValue('lessonType', course.lessonType);
       setValue('lessonDuration', course.lessonDuration.as('minutes').toString());
-      setValue('lessonsCount', course.lessonsCount?.toString());
-      setValue('duration', course.duration?.as('months').toString());
+      setValue('lessonsCount', course.lessonsCount?.toString() || '');
+      setValue('duration', course.duration?.as('months').toString() || '');
     }
   }, [props?.initialValues]);
 

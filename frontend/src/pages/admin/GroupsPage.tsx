@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { GroupDetail, ModalAction } from '../../types.ts';
+import type { GroupDetail, ModalAction } from '../../entities';
 import { Users, Plus } from 'lucide-react';
 import { GroupDetailCard } from '../../components/admin/groups/GroupDetailCard.tsx';
 import { GroupForm } from '../../components/admin/groups/GroupForm.tsx';

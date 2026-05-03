@@ -1,6 +1,6 @@
-import type { LessonDetail } from '../../types.ts';
+import type { LessonDetail } from '../../entities';
 import { axiosInstance } from '../base.ts';
-import type { LessonData, LessonDetailResponse } from './types.ts';
+import type { GetLessonsParams, LessonData, LessonDetailResponse } from './types.ts';
 import { mapLessonDetail } from './mappers.ts';
 
 export const createLesson = (data: LessonData) => {
@@ -11,9 +11,9 @@ export const updateLesson = (id: number, data: LessonData) => {
   return axiosInstance.put(`lessons/${id}/`, data);
 };
 
-export const getLessons = async (): Promise<LessonDetail[]> => {
+export const getLessons = async (params?: GetLessonsParams): Promise<LessonDetail[]> => {
   return axiosInstance
-    .get<LessonDetailResponse[]>('lessons/')
+    .get<LessonDetailResponse[]>('lessons/', { params })
     .then(rsp => rsp.data.map(mapLessonDetail));
 };
 

@@ -1,5 +1,5 @@
 import { axiosInstance } from '../base.ts';
-import type { Subject } from '../../types.ts';
+import type { Subject } from '../../entities';
 import type { SubjectData } from './types.ts';
 
 export const getSubjects = async () => {

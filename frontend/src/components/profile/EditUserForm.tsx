@@ -3,7 +3,7 @@ import { updateUser } from '../../api/users/requests.ts';
 import { type UpdateUserData } from '../../api/users/types.ts';
 import { Phone, Save, User as UserIcon } from 'lucide-react';
 import { useEffect } from 'react';
-import type { User } from '../../types.ts';
+import type { User } from '../../entities';
 import { toast } from 'sonner';
 
 interface EditUserFormProps {

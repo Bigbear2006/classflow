@@ -17,7 +17,7 @@ export default function AddressesPage() {
       <AddressForm />
       <div className="space-y-4">
         {addresses.map(address => (
-          <AddressCard address={address} />
+          <AddressCard key={address.id} address={address} />
         ))}
         {addresses.length === 0 && (
           <div className="text-center py-16 text-slate-400">

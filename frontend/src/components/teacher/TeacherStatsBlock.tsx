@@ -1,6 +1,7 @@
 import { BookOpen, Calendar, Clock, Users } from 'lucide-react';
 
 export const TeacherStatsBlock = () => {
+  // TODO: add
   const stats = [
     {
       label: 'Курсов',

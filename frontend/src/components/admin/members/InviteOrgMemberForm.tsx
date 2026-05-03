@@ -1,7 +1,7 @@
 import { AlertCircle, Mail, UserPlus } from 'lucide-react';
 import { inviteOrganizationMember } from '../../../api/organizations/requests.ts';
 import { useForm } from 'react-hook-form';
-import type { UserRole } from '../../../types.ts';
+import type { UserRole } from '../../../entities';
 
 interface InviteOrgMemberFields {
   email: string;

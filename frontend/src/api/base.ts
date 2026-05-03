@@ -4,12 +4,15 @@ import { BASE_URL } from '../config.ts';
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
+  paramsSerializer: {
+    indexes: null,
+  },
 });
 
 const navigateToLogin = () => {
-  if (!window.location.pathname.includes('/login')) {
-    window.location.pathname = '/login';
-  }
+  // if (!window.location.pathname.includes('/login') && !(window.location.pathname === '/')) {
+  //   window.location.pathname = '/login';
+  // }
 };
 
 interface FailedRequest {

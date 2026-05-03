@@ -1,19 +1,30 @@
 import { axiosInstance } from '../base.ts';
-import type { OrganizationStats, RoleCount } from '../../types.ts';
+import type { OrganizationStats, RoleCount } from '../../entities';
 import type {
   CreateOrganizationData,
   GetOrganizationMembersParams,
+  GetOrganizationsParams,
   InviteOrganizationMemberData,
   MyOrgResponse,
+  OrganizationStatsResponse,
   OrgMemberDetailResponse,
   OrgMemberResponse,
   OrgResponse,
+  RoleCountResponse,
   UpdateOrganizationMemberData,
 } from './types.ts';
-import { mapMyOrg, mapOrg, mapOrgMember, mapOrgMemberDetail } from './mappers.ts';
+import {
+  mapMyOrg,
+  mapOrg,
+  mapOrganizationStats,
+  mapOrgMember,
+  mapOrgMemberDetail,
+} from './mappers.ts';
 
-export const getOrganizations = async () => {
-  return axiosInstance.get<OrgResponse[]>('organizations/').then(rsp => rsp.data.map(mapOrg));
+export const getOrganizations = async (params: GetOrganizationsParams) => {
+  return axiosInstance
+    .get<OrgResponse[]>('organizations/', { params: params })
+    .then(rsp => rsp.data.map(mapOrg));
 };
 
 export const getCurrentOrganization = async () => {
@@ -34,7 +45,7 @@ export const getCurrentOrganizationMember = async () => {
 
 export const getOrganizationMembers = async (params?: GetOrganizationMembersParams) => {
   return axiosInstance
-    .get<OrgMemberDetailResponse[]>('organizations/current/members/', { params: params })
+    .get<OrgMemberDetailResponse[]>('organizations/current/members/', { params })
     .then(rsp => rsp.data.map(mapOrgMemberDetail));
 };
 
@@ -43,25 +54,15 @@ export const getOrganizationTeachers = async () => {
 };
 
 export const getRoleCounts = (): Promise<RoleCount[]> => {
-  // TODO: add
-  return Promise.resolve([
-    { role: 'OWNER', count: 1 },
-    { role: 'ADMIN', count: 2 },
-    { role: 'TEACHER', count: 4 },
-    { role: 'STUDENT', count: 10 },
-  ]);
+  return axiosInstance
+    .get<RoleCountResponse[]>('organizations/current/roles/')
+    .then(rsp => rsp.data);
 };
 
 export const getOrganizationStats = (): Promise<OrganizationStats> => {
-  // TODO: add
-  return Promise.resolve({
-    courses: 3,
-    teachers: 4,
-    students: 10,
-    groups: 2,
-    todayLessons: 3,
-    totalIncome: 1000,
-  });
+  return axiosInstance
+    .get<OrganizationStatsResponse>('organizations/current/stats/')
+    .then(rsp => mapOrganizationStats(rsp.data));
 };
 
 export const createOrganization = (data: CreateOrganizationData) => {
@@ -77,9 +78,5 @@ export const inviteOrganizationMember = (data: InviteOrganizationMemberData) => 
 };
 
 export const updateOrganizationMember = (user_id: number, data: UpdateOrganizationMemberData) => {
-  return Promise.resolve(() => console.log(user_id, data));
-};
-
-export const deleteOrganizationMember = (user_id: number) => {
-  return Promise.resolve(() => console.log(user_id));
+  return axiosInstance.patch(`organizations/current/members/${user_id}/`, data);
 };

@@ -1,9 +1,9 @@
 import { Edit2, Trash2 } from 'lucide-react';
 import { deleteCourse } from '../../../api/courses/requests.ts';
-import { lessonTypeLabels, paymentTypeLabels } from '../../../labels.tsx';
-import { coursePaymentTypeDisplay } from '../../../utils.ts';
-import type { Course } from '../../../types.ts';
+import { coursePaymentTypeDisplay, paymentTypeLabels } from '../../../labels/course.tsx';
+import type { Course } from '../../../entities';
 import { useAppContext } from '../../../context.tsx';
+import { lessonTypeLabels } from '../../../labels/lesson.tsx';
 
 interface CourseCardProps {
   course: Course;
@@ -17,17 +17,16 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
   return (
     <div
       key={course.id}
+      onClick={() => openDetail(course)}
       className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
     >
-      {course.subject.image && (
-        <div className="h-36 overflow-hidden cursor-pointer" onClick={() => openDetail(course)}>
-          <img
-            src={course.subject.image}
-            alt={course.subject.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      )}
+      <div className="h-36 overflow-hidden cursor-pointer">
+        <img
+          src={course.subject.image}
+          alt={course.subject.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
       <div className="p-5">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3
@@ -39,13 +38,19 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
           {isAdminOrOwner && (
             <div className="flex gap-1 flex-shrink-0">
               <button
-                onClick={() => openEdit(course)}
+                onClick={e => {
+                  e.stopPropagation();
+                  openEdit(course);
+                }}
                 className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
               >
                 <Edit2 size={14} />
               </button>
               <button
-                onClick={() => deleteCourse(course.id)}
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteCourse(course.id);
+                }}
                 className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
               >
                 <Trash2 size={14} />

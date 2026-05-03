@@ -2,6 +2,7 @@ import { BookOpen, Calendar, Clock, DollarSign } from 'lucide-react';
 
 export const StudentStatsBlock = () => {
   const stats = [
+    // TODO: add
     {
       label: 'Моих курсов',
       value: 0,

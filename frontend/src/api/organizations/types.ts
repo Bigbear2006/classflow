@@ -1,4 +1,8 @@
-import type { User, UserRole } from '../../types.ts';
+import type { RoleCount, User, UserRole } from '../../entities';
+
+export interface GetOrganizationsParams {
+  query?: string | null;
+}
 
 export interface GetOrganizationMembersParams {
   query?: string;
@@ -45,4 +49,15 @@ export interface OrgMemberDetailResponse {
   user: User;
   role: UserRole;
   created_at: string;
+}
+
+export interface RoleCountResponse extends RoleCount {}
+
+export interface OrganizationStatsResponse {
+  courses: number;
+  teachers: number;
+  students: number;
+  groups: number;
+  today_lessons: number;
+  total_income: number;
 }

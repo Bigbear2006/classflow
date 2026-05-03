@@ -13,10 +13,7 @@ export default function RegisterPage() {
           <div className="text-white font-semibold text-lg leading-tight">ClassFlow</div>
           <div className="text-slate-400 text-xs">Платформа дополнительного образования</div>
         </div>
-        <Link
-          to="/landing"
-          className="ml-auto text-slate-400 hover:text-white text-sm transition-colors"
-        >
+        <Link to="/" className="ml-auto text-slate-400 hover:text-white text-sm transition-colors">
           ← На главную
         </Link>
       </div>

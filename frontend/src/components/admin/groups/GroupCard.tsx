@@ -1,5 +1,5 @@
 import { Edit2, Trash2, Users } from 'lucide-react';
-import type { GroupDetail } from '../../../types.ts';
+import type { GroupDetail } from '../../../entities';
 import { useDeleteGroupMutation } from '../../../hooks/mutations/group.ts';
 import { useGroupStudents } from '../../../hooks/queries/group.ts';
 

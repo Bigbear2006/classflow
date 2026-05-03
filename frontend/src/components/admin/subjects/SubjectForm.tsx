@@ -1,4 +1,4 @@
-import type { FormAction, Subject } from '../../../types.ts';
+import type { FormAction, Subject } from '../../../entities';
 import { X } from 'lucide-react';
 import { useSubjectForm } from '../../../hooks/forms/subject.ts';
 import { useSubjectMutation } from '../../../hooks/mutations/subject.ts';

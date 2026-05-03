@@ -1,4 +1,4 @@
-import type { GroupDetail, User } from '../../types.ts';
+import type { GroupDetail, User } from '../../entities';
 import { axiosInstance } from '../base.ts';
 import type { DetailGroupResponse, GroupData } from './types.ts';
 import { mapGroupDetail } from './mappers.ts';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Course } from '../../types.ts';
+import type { Course } from '../../entities';
 import { useNavigate } from 'react-router';
 import { BookOpen } from 'lucide-react';
 import { getCourses } from '../../api/courses/requests.ts';

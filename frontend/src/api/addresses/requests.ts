@@ -1,5 +1,5 @@
 import { axiosInstance } from '../base.ts';
-import type { Address, AddressDetail } from '../../types.ts';
+import type { Address, AddressDetail } from '../../entities';
 import type { CreateAddressData } from './types.ts';
 
 export const getAddresses = async () => {

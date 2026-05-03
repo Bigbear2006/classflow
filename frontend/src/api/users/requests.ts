@@ -1,5 +1,5 @@
 import { axiosInstance } from '../base.ts';
-import type { User } from '../../types.ts';
+import type { User } from '../../entities';
 import type {
   ChangeUserPasswordData,
   LoginUserData,

@@ -1,18 +1,16 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import type { LessonDetail } from '../../types.ts';
+import type { LessonDetail } from '../../entities';
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { optionalInt, requiredInt } from './base.ts';
 
 const LessonSchema = z.object({
-  groupId: z.coerce.number<string>().int().optional(),
-  courseTeacherStudentId: z.preprocess(
-    (val: string) => (val !== '' ? +val : undefined),
-    z.coerce.number<string>().int().optional(),
-  ),
-  conductedById: z.coerce.number<string>().int(),
-  url: z.url().nullable(),
-  cabinetId: z.coerce.number<string>().int().optional(),
+  groupId: optionalInt(),
+  courseTeacherStudentId: optionalInt(),
+  conductedById: requiredInt(),
+  url: z.preprocess(val => (val === '' ? undefined : val), z.url().optional()),
+  cabinetId: optionalInt(),
   startDate: z.coerce.date<string>(),
   endDate: z.coerce.date<string>(),
 });

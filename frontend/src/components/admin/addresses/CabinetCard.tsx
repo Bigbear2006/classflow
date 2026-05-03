@@ -1,5 +1,5 @@
 import { DoorOpen, X } from 'lucide-react';
-import type { Cabinet } from '../../../types.ts';
+import type { Cabinet } from '../../../entities';
 import { useDeleteCabinetMutation } from '../../../hooks/mutations/cabinet.ts';
 
 interface CabinetCardProps {

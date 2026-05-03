@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import type { GroupDetail, ModalAction } from '../../../types.ts';
+import type { GroupDetail, ModalAction } from '../../../entities';
 import { type OutputGroupFields, useGroupForm } from '../../../hooks/forms/group.ts';
 import { useCourses } from '../../../hooks/queries/course.ts';
 import { useCabinets } from '../../../hooks/queries/cabinet.ts';

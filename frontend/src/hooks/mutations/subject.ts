@@ -1,7 +1,7 @@
 import { createSubject, deleteSubject, updateSubject } from '../../api/subjects/requests.ts';
 import type { SubjectData } from '../../api/subjects/types.ts';
 import { useCustomMutation } from '../useCustomMutation.ts';
-import type { ModalAction } from '../../types.ts';
+import type { ModalAction } from '../../entities';
 
 interface UseSubjectMutationOptions {
   action: ModalAction;

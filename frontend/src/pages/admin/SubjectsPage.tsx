@@ -1,6 +1,6 @@
 import { BookOpen, Plus } from 'lucide-react';
 import { useState } from 'react';
-import type { FormAction, Subject } from '../../types.ts';
+import type { FormAction, Subject } from '../../entities';
 import { SubjectForm } from '../../components/admin/subjects/SubjectForm.tsx';
 import { SubjectCard } from '../../components/admin/subjects/SubjectCard.tsx';
 import { useSubjects } from '../../hooks/queries/subject.ts';

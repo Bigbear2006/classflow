@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import type { Subject } from '../../types.ts';
+import type { Subject } from '../../entities';
 
 const SubjectSchema = z.object({
   name: z.string().min(1, 'Обязательное поле'),

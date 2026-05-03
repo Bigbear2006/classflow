@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { EditUserForm } from '../components/profile/EditUserForm.tsx';
 import { ChangeUserPassword } from '../components/profile/ChangeUserPassword.tsx';
 import { logoutUser } from '../api/users/requests.ts';
-import { roleColors, roleLabels } from '../labels.tsx';
+import { roleColors, roleLabels } from '../labels/role.tsx';
 import { useAppContext } from '../context.tsx';
 
 export default function ProfilePage() {
@@ -25,17 +25,17 @@ export default function ProfilePage() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <div className="flex items-center gap-4 mb-6">
           <div
-            className={`w-16 h-16 rounded-2xl ${roleColors[member.role]} flex items-center justify-center text-white text-2xl font-bold flex-shrink-0`}
+            className={`w-16 h-16 rounded-2xl ${roleColors[member!.role]} flex items-center justify-center text-white text-2xl font-bold flex-shrink-0`}
           >
-            {user.fullname.charAt(0) || '?'}
+            {user!.fullname.charAt(0) || '?'}
           </div>
           <div>
-            <h2 className="text-slate-900 font-semibold text-xl">{user.fullname}</h2>
+            <h2 className="text-slate-900 font-semibold text-xl">{user!.fullname}</h2>
             <div className="flex items-center gap-2 mt-1">
               <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${roleColors[member.role]}`}
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${roleColors[member!.role]}`}
               >
-                {roleLabels[member.role]}
+                {roleLabels[member!.role]}
               </span>
               {organization && (
                 <span className="flex items-center gap-1 text-xs text-slate-500">
@@ -45,7 +45,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-        <EditUserForm user={user} />
+        <EditUserForm user={user!} />
       </div>
       <ChangeUserPassword />
 
