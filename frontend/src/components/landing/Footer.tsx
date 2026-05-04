@@ -1,4 +1,4 @@
-import { MapPin, School } from 'lucide-react';
+import { School, Send } from 'lucide-react';
 import { Link } from 'react-router';
 
 const LINKS = [
@@ -55,11 +55,16 @@ export const Footer = ({ scrollTo }: FooterProps) => {
         <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-slate-500 text-sm text-center sm:text-left">
             © 2026 ClassFlow. Платформа управления дополнительным образованием.
+            <br />
+            <div className="flex items-center gap-1">
+              <Send size={12} />
+              @bigbeardev
+            </div>
           </p>
-          <div className="flex items-center gap-3 text-slate-600 text-xs">
-            <MapPin size={12} />
-            <span>Россия · Все устройства</span>
-          </div>
+          {/*<div className="flex items-center gap-3 text-slate-600 text-xs">*/}
+          {/*  <MapPin size={12} />*/}
+          {/*  <span>Россия</span>*/}
+          {/*</div>*/}
         </div>
       </div>
     </footer>

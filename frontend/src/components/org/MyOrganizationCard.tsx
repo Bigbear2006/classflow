@@ -2,7 +2,6 @@ import { ArrowRight, BookOpen, Building2, Users } from 'lucide-react';
 import { navigateToOrganization } from '../../utils.ts';
 import type { MyOrganization } from '../../entities';
 import { roleConfig } from '../../labels/role.tsx';
-import { joinOrganization } from '../../api/organizations/requests.ts';
 
 interface MyOrganizationCardProps {
   org: MyOrganization;
@@ -45,9 +44,7 @@ export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
       </div>
 
       <button
-        onClick={() => {
-          joinOrganization().then(() => navigateToOrganization(org.slug));
-        }}
+        onClick={() => navigateToOrganization(org.slug)}
         className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
       >
         Перейти <ArrowRight size={14} />

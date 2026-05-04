@@ -29,7 +29,7 @@ export const LoginForm = () => {
     setLoading(true);
     loginUser(data)
       .finally(() => setLoading(false))
-      .then(() => navigate('/'))
+      .then(() => navigate('/orgs'))
       .catch(() => setError('root', { message: 'Неверная почта или пароль' }));
   };
 

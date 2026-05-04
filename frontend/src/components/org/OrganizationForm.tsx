@@ -69,7 +69,7 @@ export const OrganizationForm = ({ closeForm }: OrganizationFormProps) => {
             type="submit"
             className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl text-sm font-medium transition-colors"
           >
-            'Создать'
+            Создать
           </button>
           <button
             type="button"

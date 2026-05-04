@@ -76,7 +76,7 @@ export const OrganizationsSearch = () => {
 
                     <button
                       onClick={() =>
-                        joinOrganization().then(() => navigateToOrganization(org.slug))
+                        joinOrganization().finally(() => navigateToOrganization(org.slug))
                       }
                       className="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white rounded-xl text-sm font-medium transition-colors"
                     >

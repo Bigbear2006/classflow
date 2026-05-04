@@ -14,11 +14,24 @@ export const getSubdomain = () => {
 };
 
 export const navigateToOrganization = (slug: string) => {
-  let host = window.location.host;
-  if (host.includes('.')) {
-    let parts = window.location.host.split('.', 2);
-    host = parts[1];
+  const { protocol, hostname, port, pathname } = window.location;
+
+  if (hostname.startsWith(`${slug}.`)) {
+    return;
   }
-  console.log(host);
-  window.location.href = `${window.location.protocol}//${slug}.${host}${window.location.pathname}`;
+
+  let newHost: string;
+  let parts = hostname.split('.');
+
+  if (hostname === 'localhost') {
+    newHost = `${slug}.${hostname}`;
+  } else if (parts.length === 2) {
+    newHost = `${slug}.${hostname}`;
+  } else {
+    const baseDomain = parts.slice(-2).join('.');
+    newHost = `${slug}.${baseDomain}`;
+  }
+
+  const portString = port ? `:${port}` : "";
+  window.location.href = `${protocol}//${newHost}${portString}${pathname}`;
 };

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Calendar, Plus, ChevronRight, ChevronLeft } from 'lucide-react';
-import type { FormAction, LessonDetail } from '../../entities';
-import { LessonForm } from '../../components/admin/schedule/LessonForm.tsx';
-import { DAY_NAMES_FULL } from '../../labels/lesson.tsx';
-import { useLessons } from '../../hooks/queries/lesson.ts';
+import type { FormAction, LessonDetail } from '../entities';
+import { LessonForm } from '../components/admin/schedule/LessonForm.tsx';
+import { DAY_NAMES_FULL } from '../labels/lesson.tsx';
+import { useLessons } from '../hooks/queries/lesson.ts';
 import { toast } from 'sonner';
-import { useDeleteLessonMutation } from '../../hooks/mutations/lesson.ts';
+import { useDeleteLessonMutation } from '../hooks/mutations/lesson.ts';
 import {
   displayDate,
   displayDateWithYear,
@@ -15,15 +15,15 @@ import {
   getWeekDays,
   getDateString,
   dateIsToday,
-} from '../../labels/date.ts';
-import { MobileScheduleDay } from '../../components/admin/schedule/MobileScheduleDay.tsx';
-import { DesktopLessonCard } from '../../components/admin/schedule/DesktopLessonCard.tsx';
-import { DesktopScheduleDay } from '../../components/admin/schedule/DesktopScheduleDay.tsx';
-import { MobileLessonCard } from '../../components/admin/schedule/MobileLessonCard.tsx';
-import { LessonsTable } from '../../components/admin/schedule/LessonsTable.tsx';
-import { groupDayLessons } from '../../api/lessons/mappers.ts';
+} from '../labels/date.ts';
+import { MobileScheduleDay } from '../components/admin/schedule/MobileScheduleDay.tsx';
+import { DesktopLessonCard } from '../components/admin/schedule/DesktopLessonCard.tsx';
+import { DesktopScheduleDay } from '../components/admin/schedule/DesktopScheduleDay.tsx';
+import { MobileLessonCard } from '../components/admin/schedule/MobileLessonCard.tsx';
+import { LessonsTable } from '../components/admin/schedule/LessonsTable.tsx';
+import { groupDayLessons } from '../api/lessons/mappers.ts';
 
-export default function AdminSchedulePage() {
+export default function SchedulePage() {
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStartDay());
   const [selectedDayIdx, setSelectedDayIdx] = useState(getTodayWeekDay());
   const [selectedLesson, setSelectedLesson] = useState<LessonDetail>();

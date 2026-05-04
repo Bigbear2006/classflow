@@ -66,12 +66,10 @@ export function AppLayout() {
                       roleCfg?.color || 'bg-slate-400'
                     } flex items-center justify-center text-white text-xs font-semibold`}
                   >
-                    {user.fullname.charAt(0) || '?'}
+                    {user.fullname.charAt(0)}
                   </div>
                 )}
-                <span className="text-sm text-slate-700 hidden sm:block">
-                  {user.fullname.split(' ')[1] || user.fullname}
-                </span>
+                <span className="text-sm text-slate-700 hidden sm:block">{user.fullname}</span>
                 <ChevronDown size={14} className="text-slate-400 hidden sm:block" />
               </button>
             </>

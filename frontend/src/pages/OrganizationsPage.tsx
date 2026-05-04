@@ -31,7 +31,7 @@ export function OrganizationsPage() {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-white text-2xl font-bold mb-1">
             Добро пожаловать
-            {user && `, ${user.fullname.split(' ')[0]}`}!
+            {user && `, ${user.fullname}`}!
           </h1>
           <p className="text-indigo-200 text-sm">
             Управляйте своими организациями или вступайте в новые учебные центры
@@ -66,7 +66,7 @@ export function OrganizationsPage() {
             )}
             <div className="grid gap-4 sm:grid-cols-2">
               {myOrgs.map(org => (
-                <MyOrganizationCard org={org} />
+                <MyOrganizationCard key={org.id} org={org} />
               ))}
             </div>
             {myOrgs.length === 0 && (

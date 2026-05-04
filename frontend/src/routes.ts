@@ -8,17 +8,19 @@ import OrganizationMembersPage from './pages/admin/OrganizationMembersPage.tsx';
 import CoursesPage from './pages/CoursesPage.tsx';
 import AddressesPage from './pages/admin/AddressesPage.tsx';
 import GroupsPage from './pages/admin/GroupsPage.tsx';
-import AdminSchedulePage from './pages/admin/AdminSchedulePage.tsx';
+import SchedulePage from './pages/SchedulePage.tsx';
 import AdminPaymentsPage from './pages/admin/AdminPaymentsPage.tsx';
 import { SubjectsPage } from './pages/admin/SubjectsPage.tsx';
 import { OrganizationsPage } from './pages/OrganizationsPage.tsx';
 import LandingPage from './pages/LandingPage.tsx';
 import DashboardPage from './pages/DashboardPage.tsx';
+import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 
 export const router = createBrowserRouter([
   {
     index: true,
     Component: LandingPage,
+    ErrorBoundary: ErrorBoundary,
   },
   {
     path: '/login',
@@ -39,7 +41,7 @@ export const router = createBrowserRouter([
       { path: 'courses', Component: CoursesPage },
       { path: 'addresses', Component: AddressesPage },
       { path: 'groups', Component: GroupsPage },
-      { path: 'schedule', Component: AdminSchedulePage },
+      { path: 'schedule', Component: SchedulePage },
       { path: 'payments', Component: AdminPaymentsPage },
       // Available without subdomain
       { path: 'orgs', Component: OrganizationsPage },

@@ -1,11 +1,11 @@
-import type {Course, Group, OrganizationMemberDetail} from '../../entities';
+import type { Course, Group, OrganizationMemberDetail } from '../../entities';
 import { axiosInstance } from '../base.ts';
 import type { GroupResponse } from '../groups/types.ts';
 import { mapGroup } from '../groups/mappers.ts';
 import type { CourseResponse, CourseData, CourseTeacherParams } from './types.ts';
 import { mapCourse } from './mappers.ts';
-import type {OrgMemberDetailResponse} from "../organizations/types.ts";
-import {mapOrgMemberDetail} from "../organizations/mappers.ts";
+import type { OrgMemberDetailResponse } from '../organizations/types.ts';
+import { mapOrgMemberDetail } from '../organizations/mappers.ts';
 
 export const getCourses = async (): Promise<Course[]> => {
   return axiosInstance.get<CourseResponse[]>('courses/').then(rsp => rsp.data.map(mapCourse));
@@ -18,7 +18,9 @@ export const getCourseGroups = async (id: number): Promise<Group[]> => {
 };
 
 export const getCourseTeachers = async (id: number): Promise<OrganizationMemberDetail[]> => {
-  return axiosInstance.get<OrgMemberDetailResponse[]>(`courses/${id}/teachers/`).then(rsp => rsp.data.map(mapOrgMemberDetail));
+  return axiosInstance
+    .get<OrgMemberDetailResponse[]>(`courses/${id}/teachers/`)
+    .then(rsp => rsp.data.map(mapOrgMemberDetail));
 };
 
 export const createCourse = (data: CourseData) => {

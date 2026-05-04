@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Features } from '../components/landing/Features.tsx';
 import { Roles } from '../components/landing/Roles.tsx';
 import { HowItWorks } from '../components/landing/HowItWorks.tsx';
-import { Reviews } from '../components/landing/Reviews.tsx';
 import { CallToAction } from '../components/landing/CallToAction.tsx';
 import { Stats } from '../components/landing/Stats.tsx';
 import { ReadyToStart } from '../components/landing/ReadyToStart.tsx';
@@ -80,7 +79,6 @@ export default function LandingPage() {
       <Features />
       <Roles />
       <HowItWorks />
-      <Reviews />
       <ReadyToStart />
       <Footer scrollTo={scrollTo} />
     </div>

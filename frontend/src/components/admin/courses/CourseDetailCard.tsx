@@ -23,7 +23,7 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
 
   const { data: groups } = useCourseGroups({ courseId: course.id });
   const { data: teachers } = useCourseTeachers({ courseId: course.id });
-  const teacherIds = teachers.map(t => t.id)
+  const teacherIds = teachers.map(t => t.id);
   const { data: foundTeachers } = useOrganizationMembers({ query: debouncedSearch });
 
   const addTeacherMutation = useAddTeacherToCourseMutation({ courseId: course.id });

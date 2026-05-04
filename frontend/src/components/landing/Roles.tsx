@@ -1,5 +1,5 @@
 import { FadeIn } from './FadeIn.tsx';
-import { CheckCircle2, Crown, GraduationCap, UserCheck, Users } from 'lucide-react';
+import { CheckCircle2, Crown, GraduationCap, Shield, UserCheck, Users } from 'lucide-react';
 
 const ROLES = [
   {
@@ -8,12 +8,26 @@ const ROLES = [
     bg: 'bg-violet-50 border-violet-200',
     accent: 'text-violet-700',
     role: 'Владелец',
-    desc: 'Создаёт организацию, управляет всем: курсами, сотрудниками, расписанием и финансами.',
+    desc: 'Создаёт организацию, управляет всем: курсами, сотрудниками, расписанием и оплатами.',
     perks: [
-      'Полный доступ ко всем данным',
-      'Настройка курсов и групп',
+      'Создание организации',
       'Управление ролями участников',
-      'Финансовая аналитика',
+      'Управление оплатами',
+      'Полный доступ ко всем данным',
+    ],
+  },
+  {
+    icon: <Shield size={24} />,
+    color: 'from-blue-500 to-blue-600',
+    bg: 'bg-blue-50 border-blue-200',
+    accent: 'text-blue-700',
+    role: 'Администратор',
+    desc: 'Управляет учебным процессом и данными, кроме настроек организации и ролей.',
+    perks: [
+      'Управление курсами и группами',
+      'Создание и редактирование расписания',
+      'Перенос занятий',
+      'Учет оплат учеников',
     ],
   },
   {
@@ -68,7 +82,7 @@ export const Roles = () => {
           </div>
         </FadeIn>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           {ROLES.map(({ icon, color, bg, accent, role, desc, perks }, i) => (
             <FadeIn key={i} delay={i * 100}>
               <div className={`rounded-3xl border p-6 ${bg} flex flex-col h-full`}>

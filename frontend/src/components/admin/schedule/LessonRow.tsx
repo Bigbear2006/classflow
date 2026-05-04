@@ -1,6 +1,7 @@
 import { getLessonStatusCfg } from '../../../labels/lesson.tsx';
 import type { LessonDetail } from '../../../entities';
 import { Edit2, Trash2 } from 'lucide-react';
+import { displayShortDate, displayTime } from '../../../labels/date.ts';
 
 interface LessonRowProps {
   lesson: LessonDetail;
@@ -14,30 +15,15 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
     <tr key={lesson.id} className="hover:bg-slate-50">
       <td className="px-5 py-3">
         <div className="font-medium text-sm text-slate-900">Урок #{lesson.id}</div>
-        <div className="text-xs text-slate-400">
-          {lesson.conductedBy.user.fullname.split(' ')[0] || ''}
-        </div>
+        <div className="text-xs text-slate-400">{lesson.conductedBy.user.fullname}</div>
       </td>
       <td className="px-5 py-3 text-sm text-slate-700">
-        <div>
-          {lesson.startDate.toLocaleDateString('ru', {
-            day: 'numeric',
-            month: 'short',
-          })}
-        </div>
+        <div>{displayShortDate(lesson.startDate)}</div>
         <div className="text-xs text-slate-400">
-          {lesson.startDate.toLocaleTimeString('ru', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}{' '}
-          —{' '}
-          {lesson.endDate.toLocaleTimeString('ru', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+          {displayTime(lesson.startDate)} — {displayTime(lesson.endDate)}
         </div>
       </td>
-      <td className="px-5 py-3 text-sm text-slate-600">{lesson.cabinet?.number}</td>
+      <td className="px-5 py-3 text-sm text-slate-600">{lesson.cabinet?.number || lesson.url}</td>
       {/*<td className="px-5 py-3 text-sm text-slate-600 hidden lg:table-cell">*/}
       {/*  {lesson.topic || '—'}*/}
       {/*</td>*/}

@@ -21,6 +21,8 @@ import { useAppContext } from '../../context.tsx';
 import { logoutUser } from '../../api/users/requests.ts';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { roleConfig } from '../../labels/role.tsx';
+import type { User } from '../../entities';
+
 interface NavItem {
   label: string;
   path: string;
@@ -28,7 +30,22 @@ interface NavItem {
   end?: boolean;
 }
 
-function getNavItems(role: string | undefined): NavItem[] {
+function getNavItems(role?: string, user?: User): NavItem[] {
+  if (!user) {
+    return [
+      {
+        label: 'Войти',
+        path: '/login',
+        icon: <LogInIcon size={18} />,
+      },
+      {
+        label: 'Зарегистрироваться',
+        path: '/register',
+        icon: <UserIcon size={18} />,
+      },
+    ];
+  }
+
   if (role === 'OWNER' || role === 'ADMIN')
     return [
       {
@@ -61,17 +78,6 @@ function getNavItems(role: string | undefined): NavItem[] {
         icon: <DollarSign size={18} />,
       },
     ];
-
-  // if (role === 'TEACHER' || role === 'STUDENT') {
-  //   return [
-  //     {
-  //       label: 'Главная',
-  //       path: '/',
-  //       icon: <LayoutDashboard size={18} />,
-  //       end: true,
-  //     },
-  //   ];
-  // }
 
   if (role === 'TEACHER')
     return [
@@ -133,18 +139,7 @@ function getNavItems(role: string | undefined): NavItem[] {
       },
     ];
 
-  return [
-    {
-      label: 'Войти',
-      path: '/login',
-      icon: <LogInIcon size={18} />,
-    },
-    {
-      label: 'Зарегистрироваться',
-      path: '/register',
-      icon: <UserIcon size={18} />,
-    },
-  ];
+  return [];
 }
 
 interface SidebarProps {
@@ -156,7 +151,7 @@ export const Sidebar = ({ upcomingCount, setSidebarOpen }: SidebarProps) => {
   const { user, member, organization } = useAppContext();
   const navigate = useNavigate();
 
-  const navItems = getNavItems(member?.role);
+  const navItems = getNavItems(member?.role, user);
   const roleCfg = member?.role ? roleConfig[member.role] : null;
 
   const handleLogout = () => {
@@ -218,7 +213,7 @@ export const Sidebar = ({ upcomingCount, setSidebarOpen }: SidebarProps) => {
       {user && (
         <div className="px-3 py-3 border-t border-slate-700/50 space-y-0.5">
           <NavLink
-            to="/"
+            to="/orgs"
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
