@@ -39,7 +39,7 @@ async def cors_middleware(request: Request, call_next: Any) -> Response:
 
 
 def create_app(_container: AsyncContainer | None = None) -> FastAPI:
-    app = FastAPI(lifespan=lifespan)
+    app = FastAPI(lifespan=lifespan, docs_url='/api/docs', openapi_url='/api/openapi.json', redoc_url='/api/redoc')
     app.include_router(root_router)
     app.add_middleware(BaseHTTPMiddleware, dispatch=cors_middleware)
     setup_exception_handlers(app)

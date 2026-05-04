@@ -32,7 +32,7 @@ else:
 RLS_TABLES = [
     # 'organizations',
     # 'users',
-    'organization_members',
+    # 'organization_members',
     'subjects',
     'courses',
     'course_teachers',
