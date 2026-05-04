@@ -16,6 +16,7 @@ from classflow.application.use_cases.user import (
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
 )
+from classflow.infrastructure.auth.config import JWTConfig
 from classflow.infrastructure.auth.token_processor import (
     JWTTokenProcessor,
     TokenType,
@@ -48,18 +49,20 @@ async def login_user_router(
     data: LoginUserDTO,
     login_user: FromDishka[LoginUser],
     token_processor: FromDishka[JWTTokenProcessor],
+    jwt_config: FromDishka[JWTConfig],
     response: Response,
 ) -> None:
     user = await login_user(data)
     token_pair = token_processor.create_token_pair(user.id)
-    set_access_cookie(response, token_pair.access)
-    set_refresh_cookie(response, token_pair.refresh)
+    set_access_cookie(response, token_pair.access, domain=jwt_config.DOMAIN)
+    set_refresh_cookie(response, token_pair.refresh, domain=jwt_config.DOMAIN)
 
 
 @user_router.post('/refresh-token/', status_code=204)
 async def refresh_token_router(
     refresh: Annotated[str, Cookie()],
     token_processor: FromDishka[JWTTokenProcessor],
+    jwt_config: FromDishka[JWTConfig],
     response: Response,
 ) -> None:
     user_id = token_processor.extract_user_id(
@@ -67,7 +70,7 @@ async def refresh_token_router(
         token_type=TokenType.REFRESH,
     )
     access = token_processor.create_access_token(user_id)
-    set_access_cookie(response, access)
+    set_access_cookie(response, access, domain=jwt_config.DOMAIN)
 
 
 @user_router.post('/logout/', status_code=204)

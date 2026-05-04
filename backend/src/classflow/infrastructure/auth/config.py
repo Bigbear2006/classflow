@@ -22,3 +22,4 @@ class JWTConfig:
     ACCESS_TOKEN_LIFETIME: timedelta = timedelta(minutes=5)
     REFRESH_TOKEN_LIFETIME: timedelta = timedelta(days=7)
     ALGORITHM: Algorithm = 'HS256'
+    DOMAIN: str | None = field(default_factory=lambda: env('DOMAIN', None))

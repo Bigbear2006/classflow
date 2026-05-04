@@ -1,5 +1,5 @@
-from asyncpg import UniqueViolationError
 from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.user import UserRepository
@@ -16,7 +16,7 @@ class UserRepositoryImpl(UserRepository):
     async def create(self, user: User) -> User:
         try:
             return await create(self.session, user)
-        except UniqueViolationError as e:
+        except IntegrityError as e:
             raise AlreadyExistsError(
                 'User already exists',
                 email=user.email,
