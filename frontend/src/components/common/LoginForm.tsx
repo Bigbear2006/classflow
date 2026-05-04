@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ErrorsBlock } from './ErrorsBlock.tsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LoginUserSchema = z.object({
   email: z.email('Неверный email'),
@@ -24,12 +25,15 @@ export const LoginForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const onSubmit = (data: LoginUserFields) => {
     setLoading(true);
     loginUser(data)
       .finally(() => setLoading(false))
-      .then(() => navigate('/orgs'))
+      .then(() => {
+        queryClient.invalidateQueries().then(() => navigate('/orgs'));
+      })
       .catch(() => setError('root', { message: 'Неверная почта или пароль' }));
   };
 

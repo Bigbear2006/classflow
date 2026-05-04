@@ -32,6 +32,6 @@ export const navigateToOrganization = (slug: string) => {
     newHost = `${slug}.${baseDomain}`;
   }
 
-  const portString = port ? `:${port}` : "";
+  const portString = port ? `:${port}` : '';
   window.location.href = `${protocol}//${newHost}${portString}${pathname}`;
 };
