@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import {
   getCurrentOrganization,
   getCurrentOrganizationMember,
@@ -7,6 +7,7 @@ import {
   getRoleCounts,
 } from '../../api/organizations/requests.ts';
 import type { GetOrganizationsParams } from '../../api/organizations/types.ts';
+import { queryClient } from '../../loaders.ts';
 
 export const useOrganizations = (params: GetOrganizationsParams) => {
   return useQuery({
@@ -16,17 +17,29 @@ export const useOrganizations = (params: GetOrganizationsParams) => {
   });
 };
 
+export const useCurrentOrganizationOptions = {
+  queryKey: ['organization'],
+  queryFn: getCurrentOrganization,
+};
+
 export const useCurrentOrganization = () => {
   return useQuery({
-    queryKey: ['organization'],
-    queryFn: getCurrentOrganization,
+    ...useCurrentOrganizationOptions,
+    initialData: () => queryClient.getQueryData(useCurrentOrganizationOptions.queryKey),
+    staleTime: 10 * 1000,
   });
+};
+
+export const useCurrentOrganizationMemberOptions = {
+  queryKey: ['member'],
+  queryFn: getCurrentOrganizationMember,
 };
 
 export const useCurrentOrganizationMember = () => {
   return useQuery({
-    queryKey: ['member'],
-    queryFn: getCurrentOrganizationMember,
+    ...useCurrentOrganizationMemberOptions,
+    initialData: () => queryClient.getQueryData(useCurrentOrganizationMemberOptions.queryKey),
+    staleTime: 10 * 1000,
   });
 };
 
@@ -38,10 +51,14 @@ export const useCurrentOrganizationTeachers = () => {
   });
 };
 
+export const roleCountsOptions = {
+  queryKey: ['roleCounts'],
+  queryFn: getRoleCounts,
+};
+
 export const useRoleCounts = () => {
-  return useQuery({
-    initialData: [],
-    queryKey: ['roleCounts'],
-    queryFn: getRoleCounts,
+  return useSuspenseQuery({
+    ...roleCountsOptions,
+    initialData: () => queryClient.getQueryData(roleCountsOptions.queryKey),
   });
 };

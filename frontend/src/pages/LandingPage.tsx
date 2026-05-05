@@ -10,14 +10,13 @@ import { DesktopNav } from '../components/landing/DesktopNav.tsx';
 import { MobileNav } from '../components/landing/MobileNav.tsx';
 import { useAppContext } from '../context.tsx';
 import { Navigate } from 'react-router';
-import { Loading } from '../components/common/Loading.tsx';
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const { user, isLoading, organization } = useAppContext();
+  const { user, organization } = useAppContext();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -51,10 +50,6 @@ export default function LandingPage() {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }, 350);
   };
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   if (organization) {
     if (user) {

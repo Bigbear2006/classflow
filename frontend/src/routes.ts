@@ -15,11 +15,14 @@ import { OrganizationsPage } from './pages/OrganizationsPage.tsx';
 import LandingPage from './pages/LandingPage.tsx';
 import DashboardPage from './pages/DashboardPage.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
+import { createLoader, organizationMembersLoader } from './loaders.ts';
 
 export const router = createBrowserRouter([
   {
     index: true,
     Component: LandingPage,
+    loader: createLoader(),
+    shouldRevalidate: () => false,
     ErrorBoundary: ErrorBoundary,
   },
   {
@@ -31,19 +34,36 @@ export const router = createBrowserRouter([
     Component: RegisterPage,
   },
   {
+    id: 'root',
     path: '/',
     Component: AppLayout,
+    loader: createLoader({ user: true, organization: true, member: true }),
+    shouldRevalidate: () => false,
     children: [
-      // Available only on the subdomains
       { path: 'dashboard', Component: DashboardPage },
-      { path: 'members', Component: OrganizationMembersPage },
+      { path: 'members', Component: OrganizationMembersPage, loader: organizationMembersLoader },
       { path: 'subjects', Component: SubjectsPage },
-      { path: 'courses', Component: CoursesPage },
       { path: 'addresses', Component: AddressesPage },
       { path: 'groups', Component: GroupsPage },
       { path: 'schedule', Component: SchedulePage },
       { path: 'payments', Component: AdminPaymentsPage },
-      // Available without subdomain
+    ],
+  },
+  {
+    id: 'organization',
+    path: '/',
+    Component: AppLayout,
+    loader: createLoader({ organization: true }),
+    shouldRevalidate: () => false,
+    children: [{ path: 'courses', Component: CoursesPage }],
+  },
+  {
+    path: '/',
+    id: 'user',
+    Component: AppLayout,
+    loader: createLoader({ user: true }),
+    shouldRevalidate: () => false,
+    children: [
       { path: 'orgs', Component: OrganizationsPage },
       { path: 'profile', Component: ProfilePage },
       { path: 'notifications', Component: NotificationsPage },

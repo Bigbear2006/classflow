@@ -9,14 +9,12 @@ interface AppContextType {
   isStudent: boolean;
   isTeacher: boolean;
   isAdminOrOwner: boolean;
-  isLoading: boolean;
-  organizationNotResolved: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const { user, member, organization, isLoading, organizationNotResolved } = useCurrentInfo();
+  const { user, member, organization } = useCurrentInfo();
   const ctx: AppContextType = {
     user,
     member,
@@ -24,8 +22,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     isStudent: member?.role === 'STUDENT',
     isTeacher: member?.role === 'TEACHER',
     isAdminOrOwner: member?.role === 'ADMIN' || member?.role === 'OWNER',
-    isLoading,
-    organizationNotResolved,
   };
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;
 };

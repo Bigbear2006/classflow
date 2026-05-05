@@ -289,10 +289,6 @@ export const Sidebar = ({ upcomingCount, setSidebarOpen }: SidebarProps) => {
                 {user.fullname.charAt(0) || '?'}
               </div>
             )}
-            <div className="min-w-0">
-              <div className="text-white text-xs font-medium truncate">{user.fullname}</div>
-              <div className="text-slate-400 text-xs truncate">{user.email}</div>
-            </div>
           </div>
         </div>
       )}
