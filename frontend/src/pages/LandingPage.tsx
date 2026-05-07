@@ -7,16 +7,12 @@ import { Stats } from '../components/landing/Stats.tsx';
 import { ReadyToStart } from '../components/landing/ReadyToStart.tsx';
 import { Footer } from '../components/landing/Footer.tsx';
 import { DesktopNav } from '../components/landing/DesktopNav.tsx';
-import { MobileNav } from '../components/landing/MobileNav.tsx';
 import { useAppContext } from '../context.tsx';
 import { Navigate } from 'react-router';
 
 export default function LandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
   const { user, organization } = useAppContext();
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -24,28 +20,7 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Lock body scroll when menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => setMenuVisible(true));
-    } else {
-      setMenuVisible(false);
-      const t = setTimeout(() => {
-        document.body.style.overflow = '';
-      }, 350);
-      return () => clearTimeout(t);
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
-
-  const openMenu = () => setMobileMenuOpen(true);
-  const closeMenu = () => setMobileMenuOpen(false);
-
   const scrollTo = (id: string) => {
-    closeMenu();
     setTimeout(() => {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }, 350);
@@ -65,10 +40,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <DesktopNav scrolled={scrolled} openMenu={openMenu} scrollTo={scrollTo} />
-      {mobileMenuOpen && (
-        <MobileNav menuVisible={menuVisible} closeMenu={closeMenu} scrollTo={scrollTo} />
-      )}
+      <DesktopNav scrolled={scrolled} scrollTo={scrollTo} />
       <CallToAction scrollTo={scrollTo} />
       <Stats />
       <Features />

@@ -1,6 +1,5 @@
 import {
   ArrowLeftRight,
-  Bell,
   BookOpen,
   BookText,
   Calendar,
@@ -8,7 +7,6 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogInIcon,
-  LogOut,
   MapPin,
   School,
   TrendingUp,
@@ -16,9 +14,8 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink } from 'react-router';
 import { useAppContext } from '../../context.tsx';
-import { logoutUser } from '../../api/users/requests.ts';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { roleConfig } from '../../labels/role.tsx';
 import type { User } from '../../entities';
@@ -133,8 +130,8 @@ function getNavItems(role?: string, user?: User): NavItem[] {
         icon: <DollarSign size={18} />,
       },
       {
-        label: 'Преподаватели',
-        path: '/teachers',
+        label: 'Отзывы',
+        path: '/feedback',
         icon: <UserCheck size={18} />,
       },
     ];
@@ -143,20 +140,14 @@ function getNavItems(role?: string, user?: User): NavItem[] {
 }
 
 interface SidebarProps {
-  upcomingCount: number;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Sidebar = ({ upcomingCount, setSidebarOpen }: SidebarProps) => {
+export const Sidebar = ({ setSidebarOpen }: SidebarProps) => {
   const { user, member, organization } = useAppContext();
-  const navigate = useNavigate();
 
   const navItems = getNavItems(member?.role, user);
   const roleCfg = member?.role ? roleConfig[member.role] : null;
-
-  const handleLogout = () => {
-    logoutUser().then(() => navigate('/login'));
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -226,70 +217,6 @@ export const Sidebar = ({ upcomingCount, setSidebarOpen }: SidebarProps) => {
             <LayoutDashboard size={18} />
             <span>Мои организации</span>
           </NavLink>
-          <NavLink
-            to="/notifications"
-            onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
-                isActive
-                  ? 'bg-indigo-500/20 text-indigo-300 font-medium'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
-              }`
-            }
-          >
-            <div className="relative">
-              <Bell size={18} />
-              {upcomingCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-indigo-500 text-white text-[9px] flex items-center justify-center font-bold">
-                  {upcomingCount > 9 ? '9+' : upcomingCount}
-                </span>
-              )}
-            </div>
-            <span>Уведомления</span>
-          </NavLink>
-          <NavLink
-            to="/profile"
-            onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
-                isActive
-                  ? 'bg-indigo-500/20 text-indigo-300 font-medium'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
-              }`
-            }
-          >
-            <UserIcon size={18} />
-            <span>Профиль</span>
-          </NavLink>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-150"
-          >
-            <LogOut size={18} />
-            <span>Выйти</span>
-          </button>
-        </div>
-      )}
-
-      {user && (
-        <div className="px-4 py-3 border-t border-slate-700/50">
-          <div className="flex items-center gap-3">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt=""
-                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-              />
-            ) : (
-              <div
-                className={`w-8 h-8 rounded-full ${
-                  roleCfg?.color || 'bg-slate-600'
-                } flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}
-              >
-                {user.fullname.charAt(0) || '?'}
-              </div>
-            )}
-          </div>
         </div>
       )}
     </div>

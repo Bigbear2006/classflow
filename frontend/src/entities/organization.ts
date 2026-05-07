@@ -38,6 +38,13 @@ export interface OrganizationMemberDetail {
   createdAt: Date;
 }
 
+export interface TeacherWithFeedback extends OrganizationMemberDetail {
+  rating: number;
+  feedbackCount: number;
+  userCanAddFeedback: boolean;
+  courses: Course[];
+}
+
 export interface RoleCount {
   role: UserRole;
   count: number;

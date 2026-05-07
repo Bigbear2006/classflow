@@ -10,7 +10,7 @@ export type {
   CourseTeacherStudent,
   CourseTeacherStudentWithLessons,
 } from './course.ts';
-export type { Feedback } from './feedback.ts';
+export type { Feedback, FeedbackDetail } from './feedback.ts';
 export type { Group, GroupDetail, GroupWithPayments, UserGroup } from './group.ts';
 export type { LessonStatus, Lesson, LessonDetail, DayLessons } from './lesson.ts';
 export type {
@@ -20,6 +20,7 @@ export type {
   MyOrganization,
   OrganizationMember,
   OrganizationMemberDetail,
+  TeacherWithFeedback,
   RoleCount,
   OrganizationStats,
 } from './organization.ts';
@@ -29,3 +30,4 @@ export type { User, UserWithPayment } from './user.ts';
 
 export type FormAction = 'CREATE' | 'EDIT';
 export type ModalAction = FormAction | 'VIEW';
+export type FeedbackTab = 'ABOUT' | 'FEEDBACK';

@@ -16,6 +16,7 @@ import LandingPage from './pages/LandingPage.tsx';
 import DashboardPage from './pages/DashboardPage.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { createLoader, organizationMembersLoader } from './loaders.ts';
+import { FeedbackPage } from './pages/FeedbackPage.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -34,10 +35,9 @@ export const router = createBrowserRouter([
     Component: RegisterPage,
   },
   {
-    id: 'root',
     path: '/',
     Component: AppLayout,
-    loader: createLoader({ user: true, organization: true, member: true }),
+    loader: createLoader({ requireUser: true, requireOrganization: true, requireMember: true }),
     shouldRevalidate: () => false,
     children: [
       { path: 'dashboard', Component: DashboardPage },
@@ -47,21 +47,20 @@ export const router = createBrowserRouter([
       { path: 'groups', Component: GroupsPage },
       { path: 'schedule', Component: SchedulePage },
       { path: 'payments', Component: AdminPaymentsPage },
+      { path: 'feedback', Component: FeedbackPage },
     ],
   },
   {
-    id: 'organization',
     path: '/',
     Component: AppLayout,
-    loader: createLoader({ organization: true }),
+    loader: createLoader({ requireOrganization: true }),
     shouldRevalidate: () => false,
     children: [{ path: 'courses', Component: CoursesPage }],
   },
   {
     path: '/',
-    id: 'user',
     Component: AppLayout,
-    loader: createLoader({ user: true }),
+    loader: createLoader({ requireUser: true }),
     shouldRevalidate: () => false,
     children: [
       { path: 'orgs', Component: OrganizationsPage },

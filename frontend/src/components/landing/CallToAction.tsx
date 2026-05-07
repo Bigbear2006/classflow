@@ -59,7 +59,7 @@ export const CallToAction = ({ scrollTo }: HeroProps) => {
                 to="/register"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-medium transition-all shadow-lg shadow-indigo-900/40 hover:shadow-indigo-900/60 hover:-translate-y-0.5"
               >
-                Начать бесплатно <ArrowRight size={16} />
+                Зарегистрироваться <ArrowRight size={16} />
               </Link>
               <button
                 onClick={() => scrollTo('how')}

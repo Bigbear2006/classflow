@@ -17,14 +17,14 @@ export function AppLayout() {
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
       <aside className="hidden lg:flex flex-col w-60 bg-slate-900 flex-shrink-0">
-        <Sidebar upcomingCount={upcomingCount} setSidebarOpen={setSidebarOpen} />
+        <Sidebar setSidebarOpen={setSidebarOpen} />
       </aside>
 
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
           <aside className="absolute left-0 top-0 bottom-0 w-64 bg-slate-900 z-50">
-            <Sidebar upcomingCount={upcomingCount} setSidebarOpen={setSidebarOpen} />
+            <Sidebar setSidebarOpen={setSidebarOpen} />
           </aside>
         </div>
       )}

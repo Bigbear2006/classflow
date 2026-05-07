@@ -19,26 +19,26 @@ export const loadBaseContext = async () => {
 };
 
 type LoaderConfig = {
-  user?: boolean;
-  organization?: boolean;
-  member?: boolean;
+  requireUser?: boolean;
+  requireOrganization?: boolean;
+  requireMember?: boolean;
 };
 
 export const createLoader = (config?: LoaderConfig) => {
   return async () => {
     await loadBaseContext();
 
-    if (config?.user && !queryClient.getQueryData(useCurrentUserOptions.queryKey)) {
+    if (config?.requireUser && !queryClient.getQueryData(useCurrentUserOptions.queryKey)) {
       return redirect('/login');
     }
     if (
-      config?.organization &&
+      config?.requireOrganization &&
       !queryClient.getQueryData(useCurrentOrganizationOptions.queryKey)
     ) {
       return redirect('/');
     }
     if (
-      config?.member &&
+      config?.requireMember &&
       !queryClient.getQueryData(useCurrentOrganizationMemberOptions.queryKey)
     ) {
       return redirect('/orgs');
