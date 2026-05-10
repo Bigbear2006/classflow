@@ -1,5 +1,5 @@
 export interface SubjectData {
   name: string;
-  image: string;
+  image?: File;
   description: string;
 }

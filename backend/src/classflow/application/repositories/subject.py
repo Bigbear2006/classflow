@@ -20,5 +20,8 @@ class SubjectRepository(Protocol):
     async def get_all(self) -> list[Subject]:
         pass
 
+    async def get_by_id(self, id: int) -> Subject:
+        pass
+
     async def delete(self, id: int) -> None:
         pass

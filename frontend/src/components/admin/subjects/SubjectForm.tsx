@@ -14,7 +14,8 @@ export const SubjectForm = ({ action, subject, closeModal }: SubjectFormProps) =
     register,
     formState: { errors },
     handleSubmit,
-  } = useSubjectForm();
+  } = useSubjectForm({ initialValues: subject });
+  console.log(errors);
 
   const mutation = useSubjectMutation({
     action: action,
@@ -61,8 +62,8 @@ export const SubjectForm = ({ action, subject, closeModal }: SubjectFormProps) =
             </label>
             <input
               {...register('image')}
-              type="url"
-              placeholder="https://..."
+              required={!!subject}
+              type="file"
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

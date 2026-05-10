@@ -39,6 +39,11 @@ class SubjectRepositoryImpl(SubjectRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[Subject], rows.all())
 
+    async def get_by_id(self, id: int) -> Subject:
+        stmt = select(Subject).where(subjects_table.c.id == id)
+        rows = await self.session.execute(stmt)
+        return rows.scalar_one()
+
     async def delete(self, id: int) -> None:
         stmt = delete(Subject).where(subjects_table.c.id == id)
         await self.session.execute(stmt)

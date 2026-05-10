@@ -7,6 +7,7 @@ from classflow.infrastructure.di.providers.repositories import (
     RepositoriesProvider,
 )
 from classflow.infrastructure.di.providers.services import ServicesProvider
+from classflow.infrastructure.di.providers.storage import StorageProvider
 from classflow.infrastructure.di.providers.uow import UnitOfWorkProvider
 from classflow.infrastructure.di.providers.use_cases import UseCasesProvider
 
@@ -18,5 +19,6 @@ providers = [
     UseCasesProvider(),
     ServicesProvider(),
     AuthProvider(),
+    StorageProvider(),
 ]
 container = make_async_container(*providers)
