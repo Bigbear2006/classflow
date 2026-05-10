@@ -9,7 +9,7 @@ import { useRoleCounts } from '../../hooks/queries/organization.ts';
 import { useSearchParams } from 'react-router';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue.ts';
 
-export default function OrganizationMembersPage() {
+export const OrganizationMembersPage = () => {
   const [searchParams, setSearchParams] = useSearchParams(window.location.search);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [roleFilter, setRoleFilter] = useState<UserRole>();
@@ -57,7 +57,7 @@ export default function OrganizationMembersPage() {
         {roleCounts.map(({ role, count }) => (
           <div key={role} className="bg-white rounded-xl border border-slate-200 p-4">
             <div
-              className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium ${roleConfig[role].color} mb-2`}
+              className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium text-white ${roleConfig[role].color} mb-2`}
             >
               {roleConfig[role].icon} {roleConfig[role].label}
             </div>
@@ -131,4 +131,4 @@ export default function OrganizationMembersPage() {
       </div>
     </div>
   );
-}
+};

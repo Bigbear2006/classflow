@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Calendar, Plus, ChevronRight, ChevronLeft } from 'lucide-react';
 import type { FormAction, LessonDetail } from '../entities';
-import { LessonForm } from '../components/admin/schedule/LessonForm.tsx';
+import { LessonForm } from '../components/schedule/LessonForm.tsx';
 import { DAY_NAMES_FULL } from '../labels/lesson.tsx';
 import { useLessons } from '../hooks/queries/lesson.ts';
 import { toast } from 'sonner';
@@ -16,14 +16,14 @@ import {
   getDateString,
   dateIsToday,
 } from '../labels/date.ts';
-import { MobileScheduleDay } from '../components/admin/schedule/MobileScheduleDay.tsx';
-import { DesktopLessonCard } from '../components/admin/schedule/DesktopLessonCard.tsx';
-import { DesktopScheduleDay } from '../components/admin/schedule/DesktopScheduleDay.tsx';
-import { MobileLessonCard } from '../components/admin/schedule/MobileLessonCard.tsx';
-import { LessonsTable } from '../components/admin/schedule/LessonsTable.tsx';
+import { MobileScheduleDay } from '../components/schedule/MobileScheduleDay.tsx';
+import { DesktopLessonCard } from '../components/schedule/DesktopLessonCard.tsx';
+import { DesktopScheduleDay } from '../components/schedule/DesktopScheduleDay.tsx';
+import { MobileLessonCard } from '../components/schedule/MobileLessonCard.tsx';
+import { LessonsTable } from '../components/schedule/LessonsTable.tsx';
 import { groupDayLessons } from '../api/lessons/mappers.ts';
 
-export default function SchedulePage() {
+export const SchedulePage = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStartDay());
   const [selectedDayIdx, setSelectedDayIdx] = useState(getTodayWeekDay());
   const [selectedLesson, setSelectedLesson] = useState<LessonDetail>();
@@ -222,4 +222,4 @@ export default function SchedulePage() {
       {action && <LessonForm action={action} lesson={selectedLesson} closeModal={closeModal} />}
     </div>
   );
-}
+};

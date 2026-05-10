@@ -1,6 +1,6 @@
 import type {
   Cabinet,
-  CourseTeacherStudent,
+  CourseTeacherStudentDetail,
   GroupDetail,
   OrganizationMemberDetail,
 } from './index.ts';
@@ -21,7 +21,7 @@ interface BaseLesson {
 export interface Lesson extends BaseLesson {
   conductedById: number;
   cabinetId?: number;
-  grouId?: number;
+  groupId?: number;
   courseTeacherStudentId?: number;
 }
 
@@ -29,7 +29,7 @@ export interface LessonDetail extends BaseLesson {
   conductedBy: OrganizationMemberDetail;
   cabinet?: Cabinet;
   group?: GroupDetail;
-  courseTeacherStudent?: CourseTeacherStudent;
+  courseTeacherStudent?: CourseTeacherStudentDetail;
 }
 
 export interface DayLessons {

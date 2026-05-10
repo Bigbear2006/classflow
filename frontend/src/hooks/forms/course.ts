@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import type { Course } from '../../entities';
+import type { CourseDetail } from '../../entities';
 import { optionalInt, requiredInt } from './base.ts';
 
 const CourseSchema = z.object({
@@ -20,7 +20,7 @@ type InputCourseFields = z.input<typeof CourseSchema>;
 export type OutputCourseFields = z.output<typeof CourseSchema>;
 
 interface UseCourseFormProps {
-  initialValues?: Course;
+  initialValues?: CourseDetail;
 }
 
 export const useCourseForm = (props?: UseCourseFormProps) => {

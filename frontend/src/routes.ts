@@ -1,22 +1,24 @@
 import { createBrowserRouter } from 'react-router';
 import { AppLayout } from './components/layout/AppLayout';
-import LoginPage from './pages/LoginPage.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
-import ProfilePage from './pages/ProfilePage.tsx';
-import NotificationsPage from './pages/NotificationsPage.tsx';
-import OrganizationMembersPage from './pages/admin/OrganizationMembersPage.tsx';
-import CoursesPage from './pages/CoursesPage.tsx';
-import AddressesPage from './pages/admin/AddressesPage.tsx';
-import GroupsPage from './pages/admin/GroupsPage.tsx';
-import SchedulePage from './pages/SchedulePage.tsx';
-import AdminPaymentsPage from './pages/admin/AdminPaymentsPage.tsx';
+import { LoginPage } from './pages/LoginPage.tsx';
+import { RegisterPage } from './pages/RegisterPage.tsx';
+import { ProfilePage } from './pages/ProfilePage.tsx';
+import { NotificationsPage } from './pages/NotificationsPage.tsx';
+import { OrganizationMembersPage } from './pages/admin/OrganizationMembersPage.tsx';
+import { CoursesPage } from './pages/CoursesPage.tsx';
+import { AddressesPage } from './pages/admin/AddressesPage.tsx';
+import { GroupsPage } from './pages/GroupsPage.tsx';
+import { SchedulePage } from './pages/SchedulePage.tsx';
+import { PaymentsPage } from './pages/PaymentsPage.tsx';
 import { SubjectsPage } from './pages/admin/SubjectsPage.tsx';
 import { OrganizationsPage } from './pages/OrganizationsPage.tsx';
-import LandingPage from './pages/LandingPage.tsx';
-import DashboardPage from './pages/DashboardPage.tsx';
+import { LandingPage } from './pages/LandingPage.tsx';
+import { DashboardPage } from './pages/DashboardPage.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { createLoader, organizationMembersLoader } from './loaders.ts';
 import { FeedbackPage } from './pages/FeedbackPage.tsx';
+import { ProgressPage } from './pages/student/ProgressPage.tsx';
+import { IndividualCoursesPage } from './pages/IndividualCoursesPage.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -45,8 +47,10 @@ export const router = createBrowserRouter([
       { path: 'subjects', Component: SubjectsPage },
       { path: 'addresses', Component: AddressesPage },
       { path: 'groups', Component: GroupsPage },
+      { path: 'individuals', Component: IndividualCoursesPage },
       { path: 'schedule', Component: SchedulePage },
-      { path: 'payments', Component: AdminPaymentsPage },
+      { path: 'payments', Component: PaymentsPage },
+      { path: 'progress', Component: ProgressPage },
       { path: 'feedback', Component: FeedbackPage },
     ],
   },

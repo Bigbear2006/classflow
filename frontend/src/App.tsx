@@ -5,7 +5,7 @@ import { AppContextProvider } from './context.tsx';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './loaders.ts';
 
-export default function App() {
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
@@ -14,4 +14,6 @@ export default function App() {
       </AppContextProvider>
     </QueryClientProvider>
   );
-}
+};
+
+export default App;

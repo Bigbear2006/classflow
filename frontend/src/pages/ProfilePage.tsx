@@ -6,7 +6,7 @@ import { logoutUser } from '../api/users/requests.ts';
 import { roleColors, roleLabels } from '../labels/role.tsx';
 import { useAppContext } from '../context.tsx';
 
-export default function ProfilePage() {
+export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, member, organization } = useAppContext();
   // const [notifs, setNotifs] = useState({ email: true, push: true });
@@ -91,4 +91,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-}
+};

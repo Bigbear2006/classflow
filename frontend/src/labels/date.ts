@@ -27,6 +27,10 @@ export const displayTime = (date: Date): string => {
   });
 };
 
+export const displayShortMonth = (date: Date): string => {
+  return date.toLocaleDateString('ru', { month: 'short' });
+};
+
 export const getDateString = (date: Date): string => {
   return date.toISOString().split('T')[0];
 };

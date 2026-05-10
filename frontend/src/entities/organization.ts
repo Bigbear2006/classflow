@@ -1,4 +1,4 @@
-import type { Course, User } from './index.ts';
+import type { AttendanceStatus, CourseDetail, User } from './index.ts';
 
 export type UserRole = 'OWNER' | 'ADMIN' | 'TEACHER' | 'STUDENT';
 
@@ -11,7 +11,7 @@ export interface Organization {
 }
 
 export interface OrganizationDetail extends Organization {
-  courses: Course[];
+  courses: CourseDetail[];
   membersCount: number;
   groupsCount: number;
 }
@@ -38,11 +38,15 @@ export interface OrganizationMemberDetail {
   createdAt: Date;
 }
 
+export interface OrganizationMemberWithAttendance extends OrganizationMemberDetail {
+  attendanceStatus: AttendanceStatus | null;
+}
+
 export interface TeacherWithFeedback extends OrganizationMemberDetail {
   rating: number;
   feedbackCount: number;
   userCanAddFeedback: boolean;
-  courses: Course[];
+  courses: CourseDetail[];
 }
 
 export interface RoleCount {

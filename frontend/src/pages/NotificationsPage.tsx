@@ -2,7 +2,7 @@ import { Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { LessonDetail, OrganizationMemberDetail, Payment } from '../entities';
 
-export default function NotificationsPage() {
+export const NotificationsPage = () => {
   const [upcomingLessons, setUpcomingLessons] = useState<LessonDetail[]>([]);
   const [recentPayments, setRecentPayments] = useState<Payment[]>([]);
   const [recentMembers, setRecentMembers] = useState<OrganizationMemberDetail[]>([]);
@@ -31,4 +31,4 @@ export default function NotificationsPage() {
       )}
     </div>
   );
-}
+};

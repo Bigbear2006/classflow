@@ -1,27 +1,27 @@
 import type { UserRole } from '../entities';
 import type { JSX } from 'react';
-import { Crown, GraduationCap, Shield, UserCheck } from 'lucide-react';
+import { Crown, GraduationCap, Shield, BookOpen } from 'lucide-react';
 
 export const roleConfig: Record<UserRole, { label: string; color: string; icon: JSX.Element }> = {
   OWNER: {
     label: 'Владелец',
-    color: 'bg-violet-100 text-violet-700',
+    color: 'bg-violet-600',
     icon: <Crown size={12} />,
   },
   ADMIN: {
     label: 'Администратор',
-    color: 'bg-blue-100 text-blue-700',
+    color: 'bg-blue-600',
     icon: <Shield size={12} />,
   },
   TEACHER: {
     label: 'Преподаватель',
-    color: 'bg-emerald-100 text-emerald-700',
-    // icon: <BookOpen size={12} />,
-    icon: <UserCheck size={12} />,
+    color: 'bg-emerald-600',
+    icon: <BookOpen size={12} />,
+    // icon: <UserCheck size={12} />,
   },
   STUDENT: {
     label: 'Ученик',
-    color: 'bg-amber-100 text-amber-700',
+    color: 'bg-amber-600',
     icon: <GraduationCap size={12} />,
   },
 };
@@ -37,5 +37,5 @@ export const roleColors: Record<string, string> = {
   OWNER: 'bg-violet-600',
   ADMIN: 'bg-blue-600',
   TEACHER: 'bg-emerald-600',
-  STUDENT: 'bg-amber-500',
+  STUDENT: 'bg-amber-600',
 };

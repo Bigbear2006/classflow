@@ -10,9 +10,7 @@ import { useState } from 'react';
 
 const RegisterUserSchema = z
   .object({
-    fullname: z.string().refine(val => val.split(' ').length >= 2, {
-      message: 'ФИО должно состоять минимум из двух слов',
-    }),
+    fullname: z.string().min(3, 'ФИО: минимум 3 символа').max(100, 'ФИО: не больше 100 символов'),
     email: z.email('Неверная почта'),
     phone: z.string(),
     password: z.string().min(8, 'Длина пароля минимум 8 символов'),

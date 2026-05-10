@@ -1,6 +1,7 @@
 import type { ModalAction } from '../../entities';
 import { useCustomMutation } from '../useCustomMutation.ts';
 import {
+  addCurrentStudentToCourse,
   addTeacherToCourse,
   createCourse,
   deleteTeacherFromCourse,
@@ -41,5 +42,12 @@ export const useDeleteTeacherFromCourseMutation = ({ courseId }: UseCourseProps)
       deleteTeacherFromCourse({ course_id: courseId, teacher_id: teacherId }),
     invalidateQueryKeyOnSuccess: ['courses', courseId, 'teachers'],
     toastErrorMessage: 'Не удалось удалить учителя с курса',
+  });
+};
+
+export const useAddCurrentStudentToCourseMutation = () => {
+  return useCustomMutation({
+    mutationFn: addCurrentStudentToCourse,
+    toastErrorMessage: 'Не удалось записаться на курс',
   });
 };

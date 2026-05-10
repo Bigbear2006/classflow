@@ -3,7 +3,7 @@ import { AddressForm } from '../../components/admin/addresses/AddressForm.tsx';
 import { AddressCard } from '../../components/admin/addresses/AddressCard.tsx';
 import { useAddresses } from '../../hooks/queries/address.ts';
 
-export default function AddressesPage() {
+export const AddressesPage = () => {
   const { data: addresses } = useAddresses();
 
   return (
@@ -28,4 +28,4 @@ export default function AddressesPage() {
       </div>
     </div>
   );
-}
+};

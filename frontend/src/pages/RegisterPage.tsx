@@ -1,7 +1,7 @@
 import { RegisterForm } from '../components/common/RegisterForm.tsx';
 import { ClassFlowBlock } from '../components/common/ClassFlowBlock.tsx';
 
-export default function RegisterPage() {
+export const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 flex flex-col">
       <ClassFlowBlock />
@@ -16,4 +16,4 @@ export default function RegisterPage() {
       </div>
     </div>
   );
-}
+};

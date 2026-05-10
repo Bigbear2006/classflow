@@ -1,5 +1,4 @@
 import {
-  ArrowLeftRight,
   BookOpen,
   BookText,
   Calendar,
@@ -65,6 +64,11 @@ function getNavItems(role?: string, user?: User): NavItem[] {
         icon: <GraduationCap size={18} />,
       },
       {
+        label: 'Индивидуальные ученики',
+        path: '/individuals',
+        icon: <UserIcon size={18} />,
+      },
+      {
         label: 'Расписание',
         path: '/schedule',
         icon: <Calendar size={18} />,
@@ -85,19 +89,19 @@ function getNavItems(role?: string, user?: User): NavItem[] {
         end: true,
       },
       {
+        label: 'Группы',
+        path: '/groups',
+        icon: <GraduationCap size={18} />,
+      },
+      {
+        label: 'Индивидуальные ученики',
+        path: '/individuals',
+        icon: <UserIcon size={18} />,
+      },
+      {
         label: 'Расписание',
         path: '/schedule',
         icon: <Calendar size={18} />,
-      },
-      {
-        label: 'Мои курсы',
-        path: '/courses/my',
-        icon: <BookOpen size={18} />,
-      },
-      {
-        label: 'Перенос занятий',
-        path: '/lesson-transfers',
-        icon: <ArrowLeftRight size={18} />,
       },
     ];
 

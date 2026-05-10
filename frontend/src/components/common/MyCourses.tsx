@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { Course } from '../../entities';
+import type { CourseDetail } from '../../entities';
 import { useNavigate } from 'react-router';
 import { BookOpen } from 'lucide-react';
 import { getCourses } from '../../api/courses/requests.ts';
 
 export const MyCourses = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<CourseDetail[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {

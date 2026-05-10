@@ -1,7 +1,7 @@
 import { LoginForm } from '../components/common/LoginForm.tsx';
 import { ClassFlowBlock } from '../components/common/ClassFlowBlock.tsx';
 
-export default function LoginPage() {
+export const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 flex flex-col">
       <ClassFlowBlock />
@@ -16,4 +16,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};

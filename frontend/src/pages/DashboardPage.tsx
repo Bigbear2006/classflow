@@ -1,13 +1,13 @@
-import { OrganizationStatsBlock } from '../components/admin/dashboard/OrganizationStatsBlock.tsx';
-import { QuickActions } from '../components/admin/dashboard/QuickActions.tsx';
+import { OrganizationStatsBlock } from '../components/dashboard/OrganizationStatsBlock.tsx';
+import { QuickActions } from '../components/dashboard/QuickActions.tsx';
 import { UpcomingLessons } from '../components/common/UpcomingLessons.tsx';
 import { OrganizationHeader } from '../components/common/OrganizationHeader.tsx';
 import { useAppContext } from '../context.tsx';
-import { TeacherStatsBlock } from '../components/teacher/TeacherStatsBlock.tsx';
-import { StudentStatsBlock } from '../components/student/StudentStatsBlock.tsx';
+import { TeacherStatsBlock } from '../components/teacher/dashboard/TeacherStatsBlock.tsx';
+import { StudentStatsBlock } from '../components/student/dashboard/StudentStatsBlock.tsx';
 import { MyCourses } from '../components/common/MyCourses.tsx';
 
-export default function DashboardPage() {
+export const DashboardPage = () => {
   const { isStudent, isTeacher, isAdminOrOwner } = useAppContext();
 
   return (
@@ -22,4 +22,4 @@ export default function DashboardPage() {
       </div>
     </div>
   );
-}
+};

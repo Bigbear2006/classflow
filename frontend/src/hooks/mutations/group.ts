@@ -1,5 +1,11 @@
 import { useCustomMutation } from '../useCustomMutation.ts';
-import { createGroup, deleteGroup, updateGroup } from '../../api/groups/requests.ts';
+import {
+  addCurrentStudentToGroup,
+  createGroup,
+  deleteGroup,
+  updateGroup,
+  updateStudentGroup,
+} from '../../api/groups/requests.ts';
 import type { ModalAction } from '../../entities';
 import type { GroupData } from '../../api/groups/types.ts';
 
@@ -25,5 +31,20 @@ export const useDeleteGroupMutation = () => {
     mutationFn: deleteGroup,
     invalidateQueryKeyOnSuccess: ['groups'],
     toastErrorMessage: 'Не удалось удалить группу',
+  });
+};
+
+export const useAddCurrentStudentToGroupMutation = () => {
+  return useCustomMutation({
+    mutationFn: addCurrentStudentToGroup,
+    toastErrorMessage: 'Не удалось записаться на курс',
+  });
+};
+
+export const useUpdateStudentGroupMutation = () => {
+  return useCustomMutation({
+    mutationFn: updateStudentGroup,
+    invalidateQueryKeyOnSuccess: ['groups', 'students'],
+    toastErrorMessage: 'Не удалось сохранить',
   });
 };

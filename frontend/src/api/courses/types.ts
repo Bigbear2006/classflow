@@ -1,4 +1,15 @@
-import type { CoursePaymentType, CourseType, LessonType, Subject, User } from '../../entities';
+import type {
+  CoursePaymentType,
+  CourseTeacherStatus,
+  CourseType,
+  LessonType,
+  StudentStatus,
+  Subject,
+  User,
+} from '../../entities';
+import type { OrganizationMemberDetailResponse } from '../organizations/types.ts';
+import type { LessonResponse } from '../lessons/types.ts';
+import type { PaymentResponse } from '../payments/types.ts';
 
 export interface CourseTeacherParams {
   course_id: number;
@@ -16,6 +27,11 @@ export interface CourseData {
   duration?: number;
 }
 
+export interface AddCurrentStudentToCourseData {
+  courseId: number;
+  teacherId: number;
+}
+
 export interface CourseResponse {
   id: number;
   subject: Subject;
@@ -27,13 +43,18 @@ export interface CourseResponse {
   lessons_count?: number;
   duration?: string;
   selected_teacher?: User;
+}
+
+export interface CourseDetailResponse extends CourseResponse {
   teachers_count: number;
   students_count: number;
+  active_group_id: number | null;
+  user_joined: boolean;
 }
 
 interface BaseCourseTeacherResponse {
   id: number;
-  is_active: boolean;
+  status: CourseTeacherStatus;
   created_at: string;
 }
 
@@ -43,12 +64,13 @@ export interface CourseTeacherResponse extends BaseCourseTeacherResponse {
 }
 
 export interface CourseTeacherDetailResponse extends BaseCourseTeacherResponse {
-  course: CourseResponse;
-  teacher: User;
+  course: CourseDetailResponse;
+  teacher: OrganizationMemberDetailResponse;
 }
 
 interface BaseCourseTeacherStudentResponse {
   id: number;
+  status: StudentStatus;
   created_at: Date;
 }
 
@@ -59,5 +81,25 @@ export interface CourseTeacherStudentResponse extends BaseCourseTeacherStudentRe
 
 export interface CourseTeacherStudentDetailResponse extends BaseCourseTeacherStudentResponse {
   course_teacher: CourseTeacherDetailResponse;
-  student: User;
+  student: OrganizationMemberDetailResponse;
+}
+
+export interface CourseTeacherStudentWithPaymentsResponse extends CourseTeacherStudentDetailResponse {
+  lessons: LessonResponse[];
+  payments: PaymentResponse[];
+}
+
+export interface IndividualCourseTeacherStudentResponse extends BaseCourseTeacherStudentResponse {
+  courseTeacherId: number;
+  student: OrganizationMemberDetailResponse;
+}
+
+export interface IndividualCourseTeacherResponse extends BaseCourseTeacherResponse {
+  course_id: number;
+  teacher: OrganizationMemberDetailResponse;
+  students: IndividualCourseTeacherStudentResponse[];
+}
+
+export interface IndividualCourseResponse extends CourseResponse {
+  teachers: IndividualCourseTeacherResponse[];
 }

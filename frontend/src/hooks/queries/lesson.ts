@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getLessons } from '../../api/lessons/requests.ts';
+import { getLessons, getLessonStudents } from '../../api/lessons/requests.ts';
 import type { GetLessonsParams } from '../../api/lessons/types.ts';
 
 export const useLessons = (params?: GetLessonsParams) => {
@@ -7,5 +7,18 @@ export const useLessons = (params?: GetLessonsParams) => {
     initialData: [],
     queryKey: ['lessons', params],
     queryFn: () => getLessons(params),
+  });
+};
+
+interface UseLessonProps {
+  lessonId?: number;
+}
+
+export const useLessonStudents = ({ lessonId }: UseLessonProps) => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['lessons', lessonId, 'students'],
+    queryFn: () => getLessonStudents(lessonId!),
+    enabled: !!lessonId,
   });
 };

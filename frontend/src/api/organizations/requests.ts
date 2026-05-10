@@ -5,11 +5,11 @@ import type {
   GetOrganizationMembersParams,
   GetOrganizationsParams,
   InviteOrganizationMemberData,
-  MyOrgResponse,
+  MyOrganizationResponse,
   OrganizationStatsResponse,
-  OrgMemberDetailResponse,
-  OrgMemberResponse,
-  OrgResponse,
+  OrganizationMemberDetailResponse,
+  OrganizationMemberResponse,
+  OrganizationResponse,
   RoleCountResponse,
   UpdateOrganizationMemberData,
 } from './types.ts';
@@ -21,35 +21,37 @@ import {
   mapOrgMemberDetail,
 } from './mappers.ts';
 
-export const getOrganizations = async (params: GetOrganizationsParams) => {
+export const getOrganizations = (params: GetOrganizationsParams) => {
   return axiosInstance
-    .get<OrgResponse[]>('organizations/', { params: params })
+    .get<OrganizationResponse[]>('organizations/', { params: params })
     .then(rsp => rsp.data.map(mapOrg));
 };
 
-export const getCurrentOrganization = async () => {
-  return axiosInstance.get<OrgResponse>('organizations/current/').then(rsp => mapOrg(rsp.data));
+export const getCurrentOrganization = () => {
+  return axiosInstance
+    .get<OrganizationResponse>('organizations/current/')
+    .then(rsp => mapOrg(rsp.data));
 };
 
-export const getMyOrganizations = async () => {
+export const getMyOrganizations = () => {
   return axiosInstance
-    .get<MyOrgResponse[]>('organizations/my/')
+    .get<MyOrganizationResponse[]>('organizations/my/')
     .then(rsp => rsp.data.map(mapMyOrg));
 };
 
-export const getCurrentOrganizationMember = async () => {
+export const getCurrentOrganizationMember = () => {
   return axiosInstance
-    .get<OrgMemberResponse>('organizations/current/members/me/')
+    .get<OrganizationMemberResponse>('organizations/current/members/me/')
     .then(rsp => mapOrgMember(rsp.data));
 };
 
-export const getOrganizationMembers = async (params?: GetOrganizationMembersParams) => {
+export const getOrganizationMembers = (params?: GetOrganizationMembersParams) => {
   return axiosInstance
-    .get<OrgMemberDetailResponse[]>('organizations/current/members/', { params })
+    .get<OrganizationMemberDetailResponse[]>('organizations/current/members/', { params })
     .then(rsp => rsp.data.map(mapOrgMemberDetail));
 };
 
-export const getOrganizationTeachers = async () => {
+export const getOrganizationTeachers = () => {
   return getOrganizationMembers({ roles: ['TEACHER'] });
 };
 

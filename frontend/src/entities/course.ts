@@ -1,9 +1,11 @@
 import type { Duration } from 'luxon';
-import type { GroupDetail, LessonDetail, Subject, User } from './index.ts';
+import type { Lesson, OrganizationMemberDetail, Payment, Subject, User } from './index.ts';
 
 export type LessonType = 'ONLINE' | 'OFFLINE' | 'MIXED';
 export type CourseType = 'GROUP' | 'INDIVIDUAL';
 export type CoursePaymentType = 'FULL_COURSE' | 'EVERY_LESSON';
+export type CourseTeacherStatus = 'ACTIVE' | 'PAUSED' | 'DELETED';
+export type StudentStatus = 'PENDING' | 'ACTIVE' | 'REJECTED' | 'DELETED';
 
 export interface Course {
   id: number;
@@ -16,31 +18,53 @@ export interface Course {
   lessonsCount?: number;
   duration?: Duration;
   selectedTeacher?: User;
-  teachersCount: number;
-  studentsCount: number;
 }
 
 export interface CourseDetail extends Course {
-  groups: GroupDetail[];
-  teachers: User[];
+  teachersCount: number;
+  studentsCount: number;
+  activeGroupId: number | null;
+  userJoined: boolean;
 }
 
-export interface CourseTeacherDetail {
+interface BaseCourseTeacher {
   id: number;
+  status: CourseTeacherStatus;
+  createdAt: Date;
+}
+
+export interface CourseTeacherDetail extends BaseCourseTeacher {
   course: Course;
-  teacher: User;
-  isActive: boolean;
-  createdAt: Date;
+  teacher: OrganizationMemberDetail;
 }
 
-export interface CourseTeacherStudent {
+interface BaseCourseTeacherStudent {
   id: number;
-  courseTeacher: CourseTeacherDetail;
-  student: User;
+  status: StudentStatus;
   createdAt: Date;
-  // status: 'active' | 'pending' | 'cancelled';
 }
 
-export interface CourseTeacherStudentWithLessons extends CourseTeacherStudent {
-  lessons: LessonDetail[];
+export interface CourseTeacherStudentDetail extends BaseCourseTeacherStudent {
+  courseTeacher: CourseTeacherDetail;
+  student: OrganizationMemberDetail;
+}
+
+export interface CourseTeacherStudentWithPayments extends CourseTeacherStudentDetail {
+  lessons: Lesson[];
+  payments: Payment[];
+}
+
+export interface IndividualCourseTeacherStudent extends BaseCourseTeacherStudent {
+  courseTeacherId: number;
+  student: OrganizationMemberDetail;
+}
+
+export interface IndividualCourseTeacher extends BaseCourseTeacher {
+  courseId: number;
+  teacher: OrganizationMemberDetail;
+  students: IndividualCourseTeacherStudent[];
+}
+
+export interface IndividualCourse extends Course {
+  teachers: IndividualCourseTeacher[];
 }

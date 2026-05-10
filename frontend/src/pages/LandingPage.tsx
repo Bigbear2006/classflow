@@ -10,7 +10,7 @@ import { DesktopNav } from '../components/landing/DesktopNav.tsx';
 import { useAppContext } from '../context.tsx';
 import { Navigate } from 'react-router';
 
-export default function LandingPage() {
+export const LandingPage = () => {
   const { user, organization } = useAppContext();
   const [scrolled, setScrolled] = useState(false);
 
@@ -50,4 +50,4 @@ export default function LandingPage() {
       <Footer scrollTo={scrollTo} />
     </div>
   );
-}
+};

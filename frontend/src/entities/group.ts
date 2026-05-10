@@ -1,4 +1,11 @@
-import type { Cabinet, Course, LessonDetail, UserWithPayment } from './index.ts';
+import type {
+  Cabinet,
+  CourseDetail,
+  Lesson,
+  OrganizationMemberDetail,
+  Payment,
+  StudentStatus,
+} from './index.ts';
 
 interface BaseGroup {
   id: number;
@@ -13,19 +20,38 @@ export interface Group extends BaseGroup {
 }
 
 export interface GroupDetail extends BaseGroup {
-  course: Course;
+  course: CourseDetail;
   defaultCabinet?: Cabinet;
 }
 
 export interface GroupWithPayments extends GroupDetail {
   totalPaid: number;
-  students: UserWithPayment[];
-  lessons: LessonDetail[];
+  students: StudentGroupWithPayments[];
+  lessons: Lesson[];
 }
 
-export interface UserGroup {
-  id: string;
-  userId: string;
-  groupId: string;
-  createdAt: string;
+interface BaseStudentGroup {
+  id: number;
+  status: StudentStatus;
+  createdAt: Date;
+}
+
+export interface StudentGroup extends BaseStudentGroup {
+  studentId: number;
+  groupId: number;
+}
+
+export interface StudentGroupDetail extends BaseStudentGroup {
+  student: OrganizationMemberDetail;
+  groupId: number;
+}
+
+export interface StudentGroupWithPayments extends BaseStudentGroup {
+  student: OrganizationMemberDetail;
+  totalPaid: number;
+  payments: Payment[];
+}
+
+export interface GroupWithStudents extends GroupDetail {
+  students: StudentGroupDetail[];
 }

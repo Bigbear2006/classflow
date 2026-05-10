@@ -6,7 +6,7 @@ export const createCabinet = (data: CreateCabinetData) => {
   return axiosInstance.post('cabinets/', data);
 };
 
-export const getCabinets = async (): Promise<CabinetDetail[]> => {
+export const getCabinets = (): Promise<CabinetDetail[]> => {
   return axiosInstance.get<CabinetDetailResponse[]>('cabinets/').then(rsp => rsp.data);
 };
 

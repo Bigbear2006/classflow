@@ -8,7 +8,7 @@ import type {
   UpdateUserData,
 } from './types.ts';
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = () => {
   return axiosInstance.get<User>('users/me/').then(rsp => rsp.data);
 };
 

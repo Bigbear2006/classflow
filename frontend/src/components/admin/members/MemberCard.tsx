@@ -35,7 +35,7 @@ export const MemberCard = ({ currentUser, currentMember, member }: MemberCardPro
       </td>
       <td className="px-5 py-3.5">
         <span
-          className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${roleConfig[member.role].color}`}
+          className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-white ${roleConfig[member.role].color}`}
         >
           {roleConfig[member.role].icon}
           {roleConfig[member.role].label}

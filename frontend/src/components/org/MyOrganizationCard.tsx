@@ -21,12 +21,12 @@ export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
           </div>
           <div>
             <div className="font-semibold text-slate-800 text-sm">{org.name}</div>
-            <div className="text-xs text-slate-400 mt-0.5">/{org.slug}</div>
+            <div className="text-xs text-slate-400 mt-0.5">{org.slug}</div>
           </div>
         </div>
         {roleOptions && (
           <span
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${roleOptions.color}`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-white ${roleOptions.color}`}
           >
             {roleOptions.icon} {roleOptions.label}
           </span>
@@ -47,7 +47,14 @@ export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
         onClick={() => navigateToOrganization(org.slug)}
         className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
       >
-        Перейти <ArrowRight size={14} />
+        {!window.location.hostname.startsWith(`${org.slug}.`) ? (
+          <>
+            Перейти
+            <ArrowRight size={14} />
+          </>
+        ) : (
+          'Вы находитесь в этой организации'
+        )}
       </button>
     </div>
   );

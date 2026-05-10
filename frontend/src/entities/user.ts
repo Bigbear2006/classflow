@@ -1,5 +1,3 @@
-import type { Payment } from './payment.ts';
-
 export interface User {
   id: number;
   fullname: string;
@@ -8,9 +6,4 @@ export interface User {
   password: string;
   createdAt: string;
   avatar?: string;
-}
-
-export interface UserWithPayment extends User {
-  totalPaid: number;
-  payments: Payment[];
 }

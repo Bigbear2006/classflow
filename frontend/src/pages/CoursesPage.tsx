@@ -1,25 +1,25 @@
 import { useState } from 'react';
-import type { Course, ModalAction } from '../entities';
+import type { CourseDetail, ModalAction } from '../entities';
 import { Plus, BookOpen } from 'lucide-react';
-import { CourseDetailCard } from '../components/admin/courses/CourseDetailCard.tsx';
-import { CourseForm } from '../components/admin/courses/CourseForm.tsx';
-import { CourseCard } from '../components/admin/courses/CourseCard.tsx';
+import { CourseDetailCard } from '../components/courses/CourseDetailCard.tsx';
+import { CourseForm } from '../components/courses/CourseForm.tsx';
+import { CourseCard } from '../components/courses/CourseCard.tsx';
 import { useAppContext } from '../context.tsx';
 import { useCourses } from '../hooks/queries/course.ts';
 
-export default function CoursesPage() {
+export const CoursesPage = () => {
   const { isAdminOrOwner } = useAppContext();
   const { data: courses } = useCourses();
 
-  const [selectedCourse, setSelectedCourse] = useState<Course>();
+  const [selectedCourse, setSelectedCourse] = useState<CourseDetail>();
   const [action, setAction] = useState<ModalAction | null>(null);
 
-  const openEdit = (course: Course) => {
+  const openEdit = (course: CourseDetail) => {
     setSelectedCourse(course);
     setAction('EDIT');
   };
 
-  const openDetail = (course: Course) => {
+  const openDetail = (course: CourseDetail) => {
     setSelectedCourse(course);
     setAction('VIEW');
   };
@@ -71,4 +71,4 @@ export default function CoursesPage() {
       )}
     </div>
   );
-}
+};

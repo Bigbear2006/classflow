@@ -1,11 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
-import { getGroups, getGroupStudents } from '../../api/groups/requests.ts';
+import {
+  getGroups,
+  getGroupStudents,
+  getGroupsWithPayments,
+  getGroupsWithStudents,
+} from '../../api/groups/requests.ts';
 
 export const useGroups = () => {
   return useQuery({
     initialData: [],
     queryKey: ['groups'],
     queryFn: getGroups,
+  });
+};
+
+export const useGroupsWithPayments = () => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['groups', 'payments'],
+    queryFn: () => getGroupsWithPayments(),
+  });
+};
+
+export const useGroupsWithStudents = () => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['groups', 'students'],
+    queryFn: getGroupsWithStudents,
   });
 };
 

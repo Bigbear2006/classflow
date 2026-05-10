@@ -1,7 +1,7 @@
 import type { CabinetDetailResponse } from '../cabinets/types.ts';
-import type { DetailGroupResponse } from '../groups/types.ts';
+import type { GroupDetailResponse } from '../groups/types.ts';
 import type { CourseTeacherStudentDetailResponse } from '../courses/types.ts';
-import type { OrgMemberDetailResponse } from '../organizations/types.ts';
+import type { OrganizationMemberDetailResponse } from '../organizations/types.ts';
 
 export interface GetLessonsParams {
   start_date: string;
@@ -34,8 +34,8 @@ export interface LessonResponse extends BaseLessonResponse {
 }
 
 export interface LessonDetailResponse extends BaseLessonResponse {
-  conducted_by: OrgMemberDetailResponse;
+  conducted_by: OrganizationMemberDetailResponse;
   cabinet?: CabinetDetailResponse;
-  group?: DetailGroupResponse;
+  group?: GroupDetailResponse;
   course_teacher_student?: CourseTeacherStudentDetailResponse;
 }

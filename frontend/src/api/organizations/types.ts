@@ -1,4 +1,4 @@
-import type { RoleCount, User, UserRole } from '../../entities';
+import type { AttendanceStatus, RoleCount, User, UserRole } from '../../entities';
 
 export interface GetOrganizationsParams {
   query?: string | null;
@@ -23,7 +23,7 @@ export interface UpdateOrganizationMemberData {
   role: UserRole;
 }
 
-export interface OrgResponse {
+export interface OrganizationResponse {
   id: number;
   name: string;
   slug: string;
@@ -31,11 +31,11 @@ export interface OrgResponse {
   created_at: string;
 }
 
-export interface MyOrgResponse extends OrgResponse {
+export interface MyOrganizationResponse extends OrganizationResponse {
   role: UserRole;
 }
 
-export interface OrgMemberResponse {
+export interface OrganizationMemberResponse {
   id: number;
   organization_id: number;
   user_id: number;
@@ -43,12 +43,16 @@ export interface OrgMemberResponse {
   created_at: string;
 }
 
-export interface OrgMemberDetailResponse {
+export interface OrganizationMemberDetailResponse {
   id: number;
   organization_id: number;
   user: User;
   role: UserRole;
   created_at: string;
+}
+
+export interface OrganizationMemberWithAttendanceResponse extends OrganizationMemberDetailResponse {
+  attendance_status: AttendanceStatus | null;
 }
 
 export interface RoleCountResponse extends RoleCount {}

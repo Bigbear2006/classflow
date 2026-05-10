@@ -1,9 +1,17 @@
 export interface Payment {
   id: number;
   amount: number;
-  createdById: string;
-  userGroupId: number | null;
+  createdById: number;
+  studentGroupId: number | null;
+  courseTeacherStudentId: number | null;
   lessonId: number | null;
-  date: string;
+  date: Date;
   comment: string;
+}
+
+export interface PaymentMeta {
+  lessonId?: number;
+  studentGroupId?: number;
+  courseTeacherStudentId?: number;
+  amount?: number;
 }

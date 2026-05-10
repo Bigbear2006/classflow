@@ -3,17 +3,19 @@ import type {
   Organization,
   OrganizationMember,
   OrganizationMemberDetail,
+  OrganizationMemberWithAttendance,
   OrganizationStats,
 } from '../../entities';
 import type {
-  MyOrgResponse,
+  MyOrganizationResponse,
   OrganizationStatsResponse,
-  OrgMemberDetailResponse,
-  OrgMemberResponse,
-  OrgResponse,
+  OrganizationMemberDetailResponse,
+  OrganizationMemberResponse,
+  OrganizationMemberWithAttendanceResponse,
+  OrganizationResponse,
 } from './types.ts';
 
-export const mapOrg = (data: OrgResponse): Organization => {
+export const mapOrg = (data: OrganizationResponse): Organization => {
   return {
     id: data.id,
     name: data.name,
@@ -23,7 +25,7 @@ export const mapOrg = (data: OrgResponse): Organization => {
   };
 };
 
-export const mapMyOrg = (data: MyOrgResponse): MyOrganization => {
+export const mapMyOrg = (data: MyOrganizationResponse): MyOrganization => {
   return {
     id: data.id,
     name: data.name,
@@ -37,7 +39,7 @@ export const mapMyOrg = (data: MyOrgResponse): MyOrganization => {
   };
 };
 
-export const mapOrgMember = (data: OrgMemberResponse): OrganizationMember => {
+export const mapOrgMember = (data: OrganizationMemberResponse): OrganizationMember => {
   return {
     id: data.id,
     organizationId: data.organization_id,
@@ -47,13 +49,24 @@ export const mapOrgMember = (data: OrgMemberResponse): OrganizationMember => {
   };
 };
 
-export const mapOrgMemberDetail = (data: OrgMemberDetailResponse): OrganizationMemberDetail => {
+export const mapOrgMemberDetail = (
+  data: OrganizationMemberDetailResponse,
+): OrganizationMemberDetail => {
   return {
     id: data.id,
     organizationId: data.organization_id,
     user: data.user,
     role: data.role,
     createdAt: new Date(data.created_at),
+  };
+};
+
+export const mapOrgMemberWithAttendance = (
+  data: OrganizationMemberWithAttendanceResponse,
+): OrganizationMemberWithAttendance => {
+  return {
+    ...mapOrgMemberDetail(data),
+    attendanceStatus: data.attendance_status,
   };
 };
 

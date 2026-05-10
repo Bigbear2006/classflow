@@ -1,5 +1,5 @@
 import type { OrganizationMemberDetail } from './organization.ts';
-import type { Course } from './course.ts';
+import type { CourseDetail } from './course.ts';
 
 interface BaseFeedback {
   id: string;
@@ -17,5 +17,5 @@ export interface Feedback extends BaseFeedback {
 export interface FeedbackDetail extends Feedback {
   author: OrganizationMemberDetail;
   teacher: OrganizationMemberDetail;
-  course: Course;
+  course: CourseDetail;
 }

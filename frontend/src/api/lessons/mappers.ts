@@ -1,8 +1,22 @@
-import type { DayLessons, LessonDetail } from '../../entities';
-import type { LessonDetailResponse } from './types.ts';
+import type { DayLessons, Lesson, LessonDetail } from '../../entities';
+import type { LessonDetailResponse, LessonResponse } from './types.ts';
 import { mapGroupDetail } from '../groups/mappers.ts';
 import { mapCourseTeacherStudentDetail } from '../courses/mappers.ts';
 import { mapOrgMemberDetail } from '../organizations/mappers.ts';
+
+export const mapLesson = (data: LessonResponse): Lesson => {
+  return {
+    id: data.id,
+    startDate: new Date(data.start_date),
+    endDate: new Date(data.end_date),
+    url: data.url,
+    createdAt: new Date(data.created_at),
+    conductedById: data.conducted_by_id,
+    cabinetId: data.cabinet_id,
+    groupId: data.group_id,
+    courseTeacherStudentId: data.course_teacher_student_id,
+  };
+};
 
 export const mapLessonDetail = (data: LessonDetailResponse): LessonDetail => {
   return {

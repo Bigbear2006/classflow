@@ -13,7 +13,7 @@ export const OrganizationHeader = () => {
         <h1 className="text-slate-900 text-2xl font-semibold">
           {organization?.name || 'ClassFlow'}
         </h1>
-        <p className="text-slate-500 text-sm">slug: {organization?.slug || ''}</p>
+        {/*<p className="text-slate-500 text-sm">{organization?.slug || ''}</p>*/}
       </div>
     </div>
   );
