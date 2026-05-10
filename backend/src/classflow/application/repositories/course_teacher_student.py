@@ -9,3 +9,9 @@ class CourseTeacherStudentRepository(Protocol):
         course_teacher_student: CourseTeacherStudent,
     ) -> CourseTeacherStudent:
         pass
+
+    async def get_all(self) -> list[CourseTeacherStudent]:
+        pass
+
+    async def get_with_payments(self) -> list[CourseTeacherStudent]:
+        pass

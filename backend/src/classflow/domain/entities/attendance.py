@@ -10,4 +10,3 @@ class Attendance:
     lesson_id: int
     student_id: int
     status: AttendanceStatus
-    comment: str = ''

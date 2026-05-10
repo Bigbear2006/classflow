@@ -1,4 +1,4 @@
-from sqlalchemy import BIGINT, Column, String, Table, text
+from sqlalchemy import BIGINT, Boolean, Column, String, Table, text
 
 from classflow.domain.entities import User
 from classflow.infrastructure.db.tables.base import (
@@ -16,6 +16,7 @@ users_table = Table(
     Column('email', String(150), unique=True, nullable=False),
     Column('phone', String(20), nullable=False, server_default=text("''")),
     Column('password', String(128), nullable=False),
+    Column('is_active', Boolean, nullable=False, server_default=text('false')),
     created_at_column(),
     gin_trgm_index('ix_users_fullname_trgm', column='fullname'),
     gin_trgm_index('ix_users_email_trgm', column='email'),

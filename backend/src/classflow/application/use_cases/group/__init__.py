@@ -1,6 +1,10 @@
+from classflow.application.use_cases.group.add_current_student import (
+    AddCurrentStudentToGroup,
+    AddCurrentStudentToGroupDTO,
+)
 from classflow.application.use_cases.group.add_user import (
-    AddUserToGroup,
-    AddUserToGroupDTO,
+    AddStudentToGroup,
+    AddStudentToGroupDTO,
 )
 from classflow.application.use_cases.group.create import (
     CreateGroup,
@@ -23,10 +27,25 @@ from classflow.application.use_cases.group.update import (
     UpdateGroup,
     UpdateGroupDTO,
 )
+from classflow.application.use_cases.group.update_student import (
+    UpdateStudentGroup,
+    UpdateStudentGroupDTO,
+)
+from classflow.application.use_cases.group.with_payments import (
+    GetGroupsWithPayments,
+)
+from classflow.application.use_cases.group.with_students import (
+    GetGroupsWithStudents,
+)
+from classflow.application.use_cases.group.with_teachers import (
+    GetGroupsWithTeachers,
+)
 
 __all__ = (
-    'AddUserToGroup',
-    'AddUserToGroupDTO',
+    'AddCurrentStudentToGroup',
+    'AddCurrentStudentToGroupDTO',
+    'AddStudentToGroup',
+    'AddStudentToGroupDTO',
     'CreateGroup',
     'CreateGroupDTO',
     'GetAllGroups',
@@ -34,8 +53,13 @@ __all__ = (
     'GetGroupByIdDTO',
     'GetGroupUsers',
     'GetGroupUsersDTO',
+    'GetGroupsWithPayments',
+    'GetGroupsWithStudents',
+    'GetGroupsWithTeachers',
     'RemoveUserFromGroup',
     'RemoveUserFromGroupDTO',
     'UpdateGroup',
     'UpdateGroupDTO',
+    'UpdateStudentGroup',
+    'UpdateStudentGroupDTO',
 )

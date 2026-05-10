@@ -26,7 +26,10 @@ class Lesson:
         init=False,
         default=None,
     )
+    is_active: bool = True
     created_at: datetime = field(init=False)
+    # Manually set this attribute
+    payment_id: int | None = field(init=False, default=None)
 
     def __post_init__(self):
         if self.start_date.date() != self.end_date.date():

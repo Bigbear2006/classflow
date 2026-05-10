@@ -4,9 +4,7 @@ from sqlalchemy import (
     Enum,
     ForeignKeyConstraint,
     Table,
-    Text,
     UniqueConstraint,
-    text,
 )
 
 from classflow.domain.entities import (
@@ -39,7 +37,6 @@ attendance_table = Table(
         index=True,
     ),
     Column('status', attendance_status_enum, nullable=False),
-    Column('comment', Text, nullable=False, server_default=text("''")),
     ForeignKeyConstraint(
         ['organization_id', 'lesson_id'],
         ['lessons.organization_id', 'lessons.id'],

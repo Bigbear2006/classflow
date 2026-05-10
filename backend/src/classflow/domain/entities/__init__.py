@@ -13,6 +13,7 @@ from classflow.domain.entities.organization import (
     OrganizationMember,
     OrganizationStats,
     RoleCount,
+    TeacherWithFeedback,
 )
 from classflow.domain.entities.payment import Payment
 from classflow.domain.entities.subject import Subject
@@ -35,5 +36,6 @@ __all__ = (
     'RoleCount',
     'StudentGroup',
     'Subject',
+    'TeacherWithFeedback',
     'User',
 )

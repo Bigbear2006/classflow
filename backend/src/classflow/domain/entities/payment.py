@@ -11,19 +11,23 @@ class Payment:
     amount: int
     created_by_id: int
     date: datetime
-    user_group_id: int | None = None
+    student_group_id: int | None = None
+    course_teacher_student_id: int | None = None
     lesson_id: int | None = None
+    comment: str = ''
 
     def __post_init__(self) -> None:
         if self.amount <= 0:
             raise ValidationError('amount must be greater than 0')
 
-        if not self.user_group_id and not self.lesson_id:
+        if not self.student_group_id and not self.course_teacher_student_id:
             raise ValidationError(
-                'user_group_id or lesson_id must be provided',
+                'student_group_id or course_teacher_student_id '
+                'must be provided',
             )
 
-        if self.user_group_id and self.lesson_id:
+        if self.student_group_id and self.course_teacher_student_id:
             raise ValidationError(
-                'user_group_id and lesson_id are mutually exclusive',
+                'student_group_id and course_teacher_student_id '
+                'are mutually exclusive',
             )

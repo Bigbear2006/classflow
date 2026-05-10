@@ -1,22 +1,29 @@
 from sqlalchemy import (
     BIGINT,
-    Boolean,
     Column,
     ForeignKeyConstraint,
     Integer,
     String,
     Table,
     UniqueConstraint,
-    text,
 )
 from sqlalchemy.orm import relationship
 
-from classflow.domain.entities import Cabinet, Course, Group, StudentGroup
+from classflow.domain.entities import (
+    Cabinet,
+    Course,
+    Group,
+    Lesson,
+    OrganizationMember,
+    Payment,
+    StudentGroup,
+)
 from classflow.infrastructure.db.tables.base import (
     created_at_column,
     mapper_registry,
     metadata,
     organization_id_fk,
+    student_status_enum,
 )
 
 groups_table = Table(
@@ -68,7 +75,7 @@ student_groups_table = Table(
         nullable=False,
         index=True,
     ),
-    Column('is_active', Boolean, nullable=False, server_default=text('true')),
+    Column('status', student_status_enum, nullable=False),
     created_at_column(),
     ForeignKeyConstraint(
         ['organization_id', 'student_id'],
@@ -89,7 +96,16 @@ mapper_registry.map_imperatively(
     properties={
         'course': relationship(Course),
         'default_cabinet': relationship(Cabinet),
+        'students': relationship(StudentGroup),
+        'lessons': relationship(Lesson, back_populates='group'),
     },
 )
 
-mapper_registry.map_imperatively(StudentGroup, student_groups_table)
+mapper_registry.map_imperatively(
+    StudentGroup,
+    student_groups_table,
+    properties={
+        'student': relationship(OrganizationMember),
+        'payments': relationship(Payment),
+    },
+)

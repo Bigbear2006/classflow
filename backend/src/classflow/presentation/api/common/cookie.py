@@ -4,7 +4,12 @@ from fastapi.security import APIKeyCookie
 cookie_scheme = APIKeyCookie(name='access')
 
 
-def set_access_cookie(response: Response, access: str, *, domain: str | None = None) -> None:
+def set_access_cookie(
+    response: Response,
+    access: str,
+    *,
+    domain: str | None = None,
+) -> None:
     response.set_cookie(
         'access',
         access,
@@ -15,7 +20,12 @@ def set_access_cookie(response: Response, access: str, *, domain: str | None = N
     )
 
 
-def set_refresh_cookie(response: Response, refresh: str, *, domain: str | None = None) -> None:
+def set_refresh_cookie(
+    response: Response,
+    refresh: str,
+    *,
+    domain: str | None = None,
+) -> None:
     response.set_cookie(
         'refresh',
         refresh,

@@ -1,6 +1,5 @@
 from sqlalchemy import (
     BIGINT,
-    Boolean,
     Column,
     Enum,
     ForeignKeyConstraint,
@@ -8,7 +7,6 @@ from sqlalchemy import (
     Interval,
     Table,
     UniqueConstraint,
-    text,
 )
 from sqlalchemy.orm import relationship
 
@@ -16,20 +14,32 @@ from classflow.domain.entities import (
     Course,
     CourseTeacher,
     CourseTeacherStudent,
+    Lesson,
     OrganizationMember,
+    Payment,
     Subject,
 )
-from classflow.domain.enums import CoursePaymentType, CourseType, LessonType
+from classflow.domain.enums import (
+    CoursePaymentType,
+    CourseTeacherStatus,
+    CourseType,
+    LessonType,
+)
 from classflow.infrastructure.db.tables.base import (
     created_at_column,
     mapper_registry,
     metadata,
     organization_id_fk,
+    student_status_enum,
 )
 
 course_type_enum = Enum(CourseType, name='course_type')
 lesson_type_enum = Enum(LessonType, name='lesson_type')
 course_payment_type_enum = Enum(CoursePaymentType, name='course_payment_type')
+course_teacher_status_enum = Enum(
+    CourseTeacherStatus,
+    name='course_teacher_status',
+)
 
 courses_table = Table(
     'courses',
@@ -74,7 +84,7 @@ course_teachers_table = Table(
         nullable=False,
         index=True,
     ),
-    Column('is_active', Boolean, nullable=False, server_default=text('true')),
+    Column('status', course_teacher_status_enum, nullable=False),
     created_at_column(),
     ForeignKeyConstraint(
         ['organization_id', 'course_id'],
@@ -105,6 +115,7 @@ course_teacher_students_table = Table(
         nullable=False,
         index=True,
     ),
+    Column('status', student_status_enum, nullable=False),
     created_at_column(),
     ForeignKeyConstraint(
         ['organization_id', 'course_teacher_id'],
@@ -121,15 +132,22 @@ course_teacher_students_table = Table(
 mapper_registry.map_imperatively(
     Course,
     courses_table,
-    properties={'subject': relationship(Subject)},
+    properties={
+        'subject': relationship(Subject),
+        'teachers': relationship(CourseTeacher, back_populates='course'),
+    },
 )
 
 mapper_registry.map_imperatively(
     CourseTeacher,
     course_teachers_table,
     properties={
-        'course': relationship(Course),
+        'course': relationship(Course, back_populates='teachers'),
         'teacher': relationship(OrganizationMember),
+        'students': relationship(
+            CourseTeacherStudent,
+            back_populates='course_teacher',
+        ),
     },
 )
 
@@ -137,7 +155,12 @@ mapper_registry.map_imperatively(
     CourseTeacherStudent,
     course_teacher_students_table,
     properties={
-        'course_teacher': relationship(CourseTeacher),
+        'course_teacher': relationship(
+            CourseTeacher,
+            back_populates='students',
+        ),
         'student': relationship(OrganizationMember),
+        'lessons': relationship(Lesson),
+        'payments': relationship(Payment),
     },
 )

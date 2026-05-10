@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Protocol
 
-from classflow.domain.entities import Lesson
+from classflow.domain.entities import Lesson, OrganizationMember
 
 
 class LessonRepository(Protocol):
@@ -30,10 +30,28 @@ class LessonRepository(Protocol):
     ) -> list[Lesson]:
         pass
 
-    async def get_student_lessons(self, user_id: int) -> list[Lesson]:
+    async def get_student_lessons(
+        self,
+        student_id: int,
+        *,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[Lesson]:
         pass
 
-    async def get_teacher_lessons(self, user_id: int) -> list[Lesson]:
+    async def get_teacher_lessons(
+        self,
+        teacher_id: int,
+        *,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[Lesson]:
+        pass
+
+    async def get_students_with_attendance(
+        self,
+        lesson_id: int,
+    ) -> list[OrganizationMember]:
         pass
 
     async def delete(self, id: int) -> None:

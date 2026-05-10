@@ -18,6 +18,8 @@ from classflow.application.use_cases.course import (
     GetCourseTeachersDTO,
     GetCourseTeacherStudents,
     GetCourseTeacherStudentsDTO,
+    GetCourseTeacherStudentsWithPayments,
+    GetIndividualCourses,
     GetMyCourses,
     UpdateCourse,
     UpdateCourseDTO,
@@ -27,10 +29,12 @@ from classflow.presentation.api.routers.course.models import (
     CourseResponse,
     CourseTeacherResponse,
     CourseTeacherStudentResponse,
+    CourseTeacherStudentWithPaymentsResponse,
     CourseWithSubjectResponse,
+    IndividualCourseResponse,
     UpdateCourseRequest,
 )
-from classflow.presentation.api.routers.group.models import DetailGroupResponse
+from classflow.presentation.api.routers.group.models import GroupDetailResponse
 from classflow.presentation.api.routers.organization.models import (
     OrganizationMemberDetailResponse,
 )
@@ -60,6 +64,16 @@ async def get_courses_router(
     return [CourseDetailResponse.model_validate(course) for course in courses]
 
 
+@course_router.get('/individual/')
+async def get_individual_courses_router(
+    get_individual_courses: FromDishka[GetIndividualCourses],
+) -> list[IndividualCourseResponse]:
+    courses = await get_individual_courses()
+    return [
+        IndividualCourseResponse.model_validate(course) for course in courses
+    ]
+
+
 @course_router.put('/{course_id}/')
 async def update_course_router(
     course_id: int,
@@ -85,10 +99,10 @@ async def get_my_courses_router(
 async def get_course_groups_router(
     course_id: int,
     get_course_groups: FromDishka[GetCourseGroups],
-) -> list[DetailGroupResponse]:
+) -> list[GroupDetailResponse]:
     dto = GetCourseGroupsDTO(course_id=course_id)
     groups = await get_course_groups(dto)
-    return [DetailGroupResponse.model_validate(group) for group in groups]
+    return [GroupDetailResponse.model_validate(group) for group in groups]
 
 
 @course_router.post('/{course_id}/teachers/{teacher_id}/', status_code=201)
@@ -157,3 +171,14 @@ async def get_course_teacher_students_router(
     )
     students = await get_course_teacher_students(dto)
     return [UserResponse.model_validate(student) for student in students]
+
+
+@course_router.get('/teachers/students/payments/')
+async def get_course_teacher_students_payments_router(
+    get_with_payments: FromDishka[GetCourseTeacherStudentsWithPayments],
+) -> list[CourseTeacherStudentWithPaymentsResponse]:
+    students = await get_with_payments()
+    return [
+        CourseTeacherStudentWithPaymentsResponse.model_validate(student)
+        for student in students
+    ]

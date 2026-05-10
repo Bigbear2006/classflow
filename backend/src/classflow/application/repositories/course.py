@@ -24,7 +24,10 @@ class CourseRepository(Protocol):
     ) -> Course:
         pass
 
-    async def get_all(self) -> list[Course]:
+    async def get_all(
+        self,
+        current_member_id: int | None = None,
+    ) -> list[Course]:
         pass
 
     async def get_groups(self, course_id: int) -> list[Group]:
@@ -33,8 +36,15 @@ class CourseRepository(Protocol):
     async def get_teachers(self, course_id: int) -> list[OrganizationMember]:
         pass
 
-    async def get_student_courses(self, user_id: int) -> list[Course]:
+    async def get_student_courses(self, student_id: int) -> list[Course]:
         pass
 
-    async def get_teacher_courses(self, user_id: int) -> list[Course]:
+    async def get_teacher_courses(self, teacher_id: int) -> list[Course]:
+        pass
+
+    async def get_individual_courses(
+        self,
+        *,
+        teacher_id: int | None = None,
+    ) -> list[Course]:
         pass

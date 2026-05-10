@@ -2,17 +2,19 @@ from typing import cast
 
 from asyncpg import UniqueViolationError
 from sqlalchemy import func, or_, select, update
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager
 
 from classflow.application.repositories.organization_member import (
     OrganizationMemberRepository,
 )
-from classflow.domain.entities import OrganizationMember
+from classflow.domain.entities import OrganizationMember, TeacherWithFeedback
 from classflow.domain.enums import UserRole
-from classflow.domain.exceptions import AlreadyExistsError
+from classflow.domain.exceptions import AlreadyExistsError, NotFoundError
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
+    feedback_table,
     organization_members_table,
     users_table,
 )
@@ -61,7 +63,10 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
             organization_members_table.c.user_id == user_id,
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        try:
+            return rows.scalar_one()
+        except NoResultFound as e:
+            raise NotFoundError('Member not found') from e
 
     async def get_organization_members(
         self,
@@ -101,3 +106,12 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
 
         rows = await self.session.scalars(stmt)
         return cast(list[OrganizationMember], rows.all())
+
+    async def get_teachers_with_feedback(self) -> list[TeacherWithFeedback]:
+        stmt = select(
+            OrganizationMember,
+            func.round(func.avg(feedback_table.c.rating)),
+        )
+        # TODO: finish or remove
+        print(stmt)
+        return []

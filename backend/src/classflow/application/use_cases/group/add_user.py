@@ -9,12 +9,12 @@ from classflow.domain.entities import StudentGroup
 
 
 @dataclass
-class AddUserToGroupDTO:
+class AddStudentToGroupDTO:
     student_id: int
     group_id: int
 
 
-class AddUserToGroup:
+class AddStudentToGroup:
     def __init__(
         self,
         student_group_repository: StudentGroupRepository,
@@ -25,7 +25,7 @@ class AddUserToGroup:
         self.permission_service = permission_service
         self.uow = uow
 
-    async def __call__(self, data: AddUserToGroupDTO) -> None:
+    async def __call__(self, data: AddStudentToGroupDTO) -> None:
         await self.permission_service.ensure_admin_or_more()
         async with self.uow:
             user_group = StudentGroup(

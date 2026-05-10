@@ -158,6 +158,12 @@ def upgrade() -> None:
         unique=False,
     )
     op.create_index(
+        op.f('ix_payments_course_teacher_student_id'),
+        'payments',
+        ['course_teacher_student_id'],
+        unique=False,
+    )
+    op.create_index(
         op.f('ix_payments_lesson_id'),
         'payments',
         ['lesson_id'],

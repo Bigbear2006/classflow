@@ -24,5 +24,23 @@ class GroupRepository(Protocol):
     async def get_all(self) -> list[Group]:
         pass
 
+    async def get_teacher_groups(self, teacher_id: int) -> list[Group]:
+        pass
+
     async def get_users(self, group_id: int) -> list[User]:
+        pass
+
+    async def get_groups_with_payments(self) -> list[Group]:
+        pass
+
+    async def get_groups_with_students(
+        self,
+        teacher_id: int | None = None,
+    ) -> list[Group]:
+        pass
+
+    async def get_groups_with_teachers(
+        self,
+        teacher_id: int | None = None,
+    ) -> list[Group]:
         pass

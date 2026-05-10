@@ -1,8 +1,13 @@
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from classflow.domain.entities.user import User
-from classflow.domain.enums import UserRole
+from classflow.domain.enums import AttendanceStatus, UserRole
+
+if TYPE_CHECKING:
+    from classflow.domain.entities.course import Course
 
 
 @dataclass
@@ -24,6 +29,48 @@ class OrganizationMember:
     user: User | None = field(init=False, default=None)
     role: UserRole
     created_at: datetime = field(init=False)
+    # Manually set this attribute
+    attendance_status: AttendanceStatus | None = field(
+        init=False,
+        default=None,
+    )
+
+    def has_role(self, role: UserRole) -> bool:
+        return self.role == role
+
+    def has_any_role(self, roles: Sequence[UserRole]) -> bool:
+        if self.role in roles:
+            return True
+        return False
+
+    @property
+    def is_owner(self) -> bool:
+        return self.has_role(UserRole.OWNER)
+
+    @property
+    def is_teacher(self) -> bool:
+        return self.has_role(UserRole.TEACHER)
+
+    @property
+    def is_student(self) -> bool:
+        return self.has_role(UserRole.STUDENT)
+
+    @property
+    def is_admin_or_more(self) -> bool:
+        return self.has_any_role([UserRole.ADMIN, UserRole.OWNER])
+
+    @property
+    def is_teacher_or_more(self) -> bool:
+        return self.has_any_role(
+            [UserRole.TEACHER, UserRole.ADMIN, UserRole.OWNER],
+        )
+
+
+class TeacherWithFeedback(OrganizationMember):
+    rating: int
+    feedback_count: int
+    user_can_add_feedback: bool
+    courses: list['Course']
 
 
 @dataclass

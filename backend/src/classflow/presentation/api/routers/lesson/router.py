@@ -12,13 +12,18 @@ from classflow.application.use_cases.lesson import (
     GetAllLessons,
     GetAllLessonsDTO,
     GetMyLessons,
+    GetStudentsWithAttendance,
+    GetStudentsWithAttendanceDTO,
     UpdateLesson,
     UpdateLessonDto,
 )
+from classflow.presentation.api.common.models import LessonResponse
 from classflow.presentation.api.routers.lesson.models import (
-    DetailLessonResponse,
-    LessonResponse,
+    LessonDetailResponse,
     UpdateLessonRequest,
+)
+from classflow.presentation.api.routers.organization.models import (
+    OrganizationMemberWithAttendanceResponse,
 )
 
 lesson_router = APIRouter(
@@ -48,23 +53,36 @@ async def update_lesson_router(
     return LessonResponse.model_validate(lesson)
 
 
+@lesson_router.get('/{lesson_id}/students/')
+async def get_lesson_students_router(
+    lesson_id: int,
+    get_students: FromDishka[GetStudentsWithAttendance],
+) -> list[OrganizationMemberWithAttendanceResponse]:
+    dto = GetStudentsWithAttendanceDTO(lesson_id=lesson_id)
+    students = await get_students(dto)
+    return [
+        OrganizationMemberWithAttendanceResponse.model_validate(student)
+        for student in students
+    ]
+
+
 @lesson_router.get('/')
 async def get_all_lessons_router(
     get_all_lessons: FromDishka[GetAllLessons],
     start_date: date | None = None,
     end_date: date | None = None,
-) -> list[DetailLessonResponse]:
+) -> list[LessonDetailResponse]:
     dto = GetAllLessonsDTO(start_date, end_date)
     lessons = await get_all_lessons(dto)
-    return [DetailLessonResponse.model_validate(lesson) for lesson in lessons]
+    return [LessonDetailResponse.model_validate(lesson) for lesson in lessons]
 
 
 @lesson_router.get('/my/')
 async def get_my_lessons_router(
     get_my_lessons: FromDishka[GetMyLessons],
-) -> list[DetailLessonResponse]:
+) -> list[LessonDetailResponse]:
     lessons = await get_my_lessons()
-    return [DetailLessonResponse.model_validate(lesson) for lesson in lessons]
+    return [LessonDetailResponse.model_validate(lesson) for lesson in lessons]
 
 
 @lesson_router.delete('/{lesson_id}/')

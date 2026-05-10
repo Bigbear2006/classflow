@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 
+from classflow.presentation.api.common.models import AddressResponse
+
 
 class CabinetResponse(BaseModel):
     id: int
@@ -7,12 +9,5 @@ class CabinetResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# Duplicate class to avoid circular import
-class _AddressResponse(BaseModel):
-    id: int
-    address: str
-    model_config = ConfigDict(from_attributes=True)
-
-
-class DetailCabinetResponse(CabinetResponse):
-    address: _AddressResponse
+class CabinetDetailResponse(CabinetResponse):
+    address: AddressResponse

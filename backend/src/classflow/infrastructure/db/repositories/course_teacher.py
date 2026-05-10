@@ -8,6 +8,7 @@ from classflow.application.repositories.course_teacher import (
     CourseTeacherRepository,
 )
 from classflow.domain.entities import CourseTeacher, User
+from classflow.domain.enums import CourseTeacherStatus
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
@@ -29,7 +30,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
             return await self.update(
                 ct.course_id,
                 ct.teacher_id,
-                is_active=True,
+                status=CourseTeacherStatus.ACTIVE,
             )
         except NoResultFound:
             return await create(self.session, course_teacher)
@@ -39,7 +40,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
         course_id: int,
         teacher_id: int,
         *,
-        is_active: bool,
+        status: CourseTeacherStatus,
     ) -> CourseTeacher:
         stmt = (
             update(CourseTeacher)
@@ -47,7 +48,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
                 course_teachers_table.c.course_id == course_id,
                 course_teachers_table.c.teacher_id == teacher_id,
             )
-            .values(is_active=is_active)
+            .values(status=status)
             .returning(CourseTeacher)
         )
         rows = await self.session.execute(stmt)
@@ -63,7 +64,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
 
     async def get_all(self) -> list[CourseTeacher]:
         stmt = select(CourseTeacher).where(
-            course_teachers_table.c.is_active.is_(True),
+            course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
         )
         rows = await self.session.scalars(stmt)
         return cast(list[CourseTeacher], rows.all())
@@ -93,4 +94,8 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
         return cast(list[User], rows.all())
 
     async def delete(self, course_id: int, teacher_id: int) -> None:
-        await self.update(course_id, teacher_id, is_active=False)
+        await self.update(
+            course_id,
+            teacher_id,
+            status=CourseTeacherStatus.DELETED,
+        )

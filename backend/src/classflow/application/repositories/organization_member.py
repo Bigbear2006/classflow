@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from classflow.domain.entities import OrganizationMember
+from classflow.domain.entities import OrganizationMember, TeacherWithFeedback
 from classflow.domain.enums import UserRole
 
 
@@ -31,4 +31,7 @@ class OrganizationMemberRepository(Protocol):
         query: str | None = None,
         roles: list[UserRole] | None = None,
     ) -> list[OrganizationMember]:
+        pass
+
+    async def get_teachers_with_feedback(self) -> list[TeacherWithFeedback]:
         pass

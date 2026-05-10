@@ -36,7 +36,7 @@ class CreateLesson:
     async def __call__(self, data: CreateLessonDTO) -> Lesson:
         await self.permission_service.ensure_admin_or_more()
 
-        if not data.cabinet_id:
+        if not data.url and not data.cabinet_id:
             if not data.group_id:
                 raise DefaultCabinetIsNotSetError()
 

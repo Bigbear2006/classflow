@@ -6,6 +6,7 @@ from classflow.application.use_cases.address import (
     GetAllAddresses,
     UpdateAddress,
 )
+from classflow.application.use_cases.attendance import BulkCreateAttendance
 from classflow.application.use_cases.cabinet import (
     CreateCabinet,
     DeleteCabinet,
@@ -20,23 +21,31 @@ from classflow.application.use_cases.course import (
     GetCourseGroups,
     GetCourseTeachers,
     GetCourseTeacherStudents,
+    GetCourseTeacherStudentsWithPayments,
+    GetIndividualCourses,
     GetMyCourses,
     UpdateCourse,
 )
 from classflow.application.use_cases.group import (
-    AddUserToGroup,
+    AddCurrentStudentToGroup,
+    AddStudentToGroup,
     CreateGroup,
     GetAllGroups,
     GetGroupById,
+    GetGroupsWithPayments,
+    GetGroupsWithStudents,
+    GetGroupsWithTeachers,
     GetGroupUsers,
     RemoveUserFromGroup,
     UpdateGroup,
+    UpdateStudentGroup,
 )
 from classflow.application.use_cases.lesson import (
     CreateLesson,
     DeleteLesson,
     GetAllLessons,
     GetMyLessons,
+    GetStudentsWithAttendance,
     UpdateLesson,
 )
 from classflow.application.use_cases.organization import (
@@ -50,6 +59,10 @@ from classflow.application.use_cases.organization import (
     GetRoleCounts,
     JoinOrganization,
     UpdateOrganizationMember,
+)
+from classflow.application.use_cases.payment import (
+    CreatePayment,
+    DeletePayment,
 )
 from classflow.application.use_cases.subject import (
     CreateSubject,
@@ -107,9 +120,11 @@ class UseCasesProvider(Provider):
         AddCurrentStudentToCourse,
         DeleteTeacherFromCourse,
         GetAllCourses,
+        GetIndividualCourses,
         GetMyCourses,
         UpdateCourse,
         GetCourseTeacherStudents,
+        GetCourseTeacherStudentsWithPayments,
         GetCourseGroups,
         GetCourseTeachers,
     )
@@ -119,13 +134,21 @@ class UseCasesProvider(Provider):
         GetGroupById,
         UpdateGroup,
         GetGroupUsers,
-        AddUserToGroup,
+        GetGroupsWithPayments,
+        GetGroupsWithTeachers,
+        GetGroupsWithStudents,
+        AddStudentToGroup,
+        AddCurrentStudentToGroup,
         RemoveUserFromGroup,
+        UpdateStudentGroup,
     )
     lesson = provide_all(
         CreateLesson,
         UpdateLesson,
         GetAllLessons,
         GetMyLessons,
+        GetStudentsWithAttendance,
         DeleteLesson,
     )
+    payment = provide_all(CreatePayment, DeletePayment)
+    attendance = provide_all(BulkCreateAttendance)

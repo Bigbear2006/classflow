@@ -37,16 +37,15 @@ class AddCurrentStudentToCourse:
         self,
         data: AddCurrentStudentToCourseDTO,
     ) -> CourseTeacherStudent:
-        await self.permission_service.ensure_student()
+        student = await self.permission_service.ensure_student()
         course_teacher = await self.course_teacher_repo.get(
             data.course_id,
             data.teacher_id,
         )
-        student_id = self.id_provider.get_current_user_id()
         async with self.uow:
             course_teacher_student = CourseTeacherStudent(
                 course_teacher_id=course_teacher.id,
-                student_id=student_id,
+                student_id=student.id,
             )
             return await self.course_teacher_student_repo.create(
                 course_teacher_student,

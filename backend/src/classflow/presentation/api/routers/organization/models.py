@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from classflow.domain.enums import UserRole
+from classflow.domain.enums import AttendanceStatus, UserRole
 from classflow.presentation.api.routers.user.models import UserResponse
 
 
@@ -35,6 +35,12 @@ class OrganizationMemberDetailResponse(BaseModel):
     role: UserRole
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
+
+
+class OrganizationMemberWithAttendanceResponse(
+    OrganizationMemberDetailResponse,
+):
+    attendance_status: AttendanceStatus | None
 
 
 class UpdateOrganizationMemberRequest(BaseModel):

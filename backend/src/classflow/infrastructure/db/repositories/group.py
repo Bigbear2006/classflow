@@ -1,16 +1,28 @@
 from typing import Any, cast
 
-from sqlalchemy import Select, and_, select, update
+from sqlalchemy import Select, and_, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import (
     joinedload,
 )
 
 from classflow.application.repositories.group import GroupRepository
-from classflow.domain.entities import Cabinet, Course, Group, User
+from classflow.domain.entities import (
+    Cabinet,
+    Course,
+    Group,
+    OrganizationMember,
+    Payment,
+    StudentGroup,
+    User,
+)
+from classflow.domain.enums import CourseTeacherStatus, StudentStatus
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
+    course_teachers_table,
+    courses_table,
     groups_table,
+    payments_table,
     student_groups_table,
     users_table,
 )
@@ -57,6 +69,22 @@ class GroupRepositoryImpl(GroupRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())
 
+    async def get_teacher_groups(self, teacher_id: int) -> list[Group]:
+        stmt = (
+            set_group_joins(select(Group))
+            .join(
+                courses_table,
+                groups_table.c.course_id == courses_table.c.id,
+            )
+            .join(
+                course_teachers_table,
+                courses_table.c.id == course_teachers_table.c.course_id,
+            )
+            .where(course_teachers_table.c.teacher_id == teacher_id)
+        )
+        rows = await self.session.scalars(stmt)
+        return cast(list[Group], rows.all())
+
     async def get_users(self, group_id: int) -> list[User]:
         stmt = (
             select(User)
@@ -67,15 +95,107 @@ class GroupRepositoryImpl(GroupRepository):
                     student_groups_table.c.student_id == users_table.c.id,
                 ),
             )
-            .where(student_groups_table.c.is_active.is_(True))
+            .where(student_groups_table.c.status == StudentStatus.ACTIVE)
             .distinct()
         )
         rows = await self.session.scalars(stmt)
         return cast(list[User], rows.all())
+
+    async def get_groups_with_payments(self) -> list[Group]:
+        stmt = (
+            set_group_joins(
+                select(Group, func.coalesce(func.sum(Payment.amount), 0)),
+            )
+            .outerjoin(
+                student_groups_table,
+                groups_table.c.id == student_groups_table.c.group_id,
+            )
+            .outerjoin(
+                payments_table,
+                student_groups_table.c.id == payments_table.c.student_group_id,
+            )
+            .options(
+                joinedload(Group.students).options(
+                    joinedload(StudentGroup.student).joinedload(
+                        OrganizationMember.user,
+                    ),
+                    joinedload(StudentGroup.payments),
+                ),
+                joinedload(Group.lessons),
+            )
+            .group_by(groups_table.c.id)
+            .distinct()
+        )
+        rows = await self.session.execute(stmt)
+        result = []
+        for group, total_paid in rows.unique().all():
+            group.total_paid = total_paid
+            for student in group.students:
+                student.total_paid = sum([p.amount for p in student.payments])
+            result.append(group)
+        return result
+
+    async def get_groups_with_students(
+        self,
+        teacher_id: int | None = None,
+    ) -> list[Group]:
+        stmt = (
+            set_group_joins(select(Group))
+            .options(
+                joinedload(Group.students)
+                .joinedload(StudentGroup.student)
+                .joinedload(OrganizationMember.user),
+            )
+            .order_by(groups_table.c.created_at)
+        )
+
+        if teacher_id:
+            stmt = join_course_teachers_to_groups(stmt).where(
+                course_teachers_table.c.teacher_id == teacher_id,
+            )
+
+        rows = await self.session.scalars(stmt)
+        return cast(list[Group], rows.unique().all())
+
+    async def get_groups_with_teachers(
+        self,
+        teacher_id: int | None = None,
+    ) -> list[Group]:
+        stmt = (
+            join_course_teachers_to_groups(select(Group))
+            .options(
+                joinedload(Group.course).joinedload(
+                    Course.subject,
+                    Course.teachers,
+                ),  # type: ignore[arg-type]
+                joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
+            )
+            .where(
+                course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
+            )
+        )
+
+        if teacher_id:
+            stmt = stmt.where(course_teachers_table.c.teacher_id == teacher_id)
+
+        rows = await self.session.scalars(stmt)
+        return cast(list[Group], rows.unique().all())
 
 
 def set_group_joins[T: tuple[Any, ...]](stmt: Select[T]) -> Select[T]:
     return stmt.options(
         joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
         joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
+    )
+
+
+def join_course_teachers_to_groups[T: tuple[Any, ...]](
+    stmt: Select[T],
+) -> Select[T]:
+    return stmt.join(
+        courses_table,
+        groups_table.c.course_id == courses_table.c.id,
+    ).join(
+        course_teachers_table,
+        courses_table.c.id == course_teachers_table.c.course_id,
     )

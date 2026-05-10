@@ -4,6 +4,7 @@ from sqlalchemy import (
     BIGINT,
     Column,
     DateTime,
+    Enum,
     ForeignKey,
     Index,
     MetaData,
@@ -12,11 +13,15 @@ from sqlalchemy import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import registry
 
+from classflow.domain.enums import StudentStatus
+
 # AsyncSession without app.current_org_id set
 RawSession = NewType('RawSession', AsyncSession)
 
 metadata = MetaData()
 mapper_registry = registry(metadata=metadata)
+
+student_status_enum = Enum(StudentStatus, name='student_status')
 
 
 def organization_id_fk() -> Column[Any]:

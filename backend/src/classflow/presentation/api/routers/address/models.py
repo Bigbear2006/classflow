@@ -1,12 +1,7 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
+from classflow.presentation.api.common.models import AddressResponse
 from classflow.presentation.api.routers.cabinet.models import CabinetResponse
-
-
-class AddressResponse(BaseModel):
-    id: int
-    address: str
-    model_config = ConfigDict(from_attributes=True)
 
 
 class AddressDetailResponse(AddressResponse):

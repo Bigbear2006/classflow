@@ -24,13 +24,20 @@ class CoursePaymentType(StrEnum):
     EVERY_LESSON = 'EVERY_LESSON'
 
 
+class CourseTeacherStatus(StrEnum):
+    ACTIVE = 'ACTIVE'
+    PAUSED = 'PAUSED'
+    DELETED = 'DELETED'
+
+
+class StudentStatus(StrEnum):
+    PENDING = 'PENDING'
+    ACTIVE = 'ACTIVE'
+    REJECTED = 'REJECTED'
+    DELETED = 'DELETED'
+
+
 class AttendanceStatus(StrEnum):
     PRESENT = 'PRESENT'
     ABSENT = 'ABSENT'
     EXCUSED = 'EXCUSED'
-
-
-class LessonTransferStatus(StrEnum):
-    PENDING = 'PENDING'
-    ACCEPTED = 'ACCEPTED'
-    REJECTED = 'REJECTED'

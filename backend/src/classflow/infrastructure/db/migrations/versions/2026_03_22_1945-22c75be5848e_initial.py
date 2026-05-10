@@ -50,6 +50,12 @@ def upgrade() -> None:
         ),
         sa.Column('password', sa.String(length=128), nullable=False),
         sa.Column(
+            'is_active',
+            sa.Boolean(),
+            server_default=sa.text('true'),
+            nullable=False,
+        ),
+        sa.Column(
             'created_at',
             sa.DateTime(timezone=True),
             server_default=sa.text('NOW()'),
@@ -231,9 +237,13 @@ def upgrade() -> None:
         sa.Column('course_id', sa.BIGINT(), nullable=False),
         sa.Column('teacher_id', sa.BIGINT(), nullable=False),
         sa.Column(
-            'is_active',
-            sa.Boolean(),
-            server_default=sa.text('true'),
+            'status',
+            sa.Enum(
+                'ACTIVE',
+                'PAUSED',
+                'DELETED',
+                name='course_teacher_status',
+            ),
             nullable=False,
         ),
         sa.Column(
@@ -361,6 +371,17 @@ def upgrade() -> None:
         sa.Column('course_teacher_id', sa.BIGINT(), nullable=False),
         sa.Column('student_id', sa.BIGINT(), nullable=False),
         sa.Column(
+            'status',
+            sa.Enum(
+                'PENDING',
+                'ACTIVE',
+                'REJECTED',
+                'DELETED',
+                name='student_status',
+            ),
+            nullable=False,
+        ),
+        sa.Column(
             'created_at',
             sa.DateTime(timezone=True),
             server_default=sa.text('NOW()'),
@@ -446,9 +467,14 @@ def upgrade() -> None:
         sa.Column('student_id', sa.BIGINT(), nullable=False),
         sa.Column('group_id', sa.BIGINT(), nullable=False),
         sa.Column(
-            'is_active',
-            sa.Boolean(),
-            server_default=sa.text('true'),
+            'status',
+            sa.Enum(
+                'PENDING',
+                'ACTIVE',
+                'REJECTED',
+                'DELETED',
+                name='student_status',
+            ),
             nullable=False,
         ),
         sa.Column(
@@ -491,12 +517,6 @@ def upgrade() -> None:
             sa.Enum('PRESENT', 'ABSENT', 'EXCUSED', name='attendance_status'),
             nullable=False,
         ),
-        sa.Column(
-            'comment',
-            sa.Text(),
-            server_default=sa.text("''"),
-            nullable=False,
-        ),
         sa.ForeignKeyConstraint(
             ['organization_id', 'lesson_id'],
             ['lessons.organization_id', 'lessons.id'],
@@ -524,6 +544,7 @@ def upgrade() -> None:
             ),
         ),
         sa.Column('student_group_id', sa.BIGINT(), nullable=True),
+        sa.Column('course_teacher_student_id', sa.BIGINT(), nullable=True),
         sa.Column('lesson_id', sa.BIGINT(), nullable=True),
         sa.Column('amount', sa.Integer(), nullable=False),
         sa.Column('created_by_id', sa.BIGINT(), nullable=False),
@@ -533,9 +554,22 @@ def upgrade() -> None:
             server_default=sa.text('NOW()'),
             nullable=False,
         ),
+        sa.Column(
+            'comment',
+            sa.String(50),
+            nullable=False,
+            server_default=sa.text("''"),
+        ),
         sa.ForeignKeyConstraint(
             ['organization_id', 'student_group_id'],
             ['student_groups.organization_id', 'student_groups.id'],
+        ),
+        sa.ForeignKeyConstraint(
+            ['organization_id', 'course_teacher_student_id'],
+            [
+                'course_teacher_students.organization_id',
+                'course_teacher_students.id',
+            ],
         ),
         sa.ForeignKeyConstraint(
             ['organization_id', 'lesson_id'],
@@ -576,4 +610,6 @@ def downgrade() -> None:
     op.execute('DROP TYPE IF EXISTS course_type')
     op.execute('DROP TYPE IF EXISTS lesson_type')
     op.execute('DROP TYPE IF EXISTS course_payment_type')
+    op.execute('DROP TYPE IF EXISTS course_teacher_status')
+    op.execute('DROP TYPE IF EXISTS student_status')
     op.execute('DROP TYPE IF EXISTS attendance_status')

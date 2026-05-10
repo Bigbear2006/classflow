@@ -10,8 +10,8 @@ from classflow.application.use_cases.cabinet import (
     GetAllCabinets,
 )
 from classflow.presentation.api.routers.cabinet.models import (
+    CabinetDetailResponse,
     CabinetResponse,
-    DetailCabinetResponse,
 )
 
 cabinet_router = APIRouter(
@@ -36,7 +36,7 @@ async def get_all_cabinets_router(
 ) -> list[CabinetResponse]:
     cabinets = await get_all_cabinets()
     return [
-        DetailCabinetResponse.model_validate(cabinet) for cabinet in cabinets
+        CabinetDetailResponse.model_validate(cabinet) for cabinet in cabinets
     ]
 
 

@@ -4,6 +4,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKeyConstraint,
     Integer,
+    String,
     Table,
     text,
 )
@@ -27,6 +28,12 @@ payments_table = Table(
         index=True,
     ),
     Column(
+        'course_teacher_student_id',
+        BIGINT,
+        nullable=True,
+        index=True,
+    ),
+    Column(
         'lesson_id',
         BIGINT,
         nullable=True,
@@ -45,9 +52,17 @@ payments_table = Table(
         nullable=False,
         server_default=text('NOW()'),
     ),
+    Column('comment', String(50), nullable=False, server_default=text("''")),
     ForeignKeyConstraint(
         ['organization_id', 'student_group_id'],
         ['student_groups.organization_id', 'student_groups.id'],
+    ),
+    ForeignKeyConstraint(
+        ['organization_id', 'course_teacher_student_id'],
+        [
+            'course_teacher_students.organization_id',
+            'course_teacher_students.id',
+        ],
     ),
     ForeignKeyConstraint(
         ['organization_id', 'lesson_id'],
