@@ -76,6 +76,7 @@ from classflow.application.use_cases.user import (
     LoginUser,
     RegisterUser,
     UpdateCurrentUser,
+    VerifyUserEmail,
 )
 
 
@@ -84,6 +85,7 @@ class UseCasesProvider(Provider):
 
     user = provide_all(
         RegisterUser,
+        VerifyUserEmail,
         LoginUser,
         GetCurrentUser,
         UpdateCurrentUser,

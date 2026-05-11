@@ -39,8 +39,14 @@ class UserRepositoryImpl(UserRepository):
         fullname: str | None = None,
         phone: str | None = None,
         password: str | None = None,
+        is_active: bool | None = None,
     ) -> User:
-        data = exclude_none(fullname=fullname, phone=phone, password=password)
+        data = exclude_none(
+            fullname=fullname,
+            phone=phone,
+            password=password,
+            is_active=is_active,
+        )
         stmt = (
             update(User)
             .where(users_table.c.id == id)

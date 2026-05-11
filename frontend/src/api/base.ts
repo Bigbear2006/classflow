@@ -27,7 +27,7 @@ let failedRequests: FailedRequest[] = [];
 axiosInstance.interceptors.response.use(null, (err: AxiosError) => {
   const config = err.config;
 
-  if (err.response?.status !== 401) {
+  if (err.response?.status !== 401 || err.config?.url?.endsWith('login/')) {
     return Promise.reject(err);
   }
 

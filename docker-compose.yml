@@ -9,6 +9,18 @@ services:
     env_file:
       - backend/.env
 
+  redis:
+    image: redis:8.6
+    command: >
+      sh -c "redis-server --appendonly yes --requirepass $$REDIS_PASSWORD"
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    env_file:
+      - backend/.env
+
   backend:
     build:
       context: backend

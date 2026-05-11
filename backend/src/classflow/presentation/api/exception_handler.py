@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -6,13 +8,17 @@ from classflow.domain.exceptions import (
     ApplicationError,
     CannotDeleteEntityError,
     InvalidCredentialsError,
+    InvalidVerificationCodeError,
     NotAuthenticatedError,
     NotFoundError,
     OrganizationNotResolvedError,
     PermissionDeniedError,
+    TooManyAttemptsError,
     ValidationError,
 )
 from classflow.presentation.api.common.models import ErrorResponse
+
+logger = logging.getLogger('classflow')
 
 CODES_MAPPING = {
     ApplicationError: 'APPLICATION_ERROR',
@@ -20,6 +26,8 @@ CODES_MAPPING = {
     AlreadyExistsError: 'ALREADY_EXISTS',
     CannotDeleteEntityError: 'CANNOT_DELETE_ENTITY',
     InvalidCredentialsError: 'INVALID_CREDENTIALS',
+    TooManyAttemptsError: 'TOO_MANY_ATTEMPTS',
+    InvalidVerificationCodeError: 'INVALID_VERIFICATION_CODE',
     NotAuthenticatedError: 'NOT_AUTHENTICATED',
     OrganizationNotResolvedError: 'ORGANIZATION_NOT_RESOLVED',
     PermissionDeniedError: 'PERMISSION_DENIED',
@@ -32,6 +40,8 @@ STATUSES_MAPPING = {
     AlreadyExistsError: 409,
     CannotDeleteEntityError: 409,
     InvalidCredentialsError: 401,
+    InvalidVerificationCodeError: 422,
+    TooManyAttemptsError: 429,
     NotAuthenticatedError: 401,
     OrganizationNotResolvedError: 400,
     PermissionDeniedError: 403,
@@ -66,6 +76,10 @@ async def unknown_exception_handler(
         code='INTERNAL_SERVER_ERROR',
         message='Internal Server Error',
         context={},
+    )
+    logger.exception(
+        f'{request.url} {exc.__class__.__name__}: {exc}',
+        exc_info=exc,
     )
     return JSONResponse(error_rsp.model_dump(), status_code=500)
 

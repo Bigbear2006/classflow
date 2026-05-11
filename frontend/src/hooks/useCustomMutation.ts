@@ -8,7 +8,7 @@ interface UseCustomMutationOptions<
   TOnMutateResult = unknown,
 > extends UseMutationOptions<TData, TError, TVariables, TOnMutateResult> {
   invalidateQueryKeyOnSuccess?: any[];
-  toastErrorMessage: string;
+  toastErrorMessage?: string;
 }
 
 export const useCustomMutation = <
@@ -27,7 +27,9 @@ export const useCustomMutation = <
         .then(() => options.onSuccess?.(data, variables, onMutateResult, context));
     },
     onError: (error, variables, onMutateResult, context) => {
-      toast.error(options.toastErrorMessage);
+      if (options.toastErrorMessage) {
+        toast.error(options.toastErrorMessage);
+      }
       options.onError?.(error, variables, onMutateResult, context);
     },
   });

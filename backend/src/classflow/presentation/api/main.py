@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from classflow.infrastructure.di.container import container
+from classflow.infrastructure.log import configure_logging
 from classflow.presentation.api import root_router
 from classflow.presentation.api.exception_handler import (
     setup_exception_handlers,
@@ -53,6 +54,7 @@ def create_app(_container: AsyncContainer | None = None) -> FastAPI:
 
 
 if __name__ == '__main__':
+    configure_logging()
     uvicorn.run(
         app=create_app(),
         host='0.0.0.0',

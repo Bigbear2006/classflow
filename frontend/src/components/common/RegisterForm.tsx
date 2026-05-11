@@ -5,7 +5,7 @@ import { isValidPhoneNumber } from 'libphonenumber-js';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerUser } from '../../api/users/requests.ts';
-import { Link, useNavigate } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { useState } from 'react';
 
 const RegisterUserSchema = z
@@ -47,7 +47,8 @@ export const RegisterForm = () => {
   } = useForm<RegisterUserFields>({
     resolver: zodResolver(RegisterUserSchema),
   });
-  const navigate = useNavigate();
+
+  const [_, setSearchParams] = useSearchParams(window.location.search);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +56,7 @@ export const RegisterForm = () => {
     setLoading(true);
     registerUser(data)
       .finally(() => setLoading(false))
-      .then(() => navigate('/login'))
+      .then(data => setSearchParams(prev => ({ ...prev, verificationToken: data.token })))
       .catch(() => setError('email', { message: 'Почта уже используется' }));
   };
 

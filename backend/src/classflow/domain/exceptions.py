@@ -28,6 +28,16 @@ class InvalidCredentialsError(ApplicationError):
         super().__init__('Invalid email or password', **context)
 
 
+class InvalidVerificationCodeError(ApplicationError):
+    def __init__(self, **context: Any) -> None:
+        super().__init__('Invalid verification code', **context)
+
+
+class TooManyAttemptsError(ApplicationError):
+    def __init__(self, **context: Any) -> None:
+        super().__init__('Too many attempts', **context)
+
+
 class NotAuthenticatedError(ApplicationError):
     def __init__(self, **context: Any) -> None:
         super().__init__('Not authenticated', **context)

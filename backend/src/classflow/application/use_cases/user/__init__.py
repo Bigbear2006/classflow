@@ -12,6 +12,10 @@ from classflow.application.use_cases.user.update_current import (
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
 )
+from classflow.application.use_cases.user.verify import (
+    VerifyUserEmail,
+    VerifyUserEmailDTO,
+)
 
 __all__ = (
     'ChangeUserPassword',
@@ -23,4 +27,6 @@ __all__ = (
     'RegisterUserDTO',
     'UpdateCurrentUser',
     'UpdateCurrentUserDTO',
+    'VerifyUserEmail',
+    'VerifyUserEmailDTO',
 )

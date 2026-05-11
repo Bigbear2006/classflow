@@ -9,5 +9,5 @@ class User:
     email: str
     password: str
     phone: str
-    is_active: bool = True
+    is_active: bool = False
     created_at: datetime = field(init=False)

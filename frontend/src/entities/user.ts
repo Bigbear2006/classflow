@@ -7,3 +7,8 @@ export interface User {
   createdAt: string;
   avatar?: string;
 }
+
+export interface VerificationData {
+  code: string;
+  token: string;
+}

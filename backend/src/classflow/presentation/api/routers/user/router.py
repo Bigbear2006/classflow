@@ -15,7 +15,10 @@ from classflow.application.use_cases.user import (
     RegisterUserDTO,
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
+    VerifyUserEmail,
+    VerifyUserEmailDTO,
 )
+from classflow.application.verification.data_generator import VerificationData
 from classflow.infrastructure.auth.config import JWTConfig
 from classflow.infrastructure.auth.token_processor import (
     JWTTokenProcessor,
@@ -39,9 +42,17 @@ user_router = APIRouter(
 async def register_user_router(
     data: RegisterUserDTO,
     register_user: FromDishka[RegisterUser],
-) -> UserResponse:
-    user = await register_user(data)
-    return UserResponse.model_validate(user)
+) -> VerificationData:
+    return await register_user(data)
+
+
+@user_router.post('/verify-email/', status_code=204)
+async def verify_user_email_router(
+    data: VerificationData,
+    verify_email: FromDishka[VerifyUserEmail],
+) -> None:
+    dto = VerifyUserEmailDTO(verification_data=data)
+    await verify_email(dto)
 
 
 @user_router.post('/login/', status_code=204)

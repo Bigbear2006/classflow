@@ -23,7 +23,7 @@ class LoginUser:
 
     async def __call__(self, data: LoginUserDTO) -> User:
         user = await self.user_repository.get_by_email(data.email)
-        if not user:
+        if not user or not user.is_active:
             raise InvalidCredentialsError()
 
         password_valid = self.password_hasher.verify_password(

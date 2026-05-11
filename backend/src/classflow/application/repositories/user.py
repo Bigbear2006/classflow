@@ -14,6 +14,7 @@ class UserRepository(Protocol):
         fullname: str | None = None,
         phone: str | None = None,
         password: str | None = None,
+        is_active: bool | None = None,
     ) -> User:
         pass
 
