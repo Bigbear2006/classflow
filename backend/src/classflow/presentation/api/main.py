@@ -6,6 +6,7 @@ import uvicorn
 from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI, Request, Response
+from prometheus_fastapi_instrumentator import Instrumentator
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from classflow.infrastructure.di.container import container
@@ -50,6 +51,7 @@ def create_app(_container: AsyncContainer | None = None) -> FastAPI:
     app.add_middleware(BaseHTTPMiddleware, dispatch=cors_middleware)
     setup_exception_handlers(app)
     setup_dishka(_container or container, app)
+    Instrumentator().instrument(app).expose(app, include_in_schema=False)
     return app
 
 
