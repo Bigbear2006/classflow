@@ -1,4 +1,4 @@
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import {
   getCurrentOrganization,
   getCurrentOrganizationMember,
@@ -14,6 +14,7 @@ export const useOrganizations = (params: GetOrganizationsParams) => {
     initialData: [],
     queryKey: ['organizations', params],
     queryFn: () => getOrganizations(params),
+    placeholderData: keepPreviousData,
   });
 };
 

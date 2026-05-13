@@ -1,10 +1,20 @@
 from typing import Protocol
 
 from classflow.domain.entities import CourseTeacher, User
+from classflow.domain.enums import CourseTeacherStatus
 
 
 class CourseTeacherRepository(Protocol):
     async def create(self, course_teacher: CourseTeacher) -> CourseTeacher:
+        pass
+
+    async def update(
+        self,
+        course_id: int,
+        teacher_id: int,
+        *,
+        status: CourseTeacherStatus,
+    ) -> CourseTeacher:
         pass
 
     async def get(self, course_id: int, teacher_id: int) -> CourseTeacher:

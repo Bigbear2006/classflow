@@ -1,6 +1,6 @@
 [project]
 name = "classflow"
-version = "0.8.0"
+version = "0.8.1"
 description = "Supplementary education management system"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -10,9 +10,11 @@ dependencies = [
     "argon2-cffi>=25.1.0",
     "asyncpg>=0.31.0",
     "dishka>=1.9.1",
+    "email-validator>=2.3.0",
     "environs>=14.6.0",
     "fastapi>=0.135.1",
     "mypy>=2.0.0",
+    "phonenumbers>=9.0.30",
     "prometheus-fastapi-instrumentator>=7.1.0",
     "pydantic>=2.12.5",
     "pyjwt>=2.12.1",

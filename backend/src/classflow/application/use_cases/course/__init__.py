@@ -38,6 +38,14 @@ from classflow.application.use_cases.course.update import (
     UpdateCourse,
     UpdateCourseDTO,
 )
+from classflow.application.use_cases.course.update_ct import (
+    UpdateCourseTeacher,
+    UpdateCourseTeacherDTO,
+)
+from classflow.application.use_cases.course.update_cts import (
+    UpdateCourseTeacherStudent,
+    UpdateCourseTeacherStudentDTO,
+)
 
 __all__ = (
     'AddCurrentStudentToCourse',
@@ -62,4 +70,8 @@ __all__ = (
     'GetMyCourses',
     'UpdateCourse',
     'UpdateCourseDTO',
+    'UpdateCourseTeacher',
+    'UpdateCourseTeacherDTO',
+    UpdateCourseTeacherStudent,
+    UpdateCourseTeacherStudentDTO,
 )

@@ -1,6 +1,6 @@
 from typing import cast
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -13,7 +13,8 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     OrganizationMember,
 )
-from classflow.infrastructure.db.repositories.base import create
+from classflow.domain.enums import StudentStatus
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import course_teacher_students_table
 
 
@@ -33,6 +34,26 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
         )
         rows = await self.session.execute(stmt)
         return cast(list[CourseTeacherStudent], rows.all())
+
+    async def update(
+        self,
+        course_teacher_id: int,
+        student_id: int,
+        *,
+        status: StudentStatus,
+    ) -> CourseTeacherStudent:
+        stmt = (
+            update(CourseTeacherStudent)
+            .where(
+                course_teacher_students_table.c.course_teacher_id
+                == course_teacher_id,
+                course_teacher_students_table.c.student_id == student_id,
+            )
+            .values(status=status)
+            .returning(CourseTeacherStudent)
+        )
+        rows = await self.session.execute(stmt)
+        return get_one(rows)
 
     async def get_with_payments(self) -> list[CourseTeacherStudent]:
         stmt = (

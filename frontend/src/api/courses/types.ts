@@ -16,6 +16,19 @@ export interface CourseTeacherParams {
   teacher_id: number;
 }
 
+export interface UpdateCourseTeacherData {
+  course_id: number;
+  teacher_id: number;
+  status: CourseTeacherStatus;
+}
+
+export interface UpdateCourseTeacherStudentData {
+  course_id: number;
+  teacher_id: number;
+  student_id: number;
+  status: StudentStatus;
+}
+
 export interface CourseData {
   subject_id: number;
   type: CourseType;

@@ -25,6 +25,8 @@ from classflow.application.use_cases.course import (
     GetIndividualCourses,
     GetMyCourses,
     UpdateCourse,
+    UpdateCourseTeacher,
+    UpdateCourseTeacherStudent,
 )
 from classflow.application.use_cases.group import (
     AddCurrentStudentToGroup,
@@ -119,6 +121,7 @@ class UseCasesProvider(Provider):
     course = provide_all(
         CreateCourse,
         AddTeacherToCourse,
+        UpdateCourseTeacher,
         AddCurrentStudentToCourse,
         DeleteTeacherFromCourse,
         GetAllCourses,
@@ -126,6 +129,7 @@ class UseCasesProvider(Provider):
         GetMyCourses,
         UpdateCourse,
         GetCourseTeacherStudents,
+        UpdateCourseTeacherStudent,
         GetCourseTeacherStudentsWithPayments,
         GetCourseGroups,
         GetCourseTeachers,

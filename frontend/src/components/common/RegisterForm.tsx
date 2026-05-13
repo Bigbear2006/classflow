@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerUser } from '../../api/users/requests.ts';
 import { Link, useSearchParams } from 'react-router';
 import { useState } from 'react';
+import { FieldError, Input, Label, TextField } from '@heroui/react';
 
 const RegisterUserSchema = z
   .object({
@@ -64,17 +65,18 @@ export const RegisterForm = () => {
     <div className="bg-white rounded-2xl shadow-2xl p-8">
       <ErrorsBlock errors={Object.values(errors)} />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">ФИО</label>
+        <TextField isRequired isInvalid={!!errors.fullname}>
+          <Label>ФИО</Label>
           <div className="relative">
             <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
+            <Input
               {...register('fullname')}
               placeholder="Иванов Иван Иванович"
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
-        </div>
+          <FieldError>{errors.fullname?.message}</FieldError>
+        </TextField>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Почта</label>

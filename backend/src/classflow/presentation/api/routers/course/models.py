@@ -29,6 +29,14 @@ class UpdateCourseRequest(BaseModel):
     duration: timedelta | None = None
 
 
+class UpdateCourseTeacherRequest(BaseModel):
+    status: CourseTeacherStatus
+
+
+class UpdateCourseTeacherStudentRequest(BaseModel):
+    status: StudentStatus
+
+
 class CourseResponse(BaseModel):
     id: int
     type: CourseType

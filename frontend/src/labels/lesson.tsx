@@ -1,4 +1,4 @@
-import type { LessonDetail, LessonStatus, LessonType } from '../entities';
+import type { LessonDetail, LessonStatus, LessonType, StudentStatus } from '../entities';
 
 export const lessonTypeLabels: Record<LessonType, string> = {
   ONLINE: 'Онлайн',
@@ -47,17 +47,17 @@ export const pendingStudentStatusConfig = [
   {
     status: 'PENDING',
     label: 'Ожидает',
-    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    color: 'bg-amber-100 text-amber-700 border-amber-200',
   },
   {
     status: 'ACTIVE',
     label: 'Принят',
-    color: 'bg-red-100 text-red-700 border-red-200',
+    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   },
   {
     status: 'REJECTED',
     label: 'Отклонен',
-    color: 'bg-amber-100 text-amber-700 border-amber-200',
+    color: 'bg-red-100 text-red-700 border-red-200',
   },
 ];
 
@@ -65,11 +65,18 @@ export const activeStudentStatusConfig = [
   {
     status: 'ACTIVE',
     label: 'В группе',
-    color: 'bg-red-100 text-red-700 border-red-200',
+    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   },
   {
     status: 'DELETED',
     label: 'Удален',
-    color: 'bg-amber-100 text-amber-700 border-amber-200',
+    color: 'bg-red-100 text-red-700 border-red-200',
   },
 ];
+
+export const getStudentStatusConfig = (studentStatus: StudentStatus) => {
+  if (studentStatus == 'PENDING' || studentStatus == 'REJECTED') {
+    return pendingStudentStatusConfig;
+  }
+  return activeStudentStatusConfig;
+};

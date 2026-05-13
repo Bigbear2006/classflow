@@ -13,20 +13,21 @@ export const GroupsPage = () => {
 
   const [action, setAction] = useState<ModalAction | null>(null);
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-  const [selectedGroup, setSelectedGroup] = useState<GroupWithStudents>();
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const selectedGroup = groups.find(g => g.id == selectedGroupId);
 
   const openEdit = (group: GroupWithStudents) => {
-    setSelectedGroup(group);
+    setSelectedGroupId(group.id);
     setAction('EDIT');
   };
 
   const openDetail = (group: GroupWithStudents) => {
-    setSelectedGroup(group);
+    setSelectedGroupId(group.id);
     setAction('VIEW');
   };
 
   const closeModal = () => {
-    setSelectedGroup(undefined);
+    setSelectedGroupId(null);
     setAction(null);
   };
 

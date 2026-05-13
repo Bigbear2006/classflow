@@ -15,6 +15,8 @@ import type {
   AddCurrentStudentToCourseData,
   IndividualCourseResponse,
   CourseTeacherStudentWithPaymentsResponse,
+  UpdateCourseTeacherData,
+  UpdateCourseTeacherStudentData,
 } from './types.ts';
 import {
   mapCourseDetail,
@@ -52,6 +54,13 @@ export const addCurrentStudentToCourse = (data: AddCurrentStudentToCourseData) =
   return axiosInstance.post(`courses/${data.courseId}/teachers/${data.teacherId}/students/me/`);
 };
 
+export const updateCourseTeacherStudent = (data: UpdateCourseTeacherStudentData) => {
+  return axiosInstance.patch(
+    `courses/${data.course_id}/teachers/${data.teacher_id}/students/${data.student_id}/`,
+    { status: data.status },
+  );
+};
+
 export const getCourseTeacherStudentsWithPayments = (): Promise<
   CourseTeacherStudentWithPayments[]
 > => {
@@ -66,6 +75,12 @@ export const createCourse = (data: CourseData) => {
 
 export const addTeacherToCourse = (params: CourseTeacherParams) => {
   return axiosInstance.post(`courses/${params.course_id}/teachers/${params.teacher_id}/`);
+};
+
+export const updateCourseTeacher = (data: UpdateCourseTeacherData) => {
+  return axiosInstance.patch(`courses/${data.course_id}/teachers/${data.teacher_id}/`, {
+    status: data.status,
+  });
 };
 
 export const deleteTeacherFromCourse = (params: CourseTeacherParams) => {

@@ -35,7 +35,7 @@ export const SchedulePage = () => {
 
   const { data: lessons } = useLessons({
     start_date: getDateString(currentWeekStart),
-    end_date: getDateString(weekDays[weekDays.length - 1]),
+    end_date: getDateString(weekDays[6]),
   });
   const dayLessons = groupDayLessons(lessons);
 

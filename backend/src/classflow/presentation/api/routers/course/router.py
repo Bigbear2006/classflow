@@ -23,6 +23,10 @@ from classflow.application.use_cases.course import (
     GetMyCourses,
     UpdateCourse,
     UpdateCourseDTO,
+    UpdateCourseTeacher,
+    UpdateCourseTeacherDTO,
+    UpdateCourseTeacherStudent,
+    UpdateCourseTeacherStudentDTO,
 )
 from classflow.presentation.api.routers.course.models import (
     CourseDetailResponse,
@@ -33,6 +37,8 @@ from classflow.presentation.api.routers.course.models import (
     CourseWithSubjectResponse,
     IndividualCourseResponse,
     UpdateCourseRequest,
+    UpdateCourseTeacherRequest,
+    UpdateCourseTeacherStudentRequest,
 )
 from classflow.presentation.api.routers.group.models import GroupDetailResponse
 from classflow.presentation.api.routers.organization.models import (
@@ -116,6 +122,22 @@ async def add_teacher_to_course_router(
     return CourseTeacherResponse.model_validate(course_teacher)
 
 
+@course_router.patch('/{course_id}/teachers/{teacher_id}/')
+async def update_course_teacher_router(
+    course_id: int,
+    teacher_id: int,
+    data: UpdateCourseTeacherRequest,
+    update_course_teacher: FromDishka[UpdateCourseTeacher],
+) -> CourseTeacherResponse:
+    dto = UpdateCourseTeacherDTO(
+        course_id=course_id,
+        teacher_id=teacher_id,
+        **data.model_dump(),
+    )
+    course_teacher = await update_course_teacher(dto)
+    return CourseTeacherResponse.model_validate(course_teacher)
+
+
 @course_router.get('/{course_id}/teachers/')
 async def get_course_teachers_router(
     course_id: int,
@@ -171,6 +193,26 @@ async def get_course_teacher_students_router(
     )
     students = await get_course_teacher_students(dto)
     return [UserResponse.model_validate(student) for student in students]
+
+
+@course_router.patch(
+    '/{course_id}/teachers/{teacher_id}/students/{student_id}/',
+)
+async def update_course_teacher_student_router(
+    course_id: int,
+    teacher_id: int,
+    student_id: int,
+    data: UpdateCourseTeacherStudentRequest,
+    update_course_teacher_student: FromDishka[UpdateCourseTeacherStudent],
+) -> CourseTeacherStudentResponse:
+    dto = UpdateCourseTeacherStudentDTO(
+        course_id=course_id,
+        teacher_id=teacher_id,
+        student_id=student_id,
+        **data.model_dump(),
+    )
+    cts = await update_course_teacher_student(dto)
+    return CourseTeacherStudentResponse.model_validate(cts)
 
 
 @course_router.get('/teachers/students/payments/')

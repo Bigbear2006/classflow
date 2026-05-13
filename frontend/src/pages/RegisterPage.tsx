@@ -29,7 +29,7 @@ export const RegisterPage = () => {
             </p>
           </div>
           {verificationToken ? (
-            <div className="flex flex-col gap-3 items-center rounded-2xl shadow-2xl p-8">
+            <div className="flex bg-white flex-col gap-3 items-center rounded-2xl shadow-2xl p-8">
               <InputOTP
                 maxLength={6}
                 value={code}
@@ -40,22 +40,21 @@ export const RegisterPage = () => {
                 }}
               >
                 <InputOTP.Group>
-                  <InputOTP.Slot index={0} />
-                  <InputOTP.Slot index={1} />
-                  <InputOTP.Slot index={2} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={0} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={1} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={2} />
                 </InputOTP.Group>
                 <InputOTP.Separator />
                 <InputOTP.Group>
-                  <InputOTP.Slot index={3} />
-                  <InputOTP.Slot index={4} />
-                  <InputOTP.Slot index={5} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={3} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={4} />
+                  <InputOTP.Slot className="border-1 border-indigo-500" index={5} />
                 </InputOTP.Group>
               </InputOTP>
               <Button
                 isDisabled={!isCompleted}
                 className="w-[282px]"
                 type="submit"
-                variant="primary"
                 onClick={() => mutation.mutate({ code: code, token: verificationToken })}
               >
                 Верифицировать аккаунт

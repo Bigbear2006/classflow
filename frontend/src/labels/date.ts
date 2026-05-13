@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 export const displayDate = (date: Date): string => {
   return date.toLocaleDateString('ru', {
     day: 'numeric',
@@ -32,7 +34,7 @@ export const displayShortMonth = (date: Date): string => {
 };
 
 export const getDateString = (date: Date): string => {
-  return date.toISOString().split('T')[0];
+  return DateTime.fromJSDate(date).setZone('Europe/Moscow').toISODate()!;
 };
 
 export const dateIsToday = (date: Date): boolean => {
@@ -58,7 +60,7 @@ export const getWeekDays = (weekStart: Date) => {
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(weekStart);
     date.setDate(date.getDate() + i);
-    date.getDay();
+    date.setHours(0, 0, 0, 0);
     return date;
   });
 };

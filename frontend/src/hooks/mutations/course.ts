@@ -6,6 +6,8 @@ import {
   createCourse,
   deleteTeacherFromCourse,
   updateCourse,
+  updateCourseTeacher,
+  updateCourseTeacherStudent,
 } from '../../api/courses/requests.ts';
 import type { CourseData } from '../../api/courses/types.ts';
 import type { UseCourseProps } from '../queries/course.ts';
@@ -36,6 +38,14 @@ export const useAddTeacherToCourseMutation = ({ courseId }: UseCourseProps) => {
   });
 };
 
+export const useUpdateCourseTeacherMutation = () => {
+  return useCustomMutation({
+    mutationFn: updateCourseTeacher,
+    invalidateQueryKeyOnSuccess: ['courses', 'individual'],
+    toastErrorMessage: 'Не удалось сохранить',
+  });
+};
+
 export const useDeleteTeacherFromCourseMutation = ({ courseId }: UseCourseProps) => {
   return useCustomMutation({
     mutationFn: (teacherId: number) =>
@@ -49,5 +59,13 @@ export const useAddCurrentStudentToCourseMutation = () => {
   return useCustomMutation({
     mutationFn: addCurrentStudentToCourse,
     toastErrorMessage: 'Не удалось записаться на курс',
+  });
+};
+
+export const useUpdateCourseTeacherStudentMutation = () => {
+  return useCustomMutation({
+    mutationFn: updateCourseTeacherStudent,
+    invalidateQueryKeyOnSuccess: ['courses', 'individual'],
+    toastErrorMessage: 'Не удалось сохранить',
   });
 };

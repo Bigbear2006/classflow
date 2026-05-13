@@ -66,7 +66,7 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
         try:
             return rows.scalar_one()
         except NoResultFound as e:
-            raise NotFoundError('Member not found') from e
+            raise NotFoundError() from e
 
     async def get_organization_members(
         self,

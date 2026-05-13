@@ -12,7 +12,8 @@ class ApplicationError(Exception):
 
 
 class NotFoundError(ApplicationError):
-    pass
+    def __init__(self, **context: Any) -> None:
+        super().__init__('Object not found', **context)
 
 
 class AlreadyExistsError(ApplicationError):

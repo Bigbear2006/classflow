@@ -2,7 +2,7 @@ import { verifyUser } from '../../api/users/requests.ts';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 import type { NavigateFunction } from 'react-router';
-import {useCustomMutation} from "../useCustomMutation.ts";
+import { useCustomMutation } from '../useCustomMutation.ts';
 
 interface VerifyUserMutationProps {
   navigate: NavigateFunction;
@@ -12,8 +12,8 @@ export const useVerifyUserMutation = ({ navigate }: VerifyUserMutationProps) => 
   return useCustomMutation({
     mutationFn: verifyUser,
     onSuccess: () => {
-      navigate('/login')
-      toast.success('Аккаунт верифицирован')
+      navigate('/login');
+      toast.success('Аккаунт верифицирован');
     },
     onError: err => {
       if (!isAxiosError(err)) {

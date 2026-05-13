@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from classflow.application.repositories.subject import SubjectRepository
 from classflow.domain.entities import Subject
 from classflow.infrastructure.db.repositories.base import create, exclude_none
-from classflow.infrastructure.db.tables import subjects_table
+from classflow.infrastructure.db.tables import courses_table, subjects_table
 
 
 class SubjectRepositoryImpl(SubjectRepository):
@@ -35,7 +35,20 @@ class SubjectRepositoryImpl(SubjectRepository):
         return rows.scalar_one()
 
     async def get_all(self) -> list[Subject]:
-        stmt = select(Subject)
+        stmt = select(Subject).order_by(subjects_table.c.name)
+        rows = await self.session.scalars(stmt)
+        return cast(list[Subject], rows.all())
+
+    async def get_unassigned(self) -> list[Subject]:
+        stmt = (
+            select(Subject)
+            .outerjoin(
+                courses_table,
+                subjects_table.c.course_id == subjects_table.c.id,
+            )
+            .where(courses_table.c.id.is_(None))
+            .order_by(subjects_table.c.name)
+        )
         rows = await self.session.scalars(stmt)
         return cast(list[Subject], rows.all())
 
