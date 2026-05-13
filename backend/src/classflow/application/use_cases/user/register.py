@@ -4,7 +4,6 @@ from classflow.application.common.password_hasher import PasswordHasher
 from classflow.application.common.uow import UnitOfWork
 from classflow.application.repositories.user import UserRepository
 from classflow.application.verification.data_generator import (
-    VerificationData,
     VerificationDataGenerator,
 )
 from classflow.application.verification.email_sender import EmailSender
@@ -12,7 +11,6 @@ from classflow.application.verification.repository import (
     VerificationDataRepository,
 )
 from classflow.domain.entities import User
-from classflow.domain.exceptions import AlreadyExistsError
 
 
 @dataclass
@@ -40,7 +38,7 @@ class RegisterUser:
         self.email_sender = email_sender
         self.uow = uow
 
-    async def __call__(self, data: RegisterUserDTO) -> VerificationData:
+    async def __call__(self, data: RegisterUserDTO) -> str:
         async with self.uow:
             password = self.password_hasher.hash_password(data.password)
             user = User(
@@ -49,23 +47,9 @@ class RegisterUser:
                 phone=data.phone,
                 password=password,
             )
-
-            try:
-                user = await self.user_repository.create(user)
-            except AlreadyExistsError:
-                await self.uow.rollback()
-                user = await self.user_repository.get_by_email(data.email)
-                if user.is_active:
-                    raise
-
-                user = await self.user_repository.update(
-                    user.id,
-                    fullname=data.fullname,
-                    phone=data.phone,
-                    password=password,
-                )
+            user = await self.user_repository.create(user)
 
         data = self.verification_data_generator.generate_data()
         await self.verification_data_repository.save(data, user_id=user.id)
         await self.email_sender.send_code(data.code, to=user.email)
-        return data
+        return data.token

@@ -5,6 +5,11 @@ export interface RegisterUserData {
   password: string;
 }
 
+export interface VerifyUserData {
+  code: string;
+  token: string;
+}
+
 export interface LoginUserData {
   email: string;
   password: string;

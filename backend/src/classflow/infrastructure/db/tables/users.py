@@ -1,4 +1,4 @@
-from sqlalchemy import BIGINT, Boolean, Column, String, Table, text
+from sqlalchemy import BIGINT, Boolean, Column, Index, String, Table, text
 
 from classflow.domain.entities import User
 from classflow.infrastructure.db.tables.base import (
@@ -13,13 +13,19 @@ users_table = Table(
     metadata,
     Column('id', BIGINT, primary_key=True, autoincrement=True),
     Column('fullname', String(100), nullable=False),
-    Column('email', String(150), unique=True, nullable=False),
+    Column('email', String(150), nullable=False),
     Column('phone', String(20), nullable=False, server_default=text("''")),
     Column('password', String(128), nullable=False),
     Column('is_active', Boolean, nullable=False, server_default=text('false')),
     created_at_column(),
     gin_trgm_index('ix_users_fullname_trgm', column='fullname'),
     gin_trgm_index('ix_users_email_trgm', column='email'),
+    Index(
+        'uq_users_email',
+        'email',
+        unique=True,
+        postgresql_where='is_active = true',
+    ),
 )
 
 mapper_registry.map_imperatively(User, users_table)

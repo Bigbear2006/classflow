@@ -8,6 +8,10 @@ from classflow.application.use_cases.user.register import (
     RegisterUser,
     RegisterUserDTO,
 )
+from classflow.application.use_cases.user.resend_code import (
+    ResendVerificationCode,
+    ResendVerificationCodeDTO,
+)
 from classflow.application.use_cases.user.update_current import (
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
@@ -25,6 +29,8 @@ __all__ = (
     'LoginUserDTO',
     'RegisterUser',
     'RegisterUserDTO',
+    'ResendVerificationCode',
+    'ResendVerificationCodeDTO',
     'UpdateCurrentUser',
     'UpdateCurrentUserDTO',
     'VerifyUserEmail',

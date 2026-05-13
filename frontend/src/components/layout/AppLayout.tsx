@@ -7,14 +7,13 @@ import { roleConfig } from '../../labels/role.tsx';
 
 export function AppLayout() {
   const { user, member } = useAppContext();
-  console.log(user);
 
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const roleCfg = member?.role ? roleConfig[member.role] : null;
   // TODO: add
-  const upcomingCount = 10;
+  const upcomingCount = 0;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">

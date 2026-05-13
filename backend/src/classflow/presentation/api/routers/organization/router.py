@@ -18,6 +18,8 @@ from classflow.application.use_cases.organization import (
     GetOrganizationStats,
     GetRoleCounts,
     JoinOrganization,
+    UpdateCurrentOrganization,
+    UpdateCurrentOrganizationDTO,
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
 )
@@ -67,6 +69,15 @@ async def get_current_organization_router(
     get_current_organization: FromDishka[GetCurrentOrganization],
 ) -> OrganizationResponse:
     org = await get_current_organization()
+    return OrganizationResponse.model_validate(org)
+
+
+@organization_router.patch('/current/')
+async def update_current_organization_router(
+    data: UpdateCurrentOrganizationDTO,
+    update_current_organization: FromDishka[UpdateCurrentOrganization],
+) -> OrganizationResponse:
+    org = await update_current_organization(data)
     return OrganizationResponse.model_validate(org)
 
 

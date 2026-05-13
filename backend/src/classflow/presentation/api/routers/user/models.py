@@ -3,6 +3,10 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 
+class VerificationTokenResponse(BaseModel):
+    token: str
+
+
 class UserResponse(BaseModel):
     id: int
     fullname: str

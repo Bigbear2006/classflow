@@ -13,6 +13,8 @@ from classflow.application.use_cases.user import (
     LoginUserDTO,
     RegisterUser,
     RegisterUserDTO,
+    ResendVerificationCode,
+    ResendVerificationCodeDTO,
     UpdateCurrentUser,
     UpdateCurrentUserDTO,
     VerifyUserEmail,
@@ -29,7 +31,10 @@ from classflow.presentation.api.common.cookie import (
     set_access_cookie,
     set_refresh_cookie,
 )
-from classflow.presentation.api.routers.user.models import UserResponse
+from classflow.presentation.api.routers.user.models import (
+    UserResponse,
+    VerificationTokenResponse,
+)
 
 user_router = APIRouter(
     prefix='/users',
@@ -42,8 +47,9 @@ user_router = APIRouter(
 async def register_user_router(
     data: RegisterUserDTO,
     register_user: FromDishka[RegisterUser],
-) -> VerificationData:
-    return await register_user(data)
+) -> VerificationTokenResponse:
+    token = await register_user(data)
+    return VerificationTokenResponse(token=token)
 
 
 @user_router.post('/verify-email/', status_code=204)
@@ -53,6 +59,14 @@ async def verify_user_email_router(
 ) -> None:
     dto = VerifyUserEmailDTO(verification_data=data)
     await verify_email(dto)
+
+
+@user_router.post('/resend-code/', status_code=204)
+async def resend_code_router(
+    data: ResendVerificationCodeDTO,
+    resend_code: FromDishka[ResendVerificationCode],
+) -> None:
+    await resend_code(data)
 
 
 @user_router.post('/login/', status_code=204)

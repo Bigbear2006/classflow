@@ -1,29 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Plus, School } from 'lucide-react';
-import { getMyOrganizations } from '../api/organizations/requests.ts';
-import type { MyOrganization } from '../entities';
 import { MAX_OWNED_ORGS_COUNT } from '../config.ts';
 import { useAppContext } from '../context.tsx';
 import { OrganizationsSearch } from '../components/org/OrganizationsSearch.tsx';
 import { OrganizationForm } from '../components/org/OrganizationForm.tsx';
 import { MyOrganizationCard } from '../components/org/MyOrganizationCard.tsx';
+import { useMyOrganizations } from '../hooks/queries/organization.ts';
+import type { FormAction, MyOrganization } from '../entities';
 
 export function OrganizationsPage() {
   const { user } = useAppContext();
 
-  const [myOrgs, setMyOrgs] = useState<MyOrganization[]>([]);
-  const [ownedOrgsCount, setOwnedOrgsCount] = useState<number>(0);
-  const [showCreate, setShowCreate] = useState(false);
+  const [action, setAction] = useState<FormAction | null>(null);
+  const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null);
+  const { data: myOrgs } = useMyOrganizations();
+  const ownedOrgsCount = myOrgs.filter(org => org.role == 'OWNER').length;
 
-  const openForm = () => setShowCreate(true);
-  const closeForm = () => setShowCreate(false);
-
-  useEffect(() => {
-    getMyOrganizations().then(orgs => {
-      setMyOrgs(orgs);
-      setOwnedOrgsCount(orgs.filter(org => org.role == 'OWNER').length);
-    });
-  }, []);
+  const openCreate = () => setAction('CREATE');
+  const openEdit = (org: MyOrganization) => {
+    setSelectedOrgId(org.id);
+    setAction('EDIT');
+  };
+  const closeForm = () => {
+    setSelectedOrgId(null);
+    setAction(null);
+  };
 
   return (
     <div className="min-h-full bg-slate-50">
@@ -49,22 +50,27 @@ export function OrganizationsPage() {
                     : 'Создайте свою организацию'}
                 </p>
               </div>
-              {!(ownedOrgsCount >= MAX_OWNED_ORGS_COUNT) && !showCreate && (
+              {!(ownedOrgsCount >= MAX_OWNED_ORGS_COUNT) && !(action === 'CREATE') && (
                 <button
-                  onClick={openForm}
+                  onClick={openCreate}
                   className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors shadow-sm"
                 >
                   <Plus size={15} />
-                  Создать организацию
+                  <p className="sm:hidden">Создать</p>
+                  <p className="hidden sm:block">Создать организацию</p>
                 </button>
               )}
             </div>
-            {showCreate && !(ownedOrgsCount >= MAX_OWNED_ORGS_COUNT) && (
-              <OrganizationForm closeForm={closeForm} />
+            {action && (
+              <OrganizationForm
+                org={myOrgs.find(o => o.id === selectedOrgId)}
+                action={action}
+                closeForm={closeForm}
+              />
             )}
             <div className="grid gap-4 sm:grid-cols-2">
               {myOrgs.map(org => (
-                <MyOrganizationCard key={org.id} org={org} />
+                <MyOrganizationCard openEdit={openEdit} key={org.id} org={org} />
               ))}
             </div>
             {myOrgs.length === 0 && (
@@ -78,9 +84,9 @@ export function OrganizationsPage() {
                 <p className="text-slate-400 text-sm">
                   Создайте свою или вступите в одну из организаций ниже
                 </p>
-                {!showCreate && (
+                {!action && (
                   <button
-                    onClick={openForm}
+                    onClick={openCreate}
                     className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
                   >
                     <Plus size={14} /> Создать организацию

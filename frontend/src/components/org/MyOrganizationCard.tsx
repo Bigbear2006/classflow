@@ -1,14 +1,18 @@
-import { ArrowRight, BookOpen, Building2, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Building2, Edit2, Users } from 'lucide-react';
 import { navigateToOrganization } from '../../utils.ts';
 import type { MyOrganization } from '../../entities';
 import { roleConfig } from '../../labels/role.tsx';
+import { useAppContext } from '../../context.tsx';
 
 interface MyOrganizationCardProps {
   org: MyOrganization;
+  openEdit: (org: MyOrganization) => void;
 }
 
-export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
+export const MyOrganizationCard = ({ org, openEdit }: MyOrganizationCardProps) => {
+  const { organization: currentOrganization } = useAppContext();
   const roleOptions = roleConfig[org.role];
+
   return (
     <div
       key={org.id}
@@ -23,6 +27,14 @@ export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
             <div className="font-semibold text-slate-800 text-sm">{org.name}</div>
             <div className="text-xs text-slate-400 mt-0.5">{org.slug}</div>
           </div>
+          {org.id === currentOrganization?.id && org.role == 'OWNER' && (
+            <button
+              onClick={() => openEdit(org)}
+              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
+            >
+              <Edit2 size={16} />
+            </button>
+          )}
         </div>
         {roleOptions && (
           <span

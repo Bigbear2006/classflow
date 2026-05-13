@@ -47,7 +47,7 @@ export type {
 } from './organization.ts';
 export type { Payment, PaymentMeta } from './payment.ts';
 export type { Subject } from './subject.ts';
-export type { User, VerificationData } from './user.ts';
+export type { User, VerificationToken } from './user.ts';
 
 export type FormAction = 'CREATE' | 'EDIT';
 export type ModalAction = FormAction | 'VIEW';

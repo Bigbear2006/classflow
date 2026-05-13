@@ -60,6 +60,7 @@ from classflow.application.use_cases.organization import (
     GetOrganizationStats,
     GetRoleCounts,
     JoinOrganization,
+    UpdateCurrentOrganization,
     UpdateOrganizationMember,
 )
 from classflow.application.use_cases.payment import (
@@ -77,6 +78,7 @@ from classflow.application.use_cases.user import (
     GetCurrentUser,
     LoginUser,
     RegisterUser,
+    ResendVerificationCode,
     UpdateCurrentUser,
     VerifyUserEmail,
 )
@@ -88,6 +90,7 @@ class UseCasesProvider(Provider):
     user = provide_all(
         RegisterUser,
         VerifyUserEmail,
+        ResendVerificationCode,
         LoginUser,
         GetCurrentUser,
         UpdateCurrentUser,
@@ -104,6 +107,7 @@ class UseCasesProvider(Provider):
         GetRoleCounts,
         GetOrganizationStats,
         UpdateOrganizationMember,
+        UpdateCurrentOrganization,
     )
     address = provide_all(
         CreateAddress,

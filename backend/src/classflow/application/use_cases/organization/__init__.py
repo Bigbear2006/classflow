@@ -27,6 +27,10 @@ from classflow.application.use_cases.organization.get_stats import (
     GetOrganizationStats,
 )
 from classflow.application.use_cases.organization.join import JoinOrganization
+from classflow.application.use_cases.organization.update_current import (
+    UpdateCurrentOrganization,
+    UpdateCurrentOrganizationDTO,
+)
 from classflow.application.use_cases.organization.update_member import (
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
@@ -46,6 +50,8 @@ __all__ = (
     'GetOrganizationStats',
     'GetRoleCounts',
     'JoinOrganization',
+    'UpdateCurrentOrganization',
+    'UpdateCurrentOrganizationDTO',
     'UpdateOrganizationMember',
     'UpdateOrganizationMemberDTO',
 )

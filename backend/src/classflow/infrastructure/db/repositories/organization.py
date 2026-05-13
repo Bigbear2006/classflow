@@ -20,6 +20,7 @@ from classflow.domain.enums import UserRole
 from classflow.infrastructure.db.repositories.base import (
     create,
     exclude_none,
+    get_one,
     set_current_org_id,
 )
 from classflow.infrastructure.db.tables import (
@@ -54,7 +55,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
             .returning(Organization)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(self, query: str) -> list[Organization]:
         stmt = (

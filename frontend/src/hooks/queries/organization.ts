@@ -2,6 +2,7 @@ import { keepPreviousData, useQuery, useSuspenseQuery } from '@tanstack/react-qu
 import {
   getCurrentOrganization,
   getCurrentOrganizationMember,
+  getMyOrganizations,
   getOrganizations,
   getOrganizationTeachers,
   getRoleCounts,
@@ -18,6 +19,13 @@ export const useOrganizations = (params: GetOrganizationsParams) => {
   });
 };
 
+export const useMyOrganizations = () => {
+  return useQuery({
+    initialData: [],
+    queryKey: ['organizations', 'my'],
+    queryFn: getMyOrganizations,
+  });
+};
 export const useCurrentOrganizationOptions = {
   queryKey: ['organization'],
   queryFn: getCurrentOrganization,

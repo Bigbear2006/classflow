@@ -33,6 +33,10 @@ export const getCurrentOrganization = () => {
     .then(rsp => mapOrg(rsp.data));
 };
 
+export const updateCurrentOrganization = (data: CreateOrganizationData) => {
+  return axiosInstance.patch<OrganizationResponse>('organizations/current/', data);
+};
+
 export const getMyOrganizations = () => {
   return axiosInstance
     .get<MyOrganizationResponse[]>('organizations/my/')

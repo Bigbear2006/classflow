@@ -1,13 +1,43 @@
-import { logoutUser, verifyUser } from '../../api/users/requests.ts';
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  resendCode,
+  verifyUser,
+} from '../../api/users/requests.ts';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
-import type { NavigateFunction } from 'react-router';
+import type { NavigateFunction, SetURLSearchParams } from 'react-router';
 import { useCustomMutation } from '../useCustomMutation.ts';
 import { queryClient } from '../../loaders.ts';
+import type { UseFormSetError } from 'react-hook-form';
+import type { RegisterUserFields } from '../forms/register.ts';
 
 interface UserMutationProps {
   navigate: NavigateFunction;
 }
+
+interface RegisterUserMutationProps {
+  setSearchParams: SetURLSearchParams;
+  setError: UseFormSetError<RegisterUserFields>;
+}
+
+export const useRegisterUserMutation = ({
+  setSearchParams,
+  setError,
+}: RegisterUserMutationProps) => {
+  return useCustomMutation({
+    mutationFn: registerUser,
+    onSuccess: data => setSearchParams(prev => ({ ...prev, verificationToken: data.token })),
+    onError: err => {
+      if (isAxiosError(err) && err.response?.status === 409) {
+        setError('email', { message: 'Почта уже используется' });
+      } else {
+        toast.error('Не удалось зарегистрироваться');
+      }
+    },
+  });
+};
 
 export const useVerifyUserMutation = ({ navigate }: UserMutationProps) => {
   return useCustomMutation({
@@ -24,10 +54,33 @@ export const useVerifyUserMutation = ({ navigate }: UserMutationProps) => {
       if (err.response?.status === 429) {
         toast.error('Слишком много попыток');
         navigate('/register');
+      } else if (err.response?.status === 409) {
+        toast.error('Пользователь с таким email уже существует');
+        navigate('/register');
       } else {
         toast.error('Неверный код');
       }
     },
+  });
+};
+
+export const useResendCodeMutation = () => {
+  return useCustomMutation({
+    mutationFn: resendCode,
+    toastErrorMessage: 'Не удалось отправить код. Попробуйте еще раз через минуту',
+    onSuccess: () => toast.success('Код отправлен'),
+  });
+};
+
+interface LoginUserMutationProps extends UserMutationProps {
+  setError: UseFormSetError<RegisterUserFields>;
+}
+
+export const useLoginUserMutation = ({ navigate, setError }: LoginUserMutationProps) => {
+  return useCustomMutation({
+    mutationFn: loginUser,
+    onSuccess: () => queryClient.resetQueries().then(() => navigate('/orgs')),
+    onError: () => setError('root', { message: 'Неверная почта или пароль' }),
   });
 };
 

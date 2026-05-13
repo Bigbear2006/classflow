@@ -28,7 +28,10 @@ class UserRepositoryImpl(UserRepository):
         return rows.unique().scalar_one_or_none()
 
     async def get_by_email(self, email: str) -> User | None:
-        stmt = select(User).where(users_table.c.email == email)
+        stmt = select(User).where(
+            users_table.c.email == email,
+            users_table.c.is_active.is_(True),
+        )
         rows = await self.session.execute(stmt)
         return rows.unique().scalar_one_or_none()
 
@@ -54,4 +57,7 @@ class UserRepositoryImpl(UserRepository):
             .returning(User)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        try:
+            return rows.scalar_one()
+        except IntegrityError as e:
+            raise AlreadyExistsError('User already exists') from e

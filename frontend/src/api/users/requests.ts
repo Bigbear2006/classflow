@@ -1,11 +1,12 @@
 import { axiosInstance } from '../base.ts';
-import type { User, VerificationData } from '../../entities';
+import type { User, VerificationToken } from '../../entities';
 import type {
   ChangeUserPasswordData,
   LoginUserData,
   LoginUserResponse,
   RegisterUserData,
   UpdateUserData,
+  VerifyUserData,
 } from './types.ts';
 
 export const getCurrentUser = () => {
@@ -13,12 +14,17 @@ export const getCurrentUser = () => {
 };
 
 export const registerUser = (data: RegisterUserData) => {
-  return axiosInstance.post<VerificationData>('users/', data).then(rsp => rsp.data);
+  return axiosInstance.post<VerificationToken>('users/', data).then(rsp => rsp.data);
 };
 
-export const verifyUser = (data: VerificationData) => {
-  return axiosInstance.post<VerificationData>('users/verify-email/', data);
+export const verifyUser = (data: VerifyUserData) => {
+  return axiosInstance.post<VerificationToken>('users/verify-email/', data);
 };
+
+export const resendCode = (data: VerificationToken) => {
+  return axiosInstance.post('users/resend-code/', data);
+};
+
 export const loginUser = (data: LoginUserData) => {
   return axiosInstance.post<LoginUserResponse>('users/login/', data);
 };

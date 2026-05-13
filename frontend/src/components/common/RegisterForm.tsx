@@ -1,118 +1,50 @@
 import { Mail, Lock, Eye, EyeOff, User, Phone } from 'lucide-react';
-import { ErrorsBlock } from './ErrorsBlock.tsx';
-import { z } from 'zod';
-import { isValidPhoneNumber } from 'libphonenumber-js';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { registerUser } from '../../api/users/requests.ts';
 import { Link, useSearchParams } from 'react-router';
 import { useState } from 'react';
-import { FieldError, Input, Label, TextField } from '@heroui/react';
-
-const RegisterUserSchema = z
-  .object({
-    fullname: z.string().min(3, 'ФИО: минимум 3 символа').max(100, 'ФИО: не больше 100 символов'),
-    email: z.email('Неверная почта'),
-    phone: z.string(),
-    password: z.string().min(8, 'Длина пароля минимум 8 символов'),
-    confirmPassword: z.string(),
-  })
-  .superRefine((data, ctx) => {
-    if (!isValidPhoneNumber(data.phone)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: data.phone.startsWith('+')
-          ? 'Неверный номер телефона'
-          : 'Номер телефона должен начинаться с +',
-        path: ['phone'],
-      });
-    }
-
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Пароли не совпадают',
-        path: ['confirmPassword'],
-      });
-    }
-  });
-
-type RegisterUserFields = z.infer<typeof RegisterUserSchema>;
+import { useRegistrationForm } from '../../hooks/forms/register.ts';
+import { useRegisterUserMutation } from '../../hooks/mutations/user.ts';
+import { CustomTextField } from './CustomTextField.tsx';
 
 export const RegisterForm = () => {
-  const {
-    register,
-    formState: { errors },
-    setError,
-    handleSubmit,
-  } = useForm<RegisterUserFields>({
-    resolver: zodResolver(RegisterUserSchema),
-  });
-
+  const { control, setError, handleSubmit } = useRegistrationForm();
   const [_, setSearchParams] = useSearchParams(window.location.search);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const onSubmit = (data: RegisterUserFields) => {
-    setLoading(true);
-    registerUser(data)
-      .finally(() => setLoading(false))
-      .then(data => setSearchParams(prev => ({ ...prev, verificationToken: data.token })))
-      .catch(() => setError('email', { message: 'Почта уже используется' }));
-  };
+  const mutation = useRegisterUserMutation({ setSearchParams, setError });
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-8">
-      <ErrorsBlock errors={Object.values(errors)} />
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <TextField isRequired isInvalid={!!errors.fullname}>
-          <Label>ФИО</Label>
-          <div className="relative">
-            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <Input
-              {...register('fullname')}
-              placeholder="Иванов Иван Иванович"
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-          </div>
-          <FieldError>{errors.fullname?.message}</FieldError>
-        </TextField>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Почта</label>
-          <div className="relative">
-            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              {...register('email')}
-              type="email"
-              placeholder="example@mail.ru"
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Телефон</label>
-          <div className="relative">
-            <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              {...register('phone')}
-              placeholder="+79990001122"
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Пароль</label>
-          <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Минимум 8 символов"
-              className="w-full pl-9 pr-10 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+      <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="space-y-4">
+        <CustomTextField
+          name="fullname"
+          control={control}
+          label="ФИО"
+          placeholder="Иванов Иван Иванович"
+          icon={User}
+          required
+        />
+        <CustomTextField
+          name="email"
+          control={control}
+          label="Почта"
+          placeholder="example@mail.ru"
+          icon={Mail}
+          required
+        />
+        <CustomTextField
+          name="phone"
+          control={control}
+          label="Телефон"
+          placeholder="+79991112233"
+          icon={Phone}
+          required
+        />
+        <CustomTextField
+          name="password"
+          control={control}
+          label="Пароль"
+          placeholder="Минимум 8 символов"
+          icon={Lock}
+          button={
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -120,33 +52,27 @@ export const RegisterForm = () => {
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Подтвердить пароль
-          </label>
-          <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              {...register('confirmPassword')}
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Повторите пароль"
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
+          }
+          type={showPassword ? 'text' : 'password'}
+          required
+        />
+        <CustomTextField
+          name="confirmPassword"
+          control={control}
+          label="Подтвердить пароль"
+          placeholder="Повторите пароль"
+          icon={Lock}
+          type={showPassword ? 'text' : 'password'}
+          required
+        />
         <button
           type="submit"
-          disabled={loading}
+          disabled={mutation.isPending}
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition-colors mt-2"
         >
-          {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+          {mutation.isPending ? 'Регистрация...' : 'Зарегистрироваться'}
         </button>
       </form>
-
       <p className="text-center text-sm text-slate-500 mt-5">
         Уже есть аккаунт?{' '}
         <Link to="/login" className="text-indigo-600 hover:underline font-medium">

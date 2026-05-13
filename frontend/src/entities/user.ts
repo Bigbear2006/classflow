@@ -8,7 +8,6 @@ export interface User {
   avatar?: string;
 }
 
-export interface VerificationData {
-  code: string;
+export interface VerificationToken {
   token: string;
 }

@@ -1,3 +1,4 @@
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -5,9 +6,23 @@ from typing import TYPE_CHECKING
 
 from classflow.domain.entities.user import User
 from classflow.domain.enums import AttendanceStatus, UserRole
+from classflow.domain.exceptions import ValidationError
 
 if TYPE_CHECKING:
     from classflow.domain.entities.course import Course
+
+RESERVED_SUBDOMAINS = [
+    'www',
+    'app',
+    'api',
+    'auth',
+    'admin',
+    'mail',
+    'service',
+    '_dmarc',
+]
+
+SLUG_REGEX = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 
 
 @dataclass
@@ -19,6 +34,24 @@ class Organization:
     created_at: datetime = field(init=False)
     # Manually set this attribute
     role: UserRole | None = field(init=False, default=None)
+
+    def __post_init__(self) -> None:
+        self.slug = self.slug.strip().lower()
+        if not SLUG_REGEX.match(self.slug):
+            raise ValidationError('Invalid slug')
+
+        if len(self.slug) < 3:
+            raise ValidationError(
+                'Organization slug must be at least 3 characters long',
+            )
+
+        if len(self.slug) > 50:
+            raise ValidationError(
+                'Organization slug must be less than 50 characters long',
+            )
+
+        if self.slug in RESERVED_SUBDOMAINS:
+            raise ValidationError(f'{self.slug} is reserved')
 
 
 @dataclass

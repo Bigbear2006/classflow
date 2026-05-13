@@ -22,11 +22,14 @@ export const navigateToOrganization = (slug: string) => {
 
   let newHost: string;
   let parts = hostname.split('.');
-
   if (hostname === 'localhost') {
     newHost = `${slug}.${hostname}`;
   } else if (parts.length === 2) {
-    newHost = `${slug}.${hostname}`;
+    if (parts[1].startsWith('localhost')) {
+      newHost = `${slug}.${parts[1]}`;
+    } else {
+      newHost = `${slug}.${hostname}`;
+    }
   } else {
     const baseDomain = parts.slice(-2).join('.');
     newHost = `${slug}.${baseDomain}`;

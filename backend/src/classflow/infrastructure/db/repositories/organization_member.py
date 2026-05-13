@@ -1,8 +1,7 @@
 from typing import cast
 
-from asyncpg import UniqueViolationError
 from sqlalchemy import func, or_, select, update
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager
 
@@ -27,7 +26,7 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
     async def create(self, member: OrganizationMember) -> OrganizationMember:
         try:
             return await create(self.session, member)
-        except UniqueViolationError as e:
+        except IntegrityError as e:
             raise AlreadyExistsError(
                 'User already joined this organization',
                 organization_id=member.organization_id,
