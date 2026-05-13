@@ -43,19 +43,18 @@ export const MyOrganizationCard = ({ org }: MyOrganizationCardProps) => {
         </span>
       </div>
 
-      <button
-        onClick={() => navigateToOrganization(org.slug)}
-        className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
-      >
-        {!window.location.hostname.startsWith(`${org.slug}.`) ? (
-          <>
-            Перейти
-            <ArrowRight size={14} />
-          </>
-        ) : (
-          'Вы находитесь в этой организации'
-        )}
-      </button>
+      {window.location.hostname.startsWith(`${org.slug}.`) ? (
+        <button className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium transition-colors">
+          Вы здесь
+        </button>
+      ) : (
+        <button
+          onClick={() => navigateToOrganization(org.slug)}
+          className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
+        >
+          Перейти <ArrowRight size={14} />
+        </button>
+      )}
     </div>
   );
 };

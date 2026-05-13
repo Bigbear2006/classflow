@@ -44,7 +44,7 @@ export const mapCourseDetail = (data: CourseDetailResponse): CourseDetail => {
     teachersCount: data.teachers_count,
     studentsCount: data.students_count,
     activeGroupId: data.active_group_id,
-    userJoined: data.user_joined,
+    studentStatus: data.student_status,
   };
 };
 

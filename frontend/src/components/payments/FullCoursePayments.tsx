@@ -1,6 +1,7 @@
 import type { GroupWithPayments, StudentGroupWithPayments } from '../../entities';
 import { X } from 'lucide-react';
 import { useDeletePaymentMutation } from '../../hooks/mutations/payment.ts';
+import { useAppContext } from '../../context.tsx';
 
 interface FullCoursePaymentsProps {
   group: GroupWithPayments;
@@ -13,6 +14,7 @@ export const FullCoursePayments = ({
   studentGroup,
   openGroupPay,
 }: FullCoursePaymentsProps) => {
+  const { isTeacherOrMore } = useAppContext();
   const pct = Math.min(Math.round((studentGroup.totalPaid / group.course.price) * 100), 100);
   const deletePaymentMutation = useDeletePaymentMutation();
 
@@ -39,12 +41,14 @@ export const FullCoursePayments = ({
               <span className="ml-1 text-xs text-emerald-600">✓</span>
             )}
           </div>
-          <button
-            onClick={() => openGroupPay(studentGroup.id)}
-            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition-colors"
-          >
-            + Оплата
-          </button>
+          {isTeacherOrMore && (
+            <button
+              onClick={() => openGroupPay(studentGroup.id)}
+              className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition-colors"
+            >
+              + Оплата
+            </button>
+          )}
         </div>
       </div>
       <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -68,12 +72,14 @@ export const FullCoursePayments = ({
                 <span className="text-emerald-600 font-medium">
                   {payment.amount.toLocaleString('ru')} ₽
                 </span>
-                <button
-                  onClick={() => deletePaymentMutation.mutate(payment.id)}
-                  className="text-slate-300 hover:text-red-400"
-                >
-                  <X size={12} />
-                </button>
+                {isTeacherOrMore && (
+                  <button
+                    onClick={() => deletePaymentMutation.mutate(payment.id)}
+                    className="text-slate-300 hover:text-red-400"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
               </div>
             </div>
           ))}

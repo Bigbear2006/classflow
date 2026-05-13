@@ -22,8 +22,11 @@ import { DesktopScheduleDay } from '../components/schedule/DesktopScheduleDay.ts
 import { MobileLessonCard } from '../components/schedule/MobileLessonCard.tsx';
 import { LessonsTable } from '../components/schedule/LessonsTable.tsx';
 import { groupDayLessons } from '../api/lessons/mappers.ts';
+import { useAppContext } from '../context.tsx';
 
 export const SchedulePage = () => {
+  const { isTeacherOrMore } = useAppContext();
+
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStartDay());
   const [selectedDayIdx, setSelectedDayIdx] = useState(getTodayWeekDay());
   const [selectedLesson, setSelectedLesson] = useState<LessonDetail>();
@@ -90,18 +93,20 @@ export const SchedulePage = () => {
           <h1 className="text-slate-900 text-xl sm:text-2xl font-semibold">Расписание</h1>
           <p className="text-slate-500 text-sm mt-0.5 hidden sm:block">Управление занятиями</p>
         </div>
-        <button
-          onClick={() => setAction('CREATE')}
-          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors shadow-sm flex-shrink-0"
-        >
-          <Plus size={16} />
-          <span className="hidden sm:inline" onClick={openCreate}>
-            Добавить занятие
-          </span>
-          <span className="sm:hidden" onClick={openCreate}>
-            Добавить
-          </span>
-        </button>
+        {isTeacherOrMore && (
+          <button
+            onClick={() => setAction('CREATE')}
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors shadow-sm flex-shrink-0"
+          >
+            <Plus size={16} />
+            <span className="hidden sm:inline" onClick={openCreate}>
+              Добавить занятие
+            </span>
+            <span className="sm:hidden" onClick={openCreate}>
+              Добавить
+            </span>
+          </button>
+        )}
       </div>
 
       <div className="flex items-center gap-2 bg-white rounded-2xl border border-slate-200 px-3 py-2.5">

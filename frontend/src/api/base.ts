@@ -9,12 +9,6 @@ export const axiosInstance = axios.create({
   },
 });
 
-const navigateToLogin = () => {
-  // if (!window.location.pathname.includes('/login') && !(window.location.pathname === '/')) {
-  //   window.location.pathname = '/login';
-  // }
-};
-
 interface FailedRequest {
   config: AxiosRequestConfig;
   resolve: (value: any) => void;
@@ -27,7 +21,11 @@ let failedRequests: FailedRequest[] = [];
 axiosInstance.interceptors.response.use(null, (err: AxiosError) => {
   const config = err.config;
 
-  if (err.response?.status !== 401 || err.config?.url?.endsWith('login/')) {
+  if (
+    err.response?.status !== 401 ||
+    err.config?.url?.endsWith('login/') ||
+    err.config?.url?.endsWith('refresh-token/')
+  ) {
     return Promise.reject(err);
   }
 
@@ -55,7 +53,6 @@ axiosInstance.interceptors.response.use(null, (err: AxiosError) => {
     .catch(err => {
       failedRequests.forEach(req => req.reject(err));
       failedRequests = [];
-      navigateToLogin();
       return Promise.reject(err);
     })
     .finally(() => (isRefreshing = false));

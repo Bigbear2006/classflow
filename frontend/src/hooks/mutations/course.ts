@@ -55,10 +55,18 @@ export const useDeleteTeacherFromCourseMutation = ({ courseId }: UseCourseProps)
   });
 };
 
-export const useAddCurrentStudentToCourseMutation = () => {
+interface AddCurrentStudentToCourseMutationProps {
+  closeModal: () => void;
+}
+
+export const useAddCurrentStudentToCourseMutation = ({
+  closeModal,
+}: AddCurrentStudentToCourseMutationProps) => {
   return useCustomMutation({
     mutationFn: addCurrentStudentToCourse,
+    invalidateQueryKeyOnSuccess: ['courses'],
     toastErrorMessage: 'Не удалось записаться на курс',
+    onSuccess: closeModal,
   });
 };
 

@@ -64,24 +64,22 @@ class GroupRepositoryImpl(GroupRepository):
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
 
-    async def get_all(self) -> list[Group]:
+    async def get_all(self, teacher_id: int | None = None) -> list[Group]:
         stmt = set_group_joins(select(Group))
-        rows = await self.session.scalars(stmt)
-        return cast(list[Group], rows.all())
 
-    async def get_teacher_groups(self, teacher_id: int) -> list[Group]:
-        stmt = (
-            set_group_joins(select(Group))
-            .join(
-                courses_table,
-                groups_table.c.course_id == courses_table.c.id,
+        if teacher_id:
+            stmt = (
+                stmt.join(
+                    courses_table,
+                    groups_table.c.course_id == courses_table.c.id,
+                )
+                .join(
+                    course_teachers_table,
+                    courses_table.c.id == course_teachers_table.c.course_id,
+                )
+                .where(course_teachers_table.c.teacher_id == teacher_id)
             )
-            .join(
-                course_teachers_table,
-                courses_table.c.id == course_teachers_table.c.course_id,
-            )
-            .where(course_teachers_table.c.teacher_id == teacher_id)
-        )
+
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())
 
@@ -101,7 +99,12 @@ class GroupRepositoryImpl(GroupRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[User], rows.all())
 
-    async def get_groups_with_payments(self) -> list[Group]:
+    async def get_groups_with_payments(
+        self,
+        *,
+        teacher_id: int | None = None,
+        student_id: int | None = None,
+    ) -> list[Group]:
         stmt = (
             set_group_joins(
                 select(Group, func.coalesce(func.sum(Payment.amount), 0)),
@@ -126,6 +129,22 @@ class GroupRepositoryImpl(GroupRepository):
             .group_by(groups_table.c.id)
             .distinct()
         )
+
+        if teacher_id:
+            stmt = stmt.join(
+                course_teachers_table,
+                groups_table.c.course_id == course_teachers_table.c.course_id,
+            ).where(
+                course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+
+        if student_id:
+            stmt = stmt.where(
+                student_groups_table.c.student_id == student_id,
+                student_groups_table.c.status == StudentStatus.ACTIVE,
+            )
+
         rows = await self.session.execute(stmt)
         result = []
         for group, total_paid in rows.unique().all():
@@ -137,7 +156,9 @@ class GroupRepositoryImpl(GroupRepository):
 
     async def get_groups_with_students(
         self,
+        *,
         teacher_id: int | None = None,
+        course_id: int | None = None,
     ) -> list[Group]:
         stmt = (
             set_group_joins(select(Group))
@@ -152,7 +173,11 @@ class GroupRepositoryImpl(GroupRepository):
         if teacher_id:
             stmt = join_course_teachers_to_groups(stmt).where(
                 course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
             )
+
+        if course_id:
+            stmt = stmt.where(groups_table.c.course_id == course_id)
 
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.unique().all())
@@ -171,7 +196,7 @@ class GroupRepositoryImpl(GroupRepository):
                 joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
             )
             .where(
-                course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
             )
         )
 

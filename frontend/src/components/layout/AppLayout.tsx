@@ -7,6 +7,7 @@ import { roleConfig } from '../../labels/role.tsx';
 
 export function AppLayout() {
   const { user, member } = useAppContext();
+  console.log(user);
 
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);

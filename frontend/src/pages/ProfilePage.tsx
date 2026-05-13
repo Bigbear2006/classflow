@@ -2,18 +2,15 @@ import { Building2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { EditUserForm } from '../components/profile/EditUserForm.tsx';
 import { ChangeUserPassword } from '../components/profile/ChangeUserPassword.tsx';
-import { logoutUser } from '../api/users/requests.ts';
 import { roleColors, roleLabels } from '../labels/role.tsx';
 import { useAppContext } from '../context.tsx';
+import { useLogoutUserMutation } from '../hooks/mutations/user.ts';
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, member, organization } = useAppContext();
   // const [notifs, setNotifs] = useState({ email: true, push: true });
-
-  const handleLogout = () => {
-    logoutUser().then(() => navigate('/login'));
-  };
+  const logoutMutation = useLogoutUserMutation({ navigate });
 
   return (
     <div className="p-6 space-y-6 max-w-2xl">
@@ -83,7 +80,7 @@ export const ProfilePage = () => {
 
       <div className="flex gap-3">
         <button
-          onClick={handleLogout}
+          onClick={() => logoutMutation.mutate()}
           className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
         >
           <LogOut size={16} /> Выйти

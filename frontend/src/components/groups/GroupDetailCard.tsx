@@ -49,7 +49,7 @@ export const GroupDetailCard = ({ group, closeModal }: GroupDetailCardProps) => 
               {activeOrDeleted.map(student => (
                 <div
                   key={student.id}
-                  className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
+                  className="flex flex-wrap gap-2 items-center justify-between p-2.5 bg-slate-50 rounded-xl"
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-medium">
@@ -97,7 +97,7 @@ export const GroupDetailCard = ({ group, closeModal }: GroupDetailCardProps) => 
                 {pendingOrRejected.map(student => (
                   <div
                     key={student.id}
-                    className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
+                    className="flex flex-wrap gap-2 items-center justify-between p-2.5 bg-slate-50 rounded-xl"
                   >
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-sm font-medium">

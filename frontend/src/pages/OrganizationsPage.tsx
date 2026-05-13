@@ -33,9 +33,7 @@ export function OrganizationsPage() {
             Добро пожаловать
             {user && `, ${user.fullname}`}!
           </h1>
-          <p className="text-indigo-200 text-sm">
-            Управляйте своими организациями или вступайте в новые учебные центры
-          </p>
+          <p className="text-indigo-200 text-sm">Здесь вы можете создавать и искать организации</p>
         </div>
       </div>
 

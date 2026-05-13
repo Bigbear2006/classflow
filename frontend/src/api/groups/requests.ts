@@ -6,6 +6,7 @@ import type {
   GroupWithPaymentsResponse,
   GroupWithStudentsResponse,
   UpdateStudentGroupData,
+  GetGroupsWithStudentsParams,
 } from './types.ts';
 import { mapGroupDetail, mapGroupWithPayments, mapGroupWithStudents } from './mappers.ts';
 
@@ -21,9 +22,11 @@ export const getGroupsWithPayments = (): Promise<GroupWithPayments[]> => {
     .then(rsp => rsp.data.map(mapGroupWithPayments));
 };
 
-export const getGroupsWithStudents = (): Promise<GroupWithStudents[]> => {
+export const getGroupsWithStudents = (
+  params: GetGroupsWithStudentsParams,
+): Promise<GroupWithStudents[]> => {
   return axiosInstance
-    .get<GroupWithStudentsResponse[]>('groups/students/')
+    .get<GroupWithStudentsResponse[]>('groups/students/', { params })
     .then(rsp => rsp.data.map(mapGroupWithStudents));
 };
 

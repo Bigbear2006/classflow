@@ -43,6 +43,25 @@ export const DAY_NAMES_FULL = [
   'Воскресенье',
 ];
 
+export const studentStatusConfig: Record<string, { label: string; color: string }> = {
+  PENDING: {
+    label: 'Заявка отправлена',
+    color: 'bg-blue-400',
+  },
+  ACTIVE: {
+    label: 'Вы записаны',
+    color: 'bg-emerald-700',
+  },
+  REJECTED: {
+    label: 'Заявка отклонена',
+    color: 'bg-red-500',
+  },
+  DELETED: {
+    label: 'Вы удалены из группы',
+    color: 'bg-red-500',
+  },
+};
+
 export const pendingStudentStatusConfig = [
   {
     status: 'PENDING',

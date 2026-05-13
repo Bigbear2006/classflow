@@ -1,6 +1,7 @@
 import { Check, DollarSign } from 'lucide-react';
 import { displayShortDate } from '../../labels/date.ts';
 import type { GroupWithPayments, PaymentMeta, StudentGroupWithPayments } from '../../entities';
+import { useAppContext } from '../../context.tsx';
 
 interface EveryLessonPaymentsProps {
   group: GroupWithPayments;
@@ -13,6 +14,8 @@ export const EveryLessonPayments = ({
   studentGroup,
   openIndividualPay,
 }: EveryLessonPaymentsProps) => {
+  const { isTeacherOrMore } = useAppContext();
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">
@@ -29,13 +32,15 @@ export const EveryLessonPayments = ({
           return (
             <button
               key={lesson.id}
-              onClick={() =>
-                !paid &&
-                openIndividualPay({
-                  lessonId: lesson.id,
-                  studentGroupId: studentGroup.id,
-                  amount: group.course.price,
-                })
+              onClick={
+                isTeacherOrMore && !paid
+                  ? () =>
+                      openIndividualPay({
+                        lessonId: lesson.id,
+                        studentGroupId: studentGroup.id,
+                        amount: group.course.price,
+                      })
+                  : undefined
               }
               className={`flex items-center gap-2 p-2 rounded-xl border text-xs transition-colors ${
                 paid

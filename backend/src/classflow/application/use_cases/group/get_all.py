@@ -18,5 +18,5 @@ class GetAllGroups:
         if member.is_admin_or_more:
             return await self.group_repository.get_all()
         elif member.is_teacher:
-            return await self.group_repository.get_teacher_groups(member.id)
-        raise PermissionDeniedError
+            return await self.group_repository.get_all(teacher_id=member.id)
+        raise PermissionDeniedError()

@@ -38,7 +38,7 @@ class Course:
     teachers_count: int | None = field(init=False, default=None)
     students_count: int | None = field(init=False, default=None)
     active_group_id: int | None = field(init=False, default=None)
-    user_joined: bool = field(init=False, default=False)
+    student_status: bool = field(init=False, default=False)
 
 
 @dataclass

@@ -58,7 +58,7 @@ class CourseDetailResponse(CourseWithSubjectResponse):
     teachers_count: int
     students_count: int
     active_group_id: int | None
-    user_joined: bool
+    student_status: str | None
 
 
 class BaseCourseTeacherResponse(BaseModel):

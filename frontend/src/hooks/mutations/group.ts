@@ -34,10 +34,18 @@ export const useDeleteGroupMutation = () => {
   });
 };
 
-export const useAddCurrentStudentToGroupMutation = () => {
+interface AddCurrentStudentToGroupMutationProps {
+  closeModal: () => void;
+}
+
+export const useAddCurrentStudentToGroupMutation = ({
+  closeModal,
+}: AddCurrentStudentToGroupMutationProps) => {
   return useCustomMutation({
     mutationFn: addCurrentStudentToGroup,
+    invalidateQueryKeyOnSuccess: ['courses'],
     toastErrorMessage: 'Не удалось записаться на курс',
+    onSuccess: closeModal,
   });
 };
 

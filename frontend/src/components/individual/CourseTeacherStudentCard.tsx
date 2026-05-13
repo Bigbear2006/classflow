@@ -29,7 +29,7 @@ export const CourseTeacherStudentCard = ({
           <div className="text-xs text-slate-400">{student.user.email}</div>
         </div>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap">
         {getStudentStatusConfig(studentStatus).map(({ status, label, color }) => (
           <button
             key={status}

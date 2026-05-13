@@ -1,6 +1,7 @@
 import { Check, DollarSign } from 'lucide-react';
 import type { CourseTeacherStudentWithPayments, PaymentMeta } from '../../entities';
 import { displayShortDate } from '../../labels/date.ts';
+import { useAppContext } from '../../context.tsx';
 
 interface IndividualPaymentsProps {
   student: CourseTeacherStudentWithPayments;
@@ -8,6 +9,8 @@ interface IndividualPaymentsProps {
 }
 
 export const IndividualPayments = ({ student, openIndividualPay }: IndividualPaymentsProps) => {
+  const { isTeacherOrMore } = useAppContext();
+
   return (
     <div key={student.id} className="bg-white rounded-2xl border border-slate-200 p-5">
       <div className="flex items-center justify-between mb-4">
@@ -30,13 +33,15 @@ export const IndividualPayments = ({ student, openIndividualPay }: IndividualPay
             return (
               <button
                 key={lesson.id}
-                onClick={() =>
-                  !paid &&
-                  openIndividualPay({
-                    lessonId: lesson.id,
-                    courseTeacherStudentId: student.id,
-                    amount: student.courseTeacher.course.price,
-                  })
+                onClick={
+                  isTeacherOrMore && !paid
+                    ? () =>
+                        openIndividualPay({
+                          lessonId: lesson.id,
+                          courseTeacherStudentId: student.id,
+                          amount: student.courseTeacher.course.price,
+                        })
+                    : undefined
                 }
                 className={`flex items-center gap-2 p-3 rounded-xl border text-xs transition-colors ${
                   paid

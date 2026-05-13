@@ -13,9 +13,12 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     OrganizationMember,
 )
-from classflow.domain.enums import StudentStatus
+from classflow.domain.enums import CourseTeacherStatus, StudentStatus
 from classflow.infrastructure.db.repositories.base import create, get_one
-from classflow.infrastructure.db.tables import course_teacher_students_table
+from classflow.infrastructure.db.tables import (
+    course_teacher_students_table,
+    course_teachers_table,
+)
 
 
 class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
@@ -55,7 +58,12 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
         rows = await self.session.execute(stmt)
         return get_one(rows)
 
-    async def get_with_payments(self) -> list[CourseTeacherStudent]:
+    async def get_with_payments(
+        self,
+        *,
+        teacher_id: int | None = None,
+        student_id: int | None = None,
+    ) -> list[CourseTeacherStudent]:
         stmt = (
             select(CourseTeacherStudent)
             .options(
@@ -74,6 +82,24 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
                 joinedload(CourseTeacherStudent.payments),
             )
             .order_by(course_teacher_students_table.c.created_at.desc())
+            .distinct()
         )
+
+        if teacher_id:
+            stmt = stmt.join(
+                course_teachers_table,
+                course_teacher_students_table.c.course_teacher_id
+                == course_teachers_table.c.id,
+            ).where(
+                course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+
+        if student_id:
+            stmt = stmt.where(
+                course_teacher_students_table.c.student_id == student_id,
+                course_teacher_students_table.c.status == StudentStatus.ACTIVE,
+            )
+
         rows = await self.session.scalars(stmt)
         return cast(list[CourseTeacherStudent], rows.unique().all())

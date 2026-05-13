@@ -8,12 +8,13 @@ import { useCourses } from '../hooks/queries/course.ts';
 import { useGroupsWithStudents } from '../hooks/queries/group.ts';
 
 export const GroupsPage = () => {
-  const { data: courses } = useCourses();
-  const { data: groups } = useGroupsWithStudents();
-
   const [action, setAction] = useState<ModalAction | null>(null);
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+
+  const { data: courses } = useCourses();
+  const { data: groups } = useGroupsWithStudents({ courseId: selectedCourseId || undefined });
+
   const selectedGroup = groups.find(g => g.id == selectedGroupId);
 
   const openEdit = (group: GroupWithStudents) => {

@@ -15,7 +15,7 @@ export const SelectCourseTeacher = ({ courseId, closeModal }: SelectCourseTeache
   const { register, handleSubmit } = useSelectCourseTeacherForm();
   const { data: teachers } = useCourseTeachers({ courseId });
 
-  const mutation = useAddCurrentStudentToCourseMutation();
+  const mutation = useAddCurrentStudentToCourseMutation({ closeModal });
   const onSubmit = (data: OutputSelectCourseTeacherFields) =>
     mutation.mutate({
       courseId: courseId,

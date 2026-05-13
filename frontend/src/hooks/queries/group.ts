@@ -22,11 +22,16 @@ export const useGroupsWithPayments = () => {
   });
 };
 
-export const useGroupsWithStudents = () => {
+interface useGroupsWithStudentsProps {
+  courseId?: number;
+}
+
+export const useGroupsWithStudents = ({ courseId }: useGroupsWithStudentsProps) => {
   return useQuery({
     initialData: [],
-    queryKey: ['groups', 'students'],
-    queryFn: getGroupsWithStudents,
+    queryKey: ['groups', 'students', courseId],
+    queryFn: () => getGroupsWithStudents({ course_id: courseId }),
+    staleTime: 5 * 1000,
   });
 };
 

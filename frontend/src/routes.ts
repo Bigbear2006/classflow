@@ -31,6 +31,8 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     Component: LoginPage,
+    loader: createLoader(),
+    shouldRevalidate: () => false,
   },
   {
     path: '/register',

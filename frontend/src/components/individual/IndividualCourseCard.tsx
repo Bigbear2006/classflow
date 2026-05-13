@@ -16,10 +16,14 @@ export const IndividualCourseCard = ({ course }: IndividualCourseCardProps) => {
         />
         <div className="flex-1">
           <h2 className="font-semibold text-slate-900">{course.subject.name}</h2>
-          <p className="text-xs text-slate-500">
-            {course.price.toLocaleString('ru')} ₽ / занятие · {course.lessonDuration.as('minutes')}{' '}
-            мин
-          </p>
+          {course.paymentType == 'EVERY_LESSON' ? (
+            <p className="text-xs text-slate-500">
+              {course.price.toLocaleString('ru')} ₽ / занятие ·{' '}
+              {course.lessonDuration.as('minutes')} мин
+            </p>
+          ) : (
+            <p>{course.price.toLocaleString('ru')} за весь курс</p>
+          )}
         </div>
       </div>
       {course.teachers.map(courseTeacher => (

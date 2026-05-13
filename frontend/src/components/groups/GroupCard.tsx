@@ -10,6 +10,7 @@ interface GroupCardProps {
 
 export const GroupCard = ({ group, openDetail, openEdit }: GroupCardProps) => {
   const activeStudents = group.students.filter(student => student.status === 'ACTIVE');
+  const pendingStudents = group.students.filter(student => student.status === 'PENDING');
   const mutation = useDeleteGroupMutation();
 
   return (
@@ -43,7 +44,8 @@ export const GroupCard = ({ group, openDetail, openEdit }: GroupCardProps) => {
       <div className="mb-3">
         <div className="flex justify-between text-xs text-slate-500 mb-1">
           <span>
-            {activeStudents.length} из {group.maxUsersCount} учеников
+            {activeStudents.length} из {group.maxUsersCount} учеников ({pendingStudents.length}{' '}
+            заявок)
           </span>
           <span>{Math.round((activeStudents.length / group.maxUsersCount) * 100)}%</span>
         </div>

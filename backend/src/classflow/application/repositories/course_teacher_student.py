@@ -23,5 +23,10 @@ class CourseTeacherStudentRepository(Protocol):
     async def get_all(self) -> list[CourseTeacherStudent]:
         pass
 
-    async def get_with_payments(self) -> list[CourseTeacherStudent]:
+    async def get_with_payments(
+        self,
+        *,
+        teacher_id: int | None = None,
+        student_id: int | None = None,
+    ) -> list[CourseTeacherStudent]:
         pass

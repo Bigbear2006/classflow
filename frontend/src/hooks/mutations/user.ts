@@ -1,14 +1,15 @@
-import { verifyUser } from '../../api/users/requests.ts';
+import { logoutUser, verifyUser } from '../../api/users/requests.ts';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 import type { NavigateFunction } from 'react-router';
 import { useCustomMutation } from '../useCustomMutation.ts';
+import { queryClient } from '../../loaders.ts';
 
-interface VerifyUserMutationProps {
+interface UserMutationProps {
   navigate: NavigateFunction;
 }
 
-export const useVerifyUserMutation = ({ navigate }: VerifyUserMutationProps) => {
+export const useVerifyUserMutation = ({ navigate }: UserMutationProps) => {
   return useCustomMutation({
     mutationFn: verifyUser,
     onSuccess: () => {
@@ -26,6 +27,15 @@ export const useVerifyUserMutation = ({ navigate }: VerifyUserMutationProps) => 
       } else {
         toast.error('Неверный код');
       }
+    },
+  });
+};
+
+export const useLogoutUserMutation = ({ navigate }: UserMutationProps) => {
+  return useCustomMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      queryClient.resetQueries().then(() => navigate('/login', { replace: true }));
     },
   });
 };

@@ -1,7 +1,14 @@
 import { LoginForm } from '../components/common/LoginForm.tsx';
 import { ClassFlowBlock } from '../components/common/ClassFlowBlock.tsx';
+import { useAppContext } from '../context.tsx';
+import { Navigate } from 'react-router';
 
 export const LoginPage = () => {
+  const { user } = useAppContext();
+  if (user) {
+    return <Navigate to="/orgs" />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 flex flex-col">
       <ClassFlowBlock />

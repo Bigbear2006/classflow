@@ -14,6 +14,7 @@ from classflow.application.use_cases.group import (
     GetGroupByIdDTO,
     GetGroupsWithPayments,
     GetGroupsWithStudents,
+    GetGroupsWithStudentsDTO,
     GetGroupUsers,
     GetGroupUsersDTO,
     RemoveUserFromGroup,
@@ -81,8 +82,10 @@ async def get_groups_with_payments_router(
 @group_router.get('/students/')
 async def get_groups_with_students_router(
     get_groups_with_students: FromDishka[GetGroupsWithStudents],
+    course_id: int | None = None,
 ) -> list[GroupWithStudentsResponse]:
-    groups = await get_groups_with_students()
+    dto = GetGroupsWithStudentsDTO(course_id=course_id)
+    groups = await get_groups_with_students(dto)
     return [
         GroupWithStudentsResponse.model_validate(group) for group in groups
     ]

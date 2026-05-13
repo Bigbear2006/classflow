@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import cast
 
-from sqlalchemy import and_, exists, func, literal, or_, select, update
+from sqlalchemy import func, literal, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager, joinedload
 
@@ -12,6 +12,7 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     Group,
     OrganizationMember,
+    StudentGroup,
     User,
 )
 from classflow.domain.enums import (
@@ -104,7 +105,7 @@ class CourseRepositoryImpl(CourseRepository):
             .scalar_subquery()
         )
 
-        group_subquery = (
+        active_group_subquery = (
             select(groups_table.c.id)
             .where(groups_table.c.course_id == courses_table.c.id)
             .order_by(groups_table.c.created_at.asc())
@@ -113,48 +114,49 @@ class CourseRepositoryImpl(CourseRepository):
         )
 
         if current_member_id:
-            user_joined_subquery = exists(
-                select(1)
+            student_group_status_subquery = (
+                select(StudentGroup.status)
                 .select_from(groups_table)
                 .outerjoin(
                     student_groups_table,
                     groups_table.c.id == student_groups_table.c.group_id,
                 )
-                .outerjoin(
-                    course_teachers_table,
-                    courses_table.c.id == course_teachers_table.c.course_id,
+                .where(
+                    groups_table.c.course_id == courses_table.c.id,
+                    student_groups_table.c.student_id == current_member_id,
                 )
+                .scalar_subquery()
+            )
+        else:
+            student_group_status_subquery = literal(None)
+
+        if current_member_id:
+            course_teacher_student_status_subquery = (
+                select(CourseTeacherStudent.status)
+                .select_from(course_teachers_table)
                 .outerjoin(
                     course_teacher_students_table,
                     course_teachers_table.c.id
                     == course_teacher_students_table.c.course_teacher_id,
                 )
                 .where(
-                    or_(
-                        and_(
-                            groups_table.c.course_id == courses_table.c.id,
-                            student_groups_table.c.student_id
-                            == current_member_id,
-                        ),
-                        and_(
-                            course_teachers_table.c.course_id
-                            == courses_table.c.id,
-                            course_teacher_students_table.c.student_id
-                            == current_member_id,
-                        ),
-                    ),
-                ),
+                    course_teachers_table.c.course_id == courses_table.c.id,
+                    course_teacher_students_table.c.student_id
+                    == current_member_id,
+                )
+                .scalar_subquery()
             )
         else:
-            user_joined_subquery = literal(False)
+            course_teacher_student_status_subquery = literal(None)
 
         stmt = select(
             Course,
             teachers_count_subquery,
             group_students_count_subquery,
             individual_students_count_subquery,
-            group_subquery,
-            user_joined_subquery,
+            active_group_subquery,
+            student_group_status_subquery,
+            course_teacher_student_status_subquery,
         ).options(joinedload(Course.subject))  # type: ignore[arg-type]
 
         rows = await self.session.execute(stmt)
@@ -165,12 +167,15 @@ class CourseRepositoryImpl(CourseRepository):
             group_students,
             individual_students,
             active_group_id,
-            user_joined,
+            student_group_status,
+            course_teacher_student_status,
         ) in rows:
             course.teachers_count = teachers_count
             course.students_count = group_students + individual_students
             course.active_group_id = active_group_id
-            course.user_joined = user_joined
+            course.student_status = (
+                student_group_status or course_teacher_student_status
+            )
             result.append(course)
         return result
 

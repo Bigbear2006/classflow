@@ -4,6 +4,10 @@ import type { OrganizationMemberDetailResponse } from '../organizations/types.ts
 import type { LessonResponse } from '../lessons/types.ts';
 import type { PaymentResponse } from '../payments/types.ts';
 
+export interface GetGroupsWithStudentsParams {
+  course_id?: number;
+}
+
 export interface GroupData {
   name: string;
   course_id: number;

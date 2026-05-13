@@ -36,6 +36,7 @@ from classflow.application.use_cases.group.with_payments import (
 )
 from classflow.application.use_cases.group.with_students import (
     GetGroupsWithStudents,
+    GetGroupsWithStudentsDTO,
 )
 from classflow.application.use_cases.group.with_teachers import (
     GetGroupsWithTeachers,
@@ -55,6 +56,7 @@ __all__ = (
     'GetGroupUsersDTO',
     'GetGroupsWithPayments',
     'GetGroupsWithStudents',
+    'GetGroupsWithStudentsDTO',
     'GetGroupsWithTeachers',
     'RemoveUserFromGroup',
     'RemoveUserFromGroupDTO',

@@ -62,7 +62,7 @@ export interface CourseDetailResponse extends CourseResponse {
   teachers_count: number;
   students_count: number;
   active_group_id: number | null;
-  user_joined: boolean;
+  student_status: string;
 }
 
 interface BaseCourseTeacherResponse {

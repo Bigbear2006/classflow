@@ -24,7 +24,7 @@ export interface CourseDetail extends Course {
   teachersCount: number;
   studentsCount: number;
   activeGroupId: number | null;
-  userJoined: boolean;
+  studentStatus: string;
 }
 
 interface BaseCourseTeacher {

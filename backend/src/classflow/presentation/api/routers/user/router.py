@@ -86,8 +86,8 @@ async def refresh_token_router(
 
 @user_router.post('/logout/', status_code=204)
 async def logout_user_router(response: Response) -> None:
-    response.delete_cookie('access')
-    response.delete_cookie('refresh')
+    set_access_cookie(response, '')
+    set_refresh_cookie(response, '')
 
 
 @user_router.get('/me/', dependencies=[Depends(cookie_scheme)])

@@ -18,7 +18,7 @@ export const CourseTeacherCard = ({ courseTeacher }: CourseTeacherCardProps) => 
       <h3 className="text-xs font-semibold text-slate-500 uppercase flex items-center gap-1.5">
         <BookOpen size={14} /> {courseTeacher.teacher.user.fullname}
       </h3>
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap">
         {courseTeacherStatusConfig
           .filter(cfg => !isTeacher || cfg.status !== 'DELETED')
           .map(({ status, label, color }) => (

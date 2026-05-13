@@ -1,6 +1,7 @@
 from classflow.application.repositories.group import GroupRepository
 from classflow.application.services.permission import PermissionService
 from classflow.domain.entities import Group
+from classflow.domain.exceptions import PermissionDeniedError
 
 
 class GetGroupsWithPayments:
@@ -13,5 +14,15 @@ class GetGroupsWithPayments:
         self.permission_service = permission_service
 
     async def __call__(self) -> list[Group]:
-        await self.permission_service.ensure_admin_or_more()
-        return await self.group_repository.get_groups_with_payments()
+        member = await self.permission_service.get_current_member()
+        if member.is_admin_or_more:
+            return await self.group_repository.get_groups_with_payments()
+        if member.is_teacher:
+            return await self.group_repository.get_groups_with_payments(
+                teacher_id=member.id,
+            )
+        if member.is_student:
+            return await self.group_repository.get_groups_with_payments(
+                student_id=member.id,
+            )
+        raise PermissionDeniedError()

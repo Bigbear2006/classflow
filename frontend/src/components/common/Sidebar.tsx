@@ -27,7 +27,7 @@ export const Sidebar = ({ setSidebarOpen }: SidebarProps) => {
               {organization?.name || 'ClassFlow'}
             </div>
             <div className="text-slate-400 text-xs">
-              {organization?.slug ? `/${organization.slug}` : 'Платформа обучения'}
+              {organization?.slug ? `${organization.slug}` : 'Платформа обучения'}
             </div>
           </div>
         </div>

@@ -3,10 +3,10 @@ import { deleteCourse } from '../../api/courses/requests.ts';
 import { displayCoursePaymentType, paymentTypeLabels } from '../../labels/course.tsx';
 import type { CourseDetail } from '../../entities';
 import { useAppContext } from '../../context.tsx';
-import { lessonTypeLabels } from '../../labels/lesson.tsx';
-import { useAddCurrentStudentToGroupMutation } from '../../hooks/mutations/group.ts';
+import { lessonTypeLabels, studentStatusConfig } from '../../labels/lesson.tsx';
 import { useState } from 'react';
 import { SelectCourseTeacher } from './SelectCourseTeacher.tsx';
+import { ConfirmAddToCourse } from './ConfirmAddToCourse.tsx';
 
 interface CourseCardProps {
   course: CourseDetail;
@@ -14,10 +14,12 @@ interface CourseCardProps {
   openEdit: (course: CourseDetail) => void;
 }
 
+type ConfirmAction = 'SELECT_TEACHER' | 'CONFIRM';
+
 export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) => {
   const { user, isStudent, isAdminOrOwner } = useAppContext();
-  const [selectTeacherModalIsOpen, setSelectTeacherModalIsOpen] = useState(false);
-  const mutation = useAddCurrentStudentToGroupMutation();
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
+  const closeModal = () => setConfirmAction(null);
 
   return (
     <div
@@ -92,30 +94,30 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
         </div>
         {user &&
           isStudent &&
-          !course.userJoined &&
+          !course.studentStatus &&
           (course.type === 'INDIVIDUAL' || course.activeGroupId) && (
             <button
-              onClick={
-                course.type === 'GROUP'
-                  ? () => mutation.mutate(course.activeGroupId!)
-                  : () => setSelectTeacherModalIsOpen(true)
+              onClick={() =>
+                setConfirmAction(course.type === 'INDIVIDUAL' ? 'SELECT_TEACHER' : 'CONFIRM')
               }
               className="flex-1 py-2.5 w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors"
             >
               Записаться
             </button>
           )}
-        {course.userJoined && (
-          <div className="flex-1 py-2.5 w-full bg-emerald-700 text-white rounded-xl text-sm font-medium">
-            <p className="text-center">Вы уже записаны на этот курс</p>
+        {course.studentStatus && (
+          <div
+            className={`flex-1 py-2.5 w-full ${studentStatusConfig[course.studentStatus].color} text-white rounded-xl text-sm font-medium`}
+          >
+            <p className="text-center">{studentStatusConfig[course.studentStatus].label}</p>
           </div>
         )}
       </div>
-      {selectTeacherModalIsOpen && (
-        <SelectCourseTeacher
-          courseId={course.id}
-          closeModal={() => setSelectTeacherModalIsOpen(false)}
-        />
+      {confirmAction == 'SELECT_TEACHER' && (
+        <SelectCourseTeacher courseId={course.id} closeModal={closeModal} />
+      )}
+      {confirmAction == 'CONFIRM' && (
+        <ConfirmAddToCourse course={course} closeModal={closeModal} />
       )}
     </div>
   );
