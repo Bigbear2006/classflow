@@ -8,7 +8,6 @@ export const ReadyToStart = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <FadeIn>
           <div className="relative bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 rounded-3xl p-10 sm:p-14 text-center overflow-hidden shadow-2xl shadow-indigo-900/20">
-            {/* Decoration */}
             <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/5 rounded-full" />
             <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full" />
             <div className="absolute top-6 left-6">

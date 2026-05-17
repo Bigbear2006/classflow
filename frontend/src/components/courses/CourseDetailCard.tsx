@@ -171,10 +171,6 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
                     className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl"
                   >
                     <span className="text-sm text-slate-800">{g.name}</span>
-                    {/* TODO: add in future */}
-                    {/*<span className="text-xs text-slate-500">*/}
-                    {/*  {g.studentsCount || 0}/{g.maxUsersCount} уч.*/}
-                    {/*</span>*/}
                   </div>
                 ))}
                 {groups.length === 0 && <p className="text-sm text-slate-400">Групп нет</p>}

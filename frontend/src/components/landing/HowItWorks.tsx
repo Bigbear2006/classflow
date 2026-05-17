@@ -38,7 +38,6 @@ export const HowItWorks = () => {
       id="how"
       className="py-20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden"
     >
-      {/* bg decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl" />
@@ -90,42 +89,6 @@ export const HowItWorks = () => {
             </FadeIn>
           ))}
         </div>
-        {/*<div className="mt-16 grid sm:grid-cols-3 gap-4">*/}
-        {/*  {[*/}
-        {/*    {*/}
-        {/*      src: 'https://images.unsplash.com/photo-1588912914074-b93851ff14b8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',*/}
-        {/*      label: 'Расписание занятий',*/}
-        {/*      icon: <Calendar size={14} />,*/}
-        {/*    },*/}
-        {/*    {*/}
-        {/*      src: 'https://images.unsplash.com/photo-1612831455740-a2f6212eeeb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',*/}
-        {/*      label: 'Каталог курсов',*/}
-        {/*      icon: <BookOpen size={14} />,*/}
-        {/*    },*/}
-        {/*    {*/}
-        {/*      src: 'https://images.unsplash.com/photo-1617131633412-39437b40a16b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',*/}
-        {/*      label: 'Аналитика и оплаты',*/}
-        {/*      icon: <BarChart3 size={14} />,*/}
-        {/*    },*/}
-        {/*  ].map(({ src, label, icon }, i) => (*/}
-        {/*    <FadeIn key={i} delay={i * 100}>*/}
-        {/*      <div className="relative rounded-2xl overflow-hidden group">*/}
-        {/*        <img*/}
-        {/*          src={src}*/}
-        {/*          alt={label}*/}
-        {/*          className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"*/}
-        {/*        />*/}
-        {/*        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />*/}
-        {/*        <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center gap-2 text-white">*/}
-        {/*          <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">*/}
-        {/*            {icon}*/}
-        {/*          </div>*/}
-        {/*          <span className="text-sm font-medium">{label}</span>*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </FadeIn>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
       </div>
     </section>
   );

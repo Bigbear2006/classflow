@@ -61,10 +61,6 @@ export const Footer = ({ scrollTo }: FooterProps) => {
               @bigbeardev
             </div>
           </div>
-          {/*<div className="flex items-center gap-3 text-slate-600 text-xs">*/}
-          {/*  <MapPin size={12} />*/}
-          {/*  <span>Россия</span>*/}
-          {/*</div>*/}
         </div>
       </div>
     </footer>

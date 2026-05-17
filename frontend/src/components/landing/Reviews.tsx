@@ -53,7 +53,6 @@ export const Reviews = () => {
           {REVIEWS.map(({ name, role, avatar, color, text, stars }, i) => (
             <FadeIn key={i} delay={i * 100}>
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
-                {/* Stars */}
                 <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: stars }).map((_, j) => (
                     <Star key={j} size={14} className="fill-amber-400 text-amber-400" />
