@@ -1,6 +1,7 @@
 import { Edit2, Trash2, Users } from 'lucide-react';
 import type { GroupWithStudents } from '../../entities';
 import { useDeleteGroupMutation } from '../../hooks/mutations/group.ts';
+import { useConfirm } from '../../hooks/useConfirm.ts';
 
 interface GroupCardProps {
   group: GroupWithStudents;
@@ -11,18 +12,24 @@ interface GroupCardProps {
 export const GroupCard = ({ group, openDetail, openEdit }: GroupCardProps) => {
   const activeStudents = group.students.filter(student => student.status === 'ACTIVE');
   const pendingStudents = group.students.filter(student => student.status === 'PENDING');
-  const mutation = useDeleteGroupMutation();
+
+  const deleteGroupMutation = useDeleteGroupMutation();
+  const handleDeleteGroup = useConfirm({
+    message: `Удалить группу ${group.name}?`,
+    action: deleteGroupMutation.mutate,
+    actionLabel: 'Удалить',
+  });
 
   return (
     <div
       key={group.id}
       className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md transition-shadow"
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 min-h-[42px]">
         <div>
           <h3 className="font-semibold text-slate-900">{group.name}</h3>
           {group.defaultCabinet && (
-            <p className="text-xs text-slate-400 mt-0.5">{group.defaultCabinet.number}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{group.defaultCabinet.number || ''}</p>
           )}
         </div>
         <div className="flex gap-1">
@@ -32,12 +39,14 @@ export const GroupCard = ({ group, openDetail, openEdit }: GroupCardProps) => {
           >
             <Edit2 size={14} />
           </button>
-          <button
-            onClick={() => mutation.mutate(group.id)}
-            className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
-          >
-            <Trash2 size={14} />
-          </button>
+          {group.students.length === 0 && (
+            <button
+              onClick={() => handleDeleteGroup(group.id)}
+              className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -60,7 +69,7 @@ export const GroupCard = ({ group, openDetail, openEdit }: GroupCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 min-h-[28px]">
         <div className="flex -space-x-2">
           {activeStudents.slice(0, 4).map(student => (
             <div

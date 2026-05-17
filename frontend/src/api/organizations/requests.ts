@@ -39,7 +39,7 @@ export const getCurrentOrganization = () => {
 };
 
 export const updateCurrentOrganization = (data: CreateOrganizationData) => {
-  return axiosInstance.patch<OrganizationResponse>('organizations/current/', data);
+  return axiosInstance.put<OrganizationResponse>('organizations/current/', data);
 };
 
 export const getMyOrganizations = () => {

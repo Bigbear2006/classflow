@@ -29,12 +29,13 @@ export const IndividualPayments = ({ student, openIndividualPay }: IndividualPay
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
           {student.lessons.map(lesson => {
-            const paid = !!student.payments.find(payment => payment.lessonId == lesson.id);
+            const payment = student.payments.find(payment => payment.lessonId == lesson.id);
+            const paid = !!payment;
             return (
               <button
                 key={lesson.id}
                 onClick={
-                  isTeacherOrMore && !paid
+                  isTeacherOrMore && !paid && lesson.endDate < new Date()
                     ? () =>
                         openIndividualPay({
                           lessonId: lesson.id,
@@ -53,7 +54,7 @@ export const IndividualPayments = ({ student, openIndividualPay }: IndividualPay
               >
                 {paid ? <Check size={12} /> : <DollarSign size={12} className="flex-shrink-0" />}
                 <span>
-                  {displayShortDate(lesson.startDate)}
+                  {displayShortDate(lesson.startDate)} {payment?.comment && `(${payment.comment})`}
                   {paid && (
                     <span className="ml-1 text-emerald-600">
                       {student.courseTeacher.course.price.toLocaleString('ru')} ₽

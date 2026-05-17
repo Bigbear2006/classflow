@@ -24,15 +24,10 @@ export const MemberCard = ({ currentUser, currentMember, member }: MemberCardPro
               member.user.fullname.charAt(0)
             )}
           </div>
-          <div>
-            <div className="text-sm font-medium text-slate-900">{member.user.fullname}</div>
-            <div className="text-xs text-slate-400 sm:hidden">{member.user.email}</div>
-          </div>
+          <div className="text-sm font-medium text-slate-900">{member.user.fullname}</div>
         </div>
       </td>
-      <td className="px-5 py-3.5 text-sm text-slate-600 hidden sm:table-cell">
-        {member.user.email}
-      </td>
+      <td className="px-5 py-3.5 text-sm text-slate-600 table-cell">{member.user.email}</td>
       <td className="px-5 py-3.5">
         <span
           className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-white ${roleConfig[member.role].color}`}
@@ -41,7 +36,7 @@ export const MemberCard = ({ currentUser, currentMember, member }: MemberCardPro
           {roleConfig[member.role].label}
         </span>
       </td>
-      <td className="px-5 py-3.5 text-sm text-slate-500 hidden md:table-cell">
+      <td className="px-5 py-3.5 text-sm text-slate-500 table-cell">
         {member.createdAt.toLocaleDateString('ru')}
       </td>
       {currentMember?.role == 'OWNER' && (

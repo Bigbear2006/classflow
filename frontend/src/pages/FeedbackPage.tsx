@@ -31,7 +31,7 @@ export const FeedbackPage = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Поиск по имени..."
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
         </div>

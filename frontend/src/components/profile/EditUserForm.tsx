@@ -1,58 +1,29 @@
-import { useForm } from 'react-hook-form';
-import { updateUser } from '../../api/users/requests.ts';
-import { type UpdateUserData } from '../../api/users/types.ts';
-import { Phone, Save, User as UserIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { Save } from 'lucide-react';
 import type { User } from '../../entities';
-import { toast } from 'sonner';
+import { useEditUserForm } from '../../hooks/forms/editUser.ts';
+import { useEditUserMutation } from '../../hooks/mutations/user.ts';
+import { FullnameField } from '../common/FullnameField.tsx';
+import { PhoneField } from '../common/PhoneField.tsx';
 
 interface EditUserFormProps {
   user: User;
 }
 
 export const EditUserForm = ({ user }: EditUserFormProps) => {
-  const { register, setValue, handleSubmit } = useForm<UpdateUserData>();
-
-  useEffect(() => {
-    setValue('fullname', user.fullname);
-    setValue('phone', user.phone);
-  }, [user]);
+  const { control, handleSubmit } = useEditUserForm({ initialValues: user });
+  const editUserMutation = useEditUserMutation();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm text-slate-600 mb-1.5 font-medium">
-          <UserIcon size={14} className="inline mr-1" />
-          ФИО
-        </label>
-        <input
-          {...register('fullname')}
-          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-      </div>
-      <div>
-        <label className="block text-sm text-slate-600 mb-1.5 font-medium">
-          <Phone size={14} className="inline mr-1" />
-          Телефон
-        </label>
-        <input
-          {...register('phone')}
-          className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-      </div>
+    <form onSubmit={handleSubmit(data => editUserMutation.mutate(data))} className="space-y-4">
+      <FullnameField control={control} />
+      <PhoneField control={control} />
       <button
-        onClick={handleSubmit(data => {
-          updateUser(data)
-            .then(() => toast.success('Данные сохранены'))
-            .catch(() => toast.error('Не удалось сохранить изменения'));
-        })}
-        className={
-          'flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium transition-all bg-indigo-600 hover:bg-indigo-700 text-white'
-        }
+        type="submit"
+        className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium transition-all bg-indigo-600 hover:bg-indigo-700 text-white"
       >
         <Save size={16} />
         Сохранить
       </button>
-    </div>
+    </form>
   );
 };

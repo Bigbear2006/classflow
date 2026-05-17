@@ -1,5 +1,4 @@
 import { Edit2, Trash2 } from 'lucide-react';
-import { deleteCourse } from '../../api/courses/requests.ts';
 import { displayCoursePaymentType, paymentTypeLabels } from '../../labels/course.tsx';
 import type { CourseDetail } from '../../entities';
 import { useAppContext } from '../../context.tsx';
@@ -7,6 +6,8 @@ import { lessonTypeLabels, studentStatusConfig } from '../../labels/lesson.tsx';
 import { useState } from 'react';
 import { SelectCourseTeacher } from './SelectCourseTeacher.tsx';
 import { ConfirmAddToCourse } from './ConfirmAddToCourse.tsx';
+import { useDeleteCourseMutation } from '../../hooks/mutations/course.ts';
+import { useConfirm } from '../../hooks/useConfirm.ts';
 
 interface CourseCardProps {
   course: CourseDetail;
@@ -20,6 +21,13 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
   const { user, isStudent, isAdminOrOwner } = useAppContext();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const closeModal = () => setConfirmAction(null);
+
+  const deleteCourseMutation = useDeleteCourseMutation();
+  const handleDeleteCourse = useConfirm({
+    message: `Удалить курс ${course.subject.name}?`,
+    action: deleteCourseMutation.mutate,
+    actionLabel: 'Удалить',
+  });
 
   return (
     <div
@@ -56,7 +64,7 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
               <button
                 onClick={e => {
                   e.stopPropagation();
-                  deleteCourse(course.id);
+                  handleDeleteCourse(course.id);
                 }}
                 className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
               >
@@ -95,7 +103,8 @@ export const CourseCard = ({ course, openDetail, openEdit }: CourseCardProps) =>
         {user &&
           isStudent &&
           !course.studentStatus &&
-          (course.type === 'INDIVIDUAL' || course.activeGroupId) && (
+          ((course.type === 'INDIVIDUAL' && course.teachersCount !== 0) ||
+            course.activeGroupId) && (
             <button
               onClick={() =>
                 setConfirmAction(course.type === 'INDIVIDUAL' ? 'SELECT_TEACHER' : 'CONFIRM')

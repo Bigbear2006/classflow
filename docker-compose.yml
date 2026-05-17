@@ -28,6 +28,8 @@ services:
     entrypoint: /app/entrypoint.sh
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/logs:/app/logs
     env_file:
       - backend/.env
     depends_on:

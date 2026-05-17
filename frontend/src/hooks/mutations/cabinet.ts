@@ -5,7 +5,8 @@ export const useCabinetMutation = () => {
   return useCustomMutation({
     mutationFn: createCabinet,
     invalidateQueryKeyOnSuccess: ['addresses'],
-    toastErrorMessage: 'Не удалось создать кабинет',
+    toastErrorMessage: ({ statusCode }) =>
+      statusCode === 409 ? 'Такой кабинет уже существует' : 'Не удалось создать кабинет',
   });
 };
 

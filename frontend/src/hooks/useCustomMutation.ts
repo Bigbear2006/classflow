@@ -1,5 +1,11 @@
 import { type DefaultError, useMutation, type UseMutationOptions } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
+
+interface ResponseError {
+  errorCode?: string;
+  statusCode?: number;
+}
 
 interface UseCustomMutationOptions<
   TData = unknown,
@@ -8,7 +14,7 @@ interface UseCustomMutationOptions<
   TOnMutateResult = unknown,
 > extends UseMutationOptions<TData, TError, TVariables, TOnMutateResult> {
   invalidateQueryKeyOnSuccess?: any[];
-  toastErrorMessage?: string;
+  toastErrorMessage?: string | ((err: ResponseError) => string);
 }
 
 export const useCustomMutation = <
@@ -28,7 +34,17 @@ export const useCustomMutation = <
     },
     onError: (error, variables, onMutateResult, context) => {
       if (options.toastErrorMessage) {
-        toast.error(options.toastErrorMessage);
+        let errorCode: string | undefined;
+        let statusCode: number | undefined;
+        if (isAxiosError(error)) {
+          errorCode = error.response?.data.code;
+          statusCode = error.status;
+        }
+        toast.error(
+          typeof options.toastErrorMessage === 'string'
+            ? options.toastErrorMessage
+            : options.toastErrorMessage({ errorCode, statusCode }),
+        );
       }
       options.onError?.(error, variables, onMutateResult, context);
     },

@@ -85,7 +85,7 @@ async def get_my_lessons_router(
     return [LessonDetailResponse.model_validate(lesson) for lesson in lessons]
 
 
-@lesson_router.delete('/{lesson_id}/')
+@lesson_router.delete('/{lesson_id}/', status_code=204)
 async def delete_lesson_router(
     lesson_id: int,
     delete_lesson: FromDishka[DeleteLesson],

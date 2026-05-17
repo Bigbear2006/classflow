@@ -4,7 +4,6 @@ import type { FormAction, LessonDetail } from '../entities';
 import { LessonForm } from '../components/schedule/LessonForm.tsx';
 import { DAY_NAMES_FULL } from '../labels/lesson.tsx';
 import { useLessons } from '../hooks/queries/lesson.ts';
-import { toast } from 'sonner';
 import { useDeleteLessonMutation } from '../hooks/mutations/lesson.ts';
 import {
   displayDate,
@@ -23,6 +22,7 @@ import { MobileLessonCard } from '../components/schedule/MobileLessonCard.tsx';
 import { LessonsTable } from '../components/schedule/LessonsTable.tsx';
 import { groupDayLessons } from '../api/lessons/mappers.ts';
 import { useAppContext } from '../context.tsx';
+import { useConfirm } from '../hooks/useConfirm.ts';
 
 export const SchedulePage = () => {
   const { isTeacherOrMore } = useAppContext();
@@ -80,11 +80,11 @@ export const SchedulePage = () => {
   };
 
   const deleteLessonMutation = useDeleteLessonMutation();
-  const onDeleteLesson = (lessonId: number) =>
-    toast('Удалить урок?', {
-      action: { label: 'Удалить', onClick: () => deleteLessonMutation.mutate(lessonId) },
-      cancel: { label: 'Отмена', onClick: () => {} },
-    });
+  const handleDeleteLesson = useConfirm({
+    message: `Удалить урок?`,
+    action: deleteLessonMutation.mutate,
+    actionLabel: 'Удалить',
+  });
 
   return (
     <div className="p-4 sm:p-6 space-y-5">
@@ -173,7 +173,7 @@ export const SchedulePage = () => {
                 key={lesson.id}
                 lesson={lesson}
                 openEdit={openEdit}
-                onDeleteLesson={onDeleteLesson}
+                handleDeleteLesson={handleDeleteLesson}
               />
             ))}
           </div>
@@ -209,7 +209,7 @@ export const SchedulePage = () => {
               key={lesson.id}
               lesson={lesson}
               openEdit={openEdit}
-              onDeleteLesson={onDeleteLesson}
+              handleDeleteLesson={handleDeleteLesson}
             />
           ))}
           {lessons.length === 0 && (
@@ -220,7 +220,11 @@ export const SchedulePage = () => {
         </div>
 
         <div className="hidden md:block overflow-x-auto">
-          <LessonsTable lessons={lessons} openEdit={openEdit} onDeleteLesson={onDeleteLesson} />
+          <LessonsTable
+            lessons={lessons}
+            openEdit={openEdit}
+            handleDeleteLesson={handleDeleteLesson}
+          />
         </div>
       </div>
 

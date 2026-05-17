@@ -11,6 +11,13 @@ class StudentGroupRepository(Protocol):
     async def get_students_count(self, group_id: int) -> int:
         pass
 
+    async def has_students(
+        self,
+        group_id: int,
+        students_ids: list[int],
+    ) -> bool:
+        pass
+
     async def update(
         self,
         student_id: int,

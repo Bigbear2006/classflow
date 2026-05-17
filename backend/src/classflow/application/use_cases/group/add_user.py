@@ -14,6 +14,7 @@ class AddStudentToGroupDTO:
     group_id: int
 
 
+# Deprecated
 class AddStudentToGroup:
     def __init__(
         self,

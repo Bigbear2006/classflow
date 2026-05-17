@@ -7,6 +7,7 @@ from classflow.domain.entities import OrganizationMember
 @dataclass
 class GetCourseTeachersDTO:
     course_id: int
+    exclude_paused: bool = False
 
 
 class GetCourseTeachers:
@@ -17,4 +18,7 @@ class GetCourseTeachers:
         self,
         data: GetCourseTeachersDTO,
     ) -> list[OrganizationMember]:
-        return await self.course_repository.get_teachers(data.course_id)
+        return await self.course_repository.get_teachers(
+            data.course_id,
+            exclude_paused=data.exclude_paused,
+        )

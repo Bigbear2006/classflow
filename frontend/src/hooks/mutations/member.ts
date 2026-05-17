@@ -1,6 +1,7 @@
 import { useCustomMutation } from '../useCustomMutation.ts';
 import { updateOrganizationMember } from '../../api/organizations/requests.ts';
 import type { UpdateOrganizationMemberData } from '../../api/organizations/types.ts';
+import { queryClient } from '../../loaders.ts';
 
 interface UseUpdateOrganizationMemberMutationOptions {
   userId: number;
@@ -13,8 +14,12 @@ export const useUpdateOrganizationMemberMutation = ({
 }: UseUpdateOrganizationMemberMutationOptions) => {
   return useCustomMutation({
     mutationFn: (data: UpdateOrganizationMemberData) => updateOrganizationMember(userId, data),
-    invalidateQueryKeyOnSuccess: ['members'],
     toastErrorMessage: 'Не удалось отредактировать участника',
-    onSuccess: closeModal,
+    onSuccess: () => {
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['members'] }),
+        queryClient.invalidateQueries({ queryKey: ['roleCounts'] }),
+      ]).then(closeModal);
+    },
   });
 };

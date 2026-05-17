@@ -73,7 +73,7 @@ export const OrganizationMembersPage = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Поиск по имени или email..."
-            className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -93,20 +93,20 @@ export const OrganizationMembersPage = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-        <table className="w-full overflow-visible">
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-x-auto">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-slate-100">
               <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                 Участник
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden sm:table-cell">
+              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide table-cell">
                 Email
               </th>
               <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                 Роль
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden md:table-cell">
+              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide table-cell">
                 Добавлен
               </th>
             </tr>

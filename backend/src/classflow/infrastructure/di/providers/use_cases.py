@@ -21,6 +21,7 @@ from classflow.application.use_cases.course import (
     AddCurrentStudentToCourse,
     AddTeacherToCourse,
     CreateCourse,
+    DeleteCourse,
     DeleteTeacherFromCourse,
     GetAllCourses,
     GetCourseGroups,
@@ -37,6 +38,7 @@ from classflow.application.use_cases.group import (
     AddCurrentStudentToGroup,
     AddStudentToGroup,
     CreateGroup,
+    DeleteGroup,
     GetAllGroups,
     GetGroupById,
     GetGroupsWithPayments,
@@ -146,6 +148,7 @@ class UseCasesProvider(Provider):
         GetCourseTeacherStudentsWithPayments,
         GetCourseGroups,
         GetCourseTeachers,
+        DeleteCourse,
     )
     group = provide_all(
         CreateGroup,
@@ -160,6 +163,7 @@ class UseCasesProvider(Provider):
         AddCurrentStudentToGroup,
         RemoveUserFromGroup,
         UpdateStudentGroup,
+        DeleteGroup,
     )
     lesson = provide_all(
         CreateLesson,

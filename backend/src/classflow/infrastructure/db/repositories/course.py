@@ -1,7 +1,8 @@
 from datetime import timedelta
 from typing import cast
 
-from sqlalchemy import func, literal, or_, select, update
+from sqlalchemy import delete, func, literal, or_, select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager, joinedload
 
@@ -21,6 +22,7 @@ from classflow.domain.enums import (
     CourseType,
     LessonType,
 )
+from classflow.domain.exceptions import CannotDeleteEntityError
 from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.repositories.group import set_group_joins
 from classflow.infrastructure.db.tables import (
@@ -76,11 +78,16 @@ class CourseRepositoryImpl(CourseRepository):
 
     async def get_all(
         self,
+        *,
         current_member_id: int | None = None,
+        type: CourseType | None = None,
     ) -> list[Course]:
         teachers_count_subquery = (
             select(func.count(course_teachers_table.c.id))
-            .where(course_teachers_table.c.course_id == courses_table.c.id)
+            .where(
+                course_teachers_table.c.course_id == courses_table.c.id,
+                course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
+            )
             .scalar_subquery()
         )
 
@@ -159,6 +166,9 @@ class CourseRepositoryImpl(CourseRepository):
             course_teacher_student_status_subquery,
         ).options(joinedload(Course.subject))  # type: ignore[arg-type]
 
+        if type:
+            stmt = stmt.where(courses_table.c.type == type)
+
         rows = await self.session.execute(stmt)
         result = []
         for (
@@ -186,7 +196,12 @@ class CourseRepositoryImpl(CourseRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.all())
 
-    async def get_teachers(self, course_id: int) -> list[OrganizationMember]:
+    async def get_teachers(
+        self,
+        course_id: int,
+        *,
+        exclude_paused: bool = False,
+    ) -> list[OrganizationMember]:
         stmt = (
             select(OrganizationMember)
             .join(
@@ -194,13 +209,20 @@ class CourseRepositoryImpl(CourseRepository):
                 organization_members_table.c.id
                 == course_teachers_table.c.teacher_id,
             )
-            .where(
-                course_teachers_table.c.course_id == course_id,
-                course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
-            )
+            .where(course_teachers_table.c.course_id == course_id)
             .options(joinedload(OrganizationMember.user))
             .distinct()
         )
+
+        if exclude_paused:
+            stmt = stmt.where(
+                course_teachers_table.c.status == CourseTeacherStatus.ACTIVE,
+            )
+        else:
+            stmt = stmt.where(
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+
         rows = await self.session.scalars(stmt)
         return cast(list[OrganizationMember], rows.all())
 
@@ -292,3 +314,12 @@ class CourseRepositoryImpl(CourseRepository):
 
         rows = await self.session.scalars(stmt)
         return cast(list[Course], rows.unique().all())
+
+    async def delete(self, id: int) -> None:
+        stmt = delete(Course).where(courses_table.c.id == id)
+        try:
+            await self.session.execute(stmt)
+        except IntegrityError as e:
+            raise CannotDeleteEntityError(
+                'Address has related teachers or students',
+            ) from e

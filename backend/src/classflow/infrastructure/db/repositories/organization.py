@@ -25,6 +25,8 @@ from classflow.infrastructure.db.repositories.base import (
 )
 from classflow.infrastructure.db.tables import (
     RawSession,
+    courses_table,
+    groups_table,
     lessons_table,
     organization_members_table,
     organizations_table,
@@ -119,40 +121,65 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         return cast(list[Organization], orgs)
 
     async def get_role_counts(self, org_id: int) -> list[RoleCount]:
-        await set_current_org_id(self.session, org_id)
-        stmt = (
-            select(OrganizationMember.role, func.count('*'))
-            .select_from(OrganizationMember)
-            .group_by(organization_members_table.c.role)
-        )
+        stmt = select(
+            func.count().filter(
+                organization_members_table.c.role == UserRole.OWNER,
+            ),
+            func.count().filter(
+                organization_members_table.c.role == UserRole.ADMIN,
+            ),
+            func.count().filter(
+                organization_members_table.c.role == UserRole.TEACHER,
+            ),
+            func.count().filter(
+                organization_members_table.c.role == UserRole.STUDENT,
+            ),
+        ).where(organization_members_table.c.organization_id == org_id)
         rows = await self.session.execute(stmt)
-        return [RoleCount(role=role, count=count) for (role, count) in rows]
+        row = rows.one()
+        return [
+            RoleCount(role=UserRole.OWNER, count=row[0]),
+            RoleCount(role=UserRole.ADMIN, count=row[1]),
+            RoleCount(role=UserRole.TEACHER, count=row[2]),
+            RoleCount(role=UserRole.STUDENT, count=row[3]),
+        ]
 
     async def get_stats(self, org_id: int) -> OrganizationStats:
-        await set_current_org_id(self.session, org_id)
-
         courses_subquery = (
-            select(func.count('*')).select_from(Course).scalar_subquery()
+            select(func.count('*'))
+            .select_from(Course)
+            .where(courses_table.c.organization_id == org_id)
+            .scalar_subquery()
         )
         teachers_subquery = (
             select(func.count('*'))
             .select_from(OrganizationMember)
-            .where(organization_members_table.c.role == UserRole.TEACHER)
+            .where(
+                organization_members_table.c.organization_id == org_id,
+                organization_members_table.c.role == UserRole.TEACHER,
+            )
             .scalar_subquery()
         )
         students_subquery = (
             select(func.count('*'))
             .select_from(OrganizationMember)
-            .where(organization_members_table.c.role == UserRole.STUDENT)
+            .where(
+                organization_members_table.c.organization_id == org_id,
+                organization_members_table.c.role == UserRole.STUDENT,
+            )
             .scalar_subquery()
         )
         group_subquery = (
-            select(func.count('*')).select_from(Group).scalar_subquery()
+            select(func.count('*'))
+            .select_from(Group)
+            .where(groups_table.c.organization_id == org_id)
+            .scalar_subquery()
         )
         lessons_subquery = (
             select(func.count('*'))
             .select_from(Lesson)
             .where(
+                lessons_table.c.organization_id == org_id,
                 lessons_table.c.start_date.cast(Date)
                 == datetime.now(UTC).date(),
             )
@@ -161,6 +188,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         income_subquery = (
             select(func.coalesce(func.sum(payments_table.c.amount), 0))
             .select_from(Payment)
+            .where(payments_table.c.organization_id == org_id)
             .scalar_subquery()
         )
 

@@ -17,6 +17,8 @@ import type {
   CourseTeacherStudentWithPaymentsResponse,
   UpdateCourseTeacherData,
   UpdateCourseTeacherStudentData,
+  GetAllCoursesParams,
+  GetCourseTeachersParams,
 } from './types.ts';
 import {
   mapCourseDetail,
@@ -26,9 +28,9 @@ import {
 import type { OrganizationMemberDetailResponse } from '../organizations/types.ts';
 import { mapOrgMemberDetail } from '../organizations/mappers.ts';
 
-export const getCourses = (): Promise<CourseDetail[]> => {
+export const getCourses = (params?: GetAllCoursesParams): Promise<CourseDetail[]> => {
   return axiosInstance
-    .get<CourseDetailResponse[]>('courses/')
+    .get<CourseDetailResponse[]>('courses/', { params })
     .then(rsp => rsp.data.map(mapCourseDetail));
 };
 
@@ -44,9 +46,12 @@ export const getCourseGroups = (id: number): Promise<Group[]> => {
     .then(rsp => rsp.data.map(mapGroup));
 };
 
-export const getCourseTeachers = (id: number): Promise<OrganizationMemberDetail[]> => {
+export const getCourseTeachers = (
+  id: number,
+  params?: GetCourseTeachersParams,
+): Promise<OrganizationMemberDetail[]> => {
   return axiosInstance
-    .get<OrganizationMemberDetailResponse[]>(`courses/${id}/teachers/`)
+    .get<OrganizationMemberDetailResponse[]>(`courses/${id}/teachers/`, { params })
     .then(rsp => rsp.data.map(mapOrgMemberDetail));
 };
 

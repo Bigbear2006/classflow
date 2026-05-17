@@ -6,7 +6,10 @@ from classflow.application.repositories.group import GroupRepository
 from classflow.application.repositories.lesson import LessonRepository
 from classflow.application.services.permission import PermissionService
 from classflow.domain.entities import Lesson
-from classflow.domain.exceptions import DefaultCabinetIsNotSetError
+from classflow.domain.exceptions import (
+    AlreadyExistsError,
+    DefaultCabinetIsNotSetError,
+)
 
 
 @dataclass
@@ -36,6 +39,21 @@ class CreateLesson:
 
     async def __call__(self, data: CreateLessonDTO) -> Lesson:
         await self.permission_service.ensure_teacher_or_more()
+
+        lesson_time_available = self.lesson_repository.is_time_available(
+            start_date=data.start_date,
+            end_date=data.end_date,
+            conducted_by_id=data.conducted_by_id,
+            cabinet_id=data.cabinet_id,
+            group_id=data.group_id,
+            course_teacher_student_id=data.course_teacher_student_id,
+        )
+        if not lesson_time_available:
+            raise AlreadyExistsError(
+                'Lesson with these start_date and end_date already exists',
+                start_date=data.start_date,
+                end_date=data.end_date,
+            )
 
         if not data.url and not data.cabinet_id:
             if not data.group_id:

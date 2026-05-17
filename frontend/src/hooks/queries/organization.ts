@@ -4,6 +4,7 @@ import {
   getCurrentOrganizationMember,
   getMyOrganizations,
   getOrganizations,
+  getOrganizationStats,
   getOrganizationTeachers,
   getRoleCounts,
   getStudentStats,
@@ -28,6 +29,7 @@ export const useMyOrganizations = () => {
     queryFn: getMyOrganizations,
   });
 };
+
 export const useCurrentOrganizationOptions = {
   queryKey: ['organization'],
   queryFn: getCurrentOrganization,
@@ -74,6 +76,20 @@ export const useRoleCounts = () => {
   });
 };
 
+export const useOrganizationStats = () => {
+  return useQuery({
+    initialData: {
+      courses: 0,
+      teachers: 0,
+      students: 0,
+      groups: 0,
+      todayLessons: 0,
+      totalIncome: 0,
+    },
+    queryKey: ['organization', 'stats'],
+    queryFn: getOrganizationStats,
+  });
+};
 export const useStudentStats = () => {
   return useQuery({
     initialData: {

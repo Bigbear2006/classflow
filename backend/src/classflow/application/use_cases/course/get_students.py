@@ -5,6 +5,7 @@ from classflow.application.repositories.course_teacher import (
 )
 from classflow.application.services.permission import PermissionService
 from classflow.domain.entities import User
+from classflow.domain.exceptions import PermissionDeniedError
 
 
 @dataclass
@@ -23,7 +24,11 @@ class GetCourseTeacherStudents:
         self.permission_service = permission_service
 
     async def __call__(self, data: GetCourseTeacherStudentsDTO) -> list[User]:
-        await self.permission_service.ensure_teacher_or_more()
+        member = await self.permission_service.ensure_teacher_or_more()
+
+        if member.is_teacher and member.id != data.teacher_id:
+            raise PermissionDeniedError()
+
         return await self.course_teacher_repository.get_students(
             data.course_id,
             data.teacher_id,

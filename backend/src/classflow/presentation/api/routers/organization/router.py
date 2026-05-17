@@ -80,7 +80,7 @@ async def get_current_organization_router(
     return OrganizationResponse.model_validate(org)
 
 
-@organization_router.patch('/current/')
+@organization_router.put('/current/')
 async def update_current_organization_router(
     data: UpdateCurrentOrganizationDTO,
     update_current_organization: FromDishka[UpdateCurrentOrganization],

@@ -7,13 +7,13 @@ import { useAppContext } from '../../context.tsx';
 interface DesktopLessonCardProps {
   lesson: LessonDetail;
   openEdit: (lesson: LessonDetail) => void;
-  onDeleteLesson: (id: number) => void;
+  handleDeleteLesson: (id: number) => void;
 }
 
 export const DesktopLessonCard = ({
   lesson,
   openEdit,
-  onDeleteLesson,
+  handleDeleteLesson,
 }: DesktopLessonCardProps) => {
   const { isAdminOrOwner } = useAppContext();
   let cfg = getLessonStatusCfg(lesson);
@@ -47,6 +47,17 @@ export const DesktopLessonCard = ({
             <span className="truncate">{lesson.cabinet.number}</span>
           </div>
         )}
+        {lesson.url && (
+          <div className="flex items-center gap-1.5 text-xs text-slate-600">
+            <a
+              href={lesson.url}
+              target="_blank"
+              className="text-indigo-600 hover:underline font-medium"
+            >
+              Ссылка
+            </a>
+          </div>
+        )}
         <div className="flex items-center gap-1.5 text-xs text-slate-600 col-span-2">
           <UserCheck size={12} className="text-slate-400 flex-shrink-0" />
           <span className="truncate">{lesson.conductedBy.user.fullname}</span>
@@ -65,7 +76,7 @@ export const DesktopLessonCard = ({
             <Edit2 size={13} /> Редактировать
           </button>
           <button
-            onClick={() => onDeleteLesson(lesson.id)}
+            onClick={() => handleDeleteLesson(lesson.id)}
             className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 text-xs font-medium transition-colors"
           >
             <Trash2 size={13} /> Удалить

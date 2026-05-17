@@ -1,4 +1,9 @@
 import logging.config
+import os
+
+if not os.path.exists('logs'):
+    os.mkdir('logs')
+
 
 LOGGING = {
     'version': 1,
@@ -15,10 +20,18 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'default',
+            'filename': 'logs/backend.log',
+            'maxBytes': 5 * 1024 * 1024,
+            'backupCount': 5,
+            'encoding': 'utf-8',
+        },
     },
     'loggers': {
         'classflow': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': False,
         },

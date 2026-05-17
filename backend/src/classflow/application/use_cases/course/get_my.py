@@ -11,6 +11,7 @@ class GetMyCoursesDTO:
     teacher_id: int
 
 
+# Deprecated
 class GetMyCourses:
     def __init__(
         self,

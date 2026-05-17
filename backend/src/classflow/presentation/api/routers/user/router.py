@@ -112,7 +112,7 @@ async def get_me_router(
     return UserResponse.model_validate(user)
 
 
-@user_router.patch('/me/', dependencies=[Depends(cookie_scheme)])
+@user_router.put('/me/', dependencies=[Depends(cookie_scheme)])
 async def update_me_router(
     data: UpdateCurrentUserDTO,
     update_user: FromDishka[UpdateCurrentUser],

@@ -38,6 +38,13 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
         rows = await self.session.execute(stmt)
         return cast(list[CourseTeacherStudent], rows.all())
 
+    async def get(self, id: int) -> CourseTeacherStudent:
+        stmt = select(CourseTeacherStudent).where(
+            course_teacher_students_table.c.id == id,
+        )
+        rows = await self.session.execute(stmt)
+        return get_one(rows)
+
     async def update(
         self,
         course_teacher_id: int,

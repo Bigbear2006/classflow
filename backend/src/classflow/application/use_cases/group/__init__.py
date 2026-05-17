@@ -10,6 +10,10 @@ from classflow.application.use_cases.group.create import (
     CreateGroup,
     CreateGroupDTO,
 )
+from classflow.application.use_cases.group.delete import (
+    DeleteGroup,
+    DeleteGroupDTO,
+)
 from classflow.application.use_cases.group.get_all import GetAllGroups
 from classflow.application.use_cases.group.get_by_id import (
     GetGroupById,
@@ -49,6 +53,8 @@ __all__ = (
     'AddStudentToGroupDTO',
     'CreateGroup',
     'CreateGroupDTO',
+    'DeleteGroup',
+    'DeleteGroupDTO',
     'GetAllGroups',
     'GetGroupById',
     'GetGroupByIdDTO',

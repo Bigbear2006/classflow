@@ -15,8 +15,12 @@ export const useLessonMutation = ({ action, lessonId, closeModal }: UseLessonMut
     mutationFn: action === 'CREATE' ? createLesson : updateLessonFn,
     invalidateQueryKeyOnSuccess: ['lessons'],
     onSuccess: closeModal,
-    toastErrorMessage:
-      action === 'CREATE' ? 'Не удалось создать урок' : 'Не удалось обновить урок',
+    toastErrorMessage: ({ statusCode }) =>
+      statusCode === 409
+        ? 'Урок на это время уже есть'
+        : action === 'CREATE'
+          ? 'Не удалось создать урок'
+          : 'Не удалось обновить урок',
   });
 };
 

@@ -4,9 +4,10 @@ import { useCabinetForm } from '../../../hooks/forms/cabinet.ts';
 
 interface CabinetFormProps {
   addressId: number;
+  closeInput: () => void;
 }
 
-export const CabinetForm = ({ addressId }: CabinetFormProps) => {
+export const CabinetForm = ({ addressId, closeInput }: CabinetFormProps) => {
   const { register, handleSubmit } = useCabinetForm();
   const mutation = useCabinetMutation();
 
@@ -16,7 +17,7 @@ export const CabinetForm = ({ addressId }: CabinetFormProps) => {
         {...register('number')}
         placeholder="Номер"
         autoFocus
-        className="w-24 px-2.5 py-1.5 border border-indigo-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-24 px-2.5 py-1.5 border border-indigo-300 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
       />
       <button
         onClick={handleSubmit(data => mutation.mutate({ ...data, address_id: addressId }))}
@@ -24,7 +25,10 @@ export const CabinetForm = ({ addressId }: CabinetFormProps) => {
       >
         <Plus size={12} />
       </button>
-      <button className="p-1.5 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200">
+      <button
+        onClick={closeInput}
+        className="p-1.5 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200"
+      >
         <X size={12} />
       </button>
     </div>

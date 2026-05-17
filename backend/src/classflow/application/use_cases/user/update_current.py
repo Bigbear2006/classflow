@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 
 from classflow.application.common.id_provider import IdentityProvider
 from classflow.application.common.uow import UnitOfWork
@@ -8,8 +8,8 @@ from classflow.domain.entities import User
 
 @dataclass
 class UpdateCurrentUserDTO:
-    fullname: str | None = None
-    phone: str | None = None
+    fullname: str
+    phone: str
 
 
 class UpdateCurrentUser:
@@ -26,8 +26,9 @@ class UpdateCurrentUser:
     async def __call__(self, data: UpdateCurrentUserDTO) -> User:
         current_user = await self.id_provider.get_current_user()
         async with self.uow:
+            updated_user = replace(current_user, **asdict(data))
             return await self.user_repository.update(
                 current_user.id,
-                fullname=data.fullname,
-                phone=data.phone,
+                fullname=updated_user.fullname,
+                phone=updated_user.phone,
             )

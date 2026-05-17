@@ -1,3 +1,3 @@
-export interface CreateAddressData {
+export interface AddressData {
   address: string;
 }

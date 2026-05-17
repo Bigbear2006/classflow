@@ -7,10 +7,14 @@ import { displayTime } from '../../labels/date.ts';
 interface MobileLessonCardProps {
   lesson: LessonDetail;
   openEdit: (lesson: LessonDetail) => void;
-  onDeleteLesson: (id: number) => void;
+  handleDeleteLesson: (id: number) => void;
 }
 
-export const MobileLessonCard = ({ lesson, openEdit, onDeleteLesson }: MobileLessonCardProps) => {
+export const MobileLessonCard = ({
+  lesson,
+  openEdit,
+  handleDeleteLesson,
+}: MobileLessonCardProps) => {
   const { isAdminOrOwner } = useAppContext();
   const cfg = getLessonStatusCfg(lesson);
 
@@ -31,7 +35,21 @@ export const MobileLessonCard = ({ lesson, openEdit, onDeleteLesson }: MobileLes
         </div>
         <div className="text-xs text-slate-500 mt-0.5">
           {displayTime(lesson.startDate)} — {displayTime(lesson.endDate)}
-          {lesson.cabinet ? ` · каб. ${lesson.cabinet.number}` : ` · ${lesson.url}`}
+          {lesson.cabinet ? (
+            ` · каб. ${lesson.cabinet.number}`
+          ) : (
+            <>
+              {' '}
+              ·{' '}
+              <a
+                href={lesson.url}
+                target="_blank"
+                className="text-indigo-600 hover:underline font-medium"
+              >
+                Ссылка
+              </a>
+            </>
+          )}
         </div>
         <span
           className={`inline-block mt-1.5 px-2 py-0.5 rounded-lg text-xs font-medium ${cfg.color}`}
@@ -48,7 +66,7 @@ export const MobileLessonCard = ({ lesson, openEdit, onDeleteLesson }: MobileLes
             <Edit2 size={14} />
           </button>
           <button
-            onClick={() => onDeleteLesson(lesson.id)}
+            onClick={() => handleDeleteLesson(lesson.id)}
             className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
           >
             <Trash2 size={14} />

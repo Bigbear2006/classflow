@@ -7,10 +7,10 @@ import { useAppContext } from '../../context.tsx';
 interface LessonRowProps {
   lesson: LessonDetail;
   openEdit: (lesson: LessonDetail) => void;
-  onDeleteLesson: (id: number) => void;
+  handleDeleteLesson: (id: number) => void;
 }
 
-export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) => {
+export const LessonRow = ({ lesson, openEdit, handleDeleteLesson }: LessonRowProps) => {
   const { isTeacherOrMore } = useAppContext();
   const cfg = getLessonStatusCfg(lesson);
 
@@ -31,7 +31,17 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
           {displayTime(lesson.startDate)} — {displayTime(lesson.endDate)}
         </div>
       </td>
-      <td className="px-5 py-3 text-sm text-slate-600">{lesson.cabinet?.number || lesson.url}</td>
+      <td className="px-5 py-3 text-sm text-slate-600">
+        {lesson.cabinet?.number || (
+          <a
+            href={lesson.url}
+            target="_blank"
+            className="text-indigo-600 hover:underline font-medium"
+          >
+            Ссылка
+          </a>
+        )}
+      </td>
       <td className="px-5 py-3 text-sm text-slate-600 hidden lg:table-cell">{lesson.topic}</td>
       <td className="px-5 py-3">
         <span className={`px-2 py-1 rounded-lg text-xs font-medium ${cfg.color}`}>
@@ -48,7 +58,7 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
               <Edit2 size={14} />
             </button>
             <button
-              onClick={() => onDeleteLesson(lesson.id)}
+              onClick={() => handleDeleteLesson(lesson.id)}
               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500"
             >
               <Trash2 size={14} />

@@ -9,6 +9,8 @@ from classflow.application.use_cases.group import (
     AddStudentToGroupDTO,
     CreateGroup,
     CreateGroupDTO,
+    DeleteGroup,
+    DeleteGroupDTO,
     GetAllGroups,
     GetGroupById,
     GetGroupByIdDTO,
@@ -153,3 +155,12 @@ async def remove_student_from_group_router(
 ) -> None:
     dto = RemoveUserFromGroupDTO(student_id=student_id, group_id=group_id)
     await remove_user_from_group(dto)
+
+
+@group_router.delete('/{group_id}/', status_code=204)
+async def delete_group_router(
+    group_id: int,
+    delete_group: FromDishka[DeleteGroup],
+) -> None:
+    dto = DeleteGroupDTO(id=group_id)
+    await delete_group(dto)

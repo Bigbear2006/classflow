@@ -19,15 +19,17 @@ type CustomTextFieldProps<
 > = {
   name: FieldPath<TFieldValues>;
   control: Control<TFieldValues, TContext, TTransformedValues>;
-  label: string;
+  label?: string;
   placeholder?: string;
   description?: string;
   icon?: LucideIcon;
   button?: ReactNode;
   required?: boolean;
   type?: React.HTMLInputTypeAttribute;
+  disabled?: boolean;
   isTextArea?: boolean;
   selectOptions?: { value: string | number; label: string }[];
+  allowEmptySelect?: boolean;
 };
 
 export const FormField = <
@@ -44,15 +46,18 @@ export const FormField = <
   button,
   required,
   type = 'text',
+  disabled = false,
   isTextArea = false,
   selectOptions,
+  allowEmptySelect = false,
 }: CustomTextFieldProps<TFieldValues, TContext, TTransformedValues>) => {
   return (
     <Controller
       name={name}
       render={({ field, fieldState }) => (
-        <TextField isRequired={required} isInvalid={fieldState.invalid}>
-          <Label>{label}</Label>
+        <TextField isRequired={required} isDisabled={disabled} isInvalid={fieldState.invalid}>
+          {label && <Label>{label}</Label>}
+
           <div className="relative">
             {Icon && (
               <Icon
@@ -75,14 +80,21 @@ export const FormField = <
                 {...field}
                 value={field.value || ''}
                 aria-label={label}
-                placeholder={placeholder}
+                placeholder={placeholder || 'Выбрать'}
+                isDisabled={disabled}
               >
                 <Select.Trigger className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                  <Select.Value />
+                  <Select.Value className="text-sm" />
                   <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
                   <ListBox>
+                    {allowEmptySelect && (
+                      <ListBox.Item id="" key="" textValue="">
+                        Не выбрано
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    )}
                     {selectOptions.map(elem => (
                       <ListBox.Item
                         id={elem.value.toString()}
@@ -103,6 +115,7 @@ export const FormField = <
             {!isTextArea && !selectOptions && (
               <Input
                 {...field}
+                value={field.value || ''}
                 type={type}
                 placeholder={placeholder}
                 className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500`}

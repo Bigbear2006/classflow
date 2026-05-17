@@ -11,6 +11,14 @@ import type { OrganizationMemberDetailResponse } from '../organizations/types.ts
 import type { LessonResponse } from '../lessons/types.ts';
 import type { PaymentResponse } from '../payments/types.ts';
 
+export interface GetAllCoursesParams {
+  type: CourseType;
+}
+
+export interface GetCourseTeachersParams {
+  exclude_paused?: boolean;
+}
+
 export interface CourseTeacherParams {
   course_id: number;
   teacher_id: number;

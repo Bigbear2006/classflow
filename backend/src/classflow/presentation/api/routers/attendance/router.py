@@ -25,7 +25,7 @@ attendance_router = APIRouter(
 
 @attendance_router.post('/', status_code=201)
 async def bulk_create_attendance_router(
-    data: list[BulkCreateAttendanceDTO],
+    data: BulkCreateAttendanceDTO,
     bulk_create_attendance: FromDishka[BulkCreateAttendance],
 ) -> list[AttendanceResponse]:
     attendance_list = await bulk_create_attendance(data)

@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import cast
 
-from sqlalchemy import Date, Select, delete, or_, select, update
+from sqlalchemy import Date, Select, delete, exists, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager, joinedload
 
@@ -73,6 +73,31 @@ class LessonRepositoryImpl(LessonRepository):
         )
         rows = await self.session.execute(stmt)
         return get_one(rows)
+
+    async def is_time_available(
+        self,
+        *,
+        start_date: date,
+        end_date: date,
+        conducted_by_id: int,
+        cabinet_id: int | None = None,
+        group_id: int | None = None,
+        course_teacher_student_id: int | None = None,
+    ) -> bool:
+        stmt = select(
+            exists().where(
+                (
+                    (lessons_table.c.start_date >= start_date)
+                    & (lessons_table.c.end_date <= end_date)
+                )
+                | (lessons_table.c.conducted_by_id == conducted_by_id)
+                | (lessons_table.c.cabinet_id == cabinet_id)
+                | (lessons_table.c.group_id == group_id)
+                | lessons_table.c.course_teacher_student_id
+                == course_teacher_student_id,
+            ),
+        )
+        return await self.session.scalar(stmt)
 
     async def get_all(
         self,

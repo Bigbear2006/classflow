@@ -48,3 +48,6 @@ class GroupRepository(Protocol):
         teacher_id: int | None = None,
     ) -> list[Group]:
         pass
+
+    async def delete(self, id: int) -> None:
+        pass

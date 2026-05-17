@@ -56,7 +56,9 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
             />
           )}
           <p className="text-slate-600 text-sm">{course.subject.description}</p>
-          <div className="grid grid-cols-3 gap-3">
+          <div
+            className={`grid ${course.duration?.days !== 0 ? 'grid-cols-3' : 'grid-cols-2'} gap-3`}
+          >
             <div className="bg-slate-50 rounded-xl p-3 text-center">
               <DollarSign size={16} className="mx-auto text-slate-400 mb-1" />
               <div className="font-semibold">{course.price.toLocaleString('ru')} ₽</div>
@@ -64,11 +66,15 @@ export const CourseDetailCard = ({ course, closeModal }: CourseDetailCardProps) 
                 {displayCoursePaymentType(course.paymentType)}
               </div>
             </div>
-            <div className="bg-slate-50 rounded-xl p-3 text-center">
-              <Clock size={16} className="mx-auto text-slate-400 mb-1" />
-              <div className="font-semibold">{course.duration?.as('months')} месяцев</div>
-              <div className="text-xs text-slate-400">длительность</div>
-            </div>
+            {course.duration?.days !== 0 && (
+              <div className="bg-slate-50 rounded-xl p-3 text-center">
+                <Clock size={16} className="mx-auto text-slate-400 mb-1" />
+                <div className="font-semibold">{course.duration?.as('months')} месяцев</div>
+                {course.lessonsCount && (
+                  <div className="text-xs text-slate-400">{course.lessonsCount} уроков</div>
+                )}
+              </div>
+            )}
             <div className="bg-slate-50 rounded-xl p-3 text-center">
               <Users size={16} className="mx-auto text-slate-400 mb-1" />
               <div className="font-semibold">{groups.length}</div>

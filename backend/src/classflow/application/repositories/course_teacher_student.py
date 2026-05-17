@@ -20,6 +20,9 @@ class CourseTeacherStudentRepository(Protocol):
     ) -> CourseTeacherStudent:
         pass
 
+    async def get(self, id: int) -> CourseTeacherStudent:
+        pass
+
     async def get_all(self) -> list[CourseTeacherStudent]:
         pass
 

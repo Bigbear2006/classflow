@@ -4,6 +4,7 @@ import {
   addCurrentStudentToCourse,
   addTeacherToCourse,
   createCourse,
+  deleteCourse,
   deleteTeacherFromCourse,
   updateCourse,
   updateCourseTeacher,
@@ -75,5 +76,16 @@ export const useUpdateCourseTeacherStudentMutation = () => {
     mutationFn: updateCourseTeacherStudent,
     invalidateQueryKeyOnSuccess: ['courses', 'individual'],
     toastErrorMessage: 'Не удалось сохранить',
+  });
+};
+
+export const useDeleteCourseMutation = () => {
+  return useCustomMutation({
+    mutationFn: deleteCourse,
+    invalidateQueryKeyOnSuccess: ['courses'],
+    toastErrorMessage: ({ errorCode }) =>
+      errorCode === 'CANNOT_DELETE_ENTITY'
+        ? 'У курса еще есть учителя и/или ученики'
+        : 'Не удалось удалить курс',
   });
 };

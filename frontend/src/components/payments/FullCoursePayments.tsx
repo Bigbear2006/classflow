@@ -65,8 +65,7 @@ export const FullCoursePayments = ({
               className="flex items-center justify-between text-xs text-slate-500"
             >
               <span>
-                {payment.date.toLocaleDateString('ru')}{' '}
-                {payment.comment ? ' — ' + payment.comment : ''}
+                {payment.date.toLocaleDateString('ru')} {payment.comment && `(${payment.comment})`}
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-emerald-600 font-medium">

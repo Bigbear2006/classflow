@@ -10,6 +10,8 @@ import { FormButtons } from '../common/FormButtons.tsx';
 import { LessonAttendance } from './LessonAttendance.tsx';
 import { useEffect } from 'react';
 import { DateTime } from 'luxon';
+import { CourseTypeField } from '../courses/CourseTypeField.tsx';
+import { useAppContext } from '../../context.tsx';
 
 interface LessonFormProps {
   action: FormAction;
@@ -18,6 +20,7 @@ interface LessonFormProps {
 }
 
 export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
+  const { isTeacher } = useAppContext();
   const { control, watch, setValue, handleSubmit } = useLessonForm({ initialValues: lesson });
   const type = watch('type');
   const groupId = watch('groupId');
@@ -35,8 +38,8 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
     lessonMutation.mutate({
       topic: data.topic,
       conducted_by_id: data.conductedById,
-      start_date: data.startDate.toISOString(),
-      end_date: data.endDate.toISOString(),
+      start_date: DateTime.fromJSDate(data.startDate).toJSON()!,
+      end_date: DateTime.fromJSDate(data.endDate).toJSON()!,
       cabinet_id: data.cabinetId,
       url: data.url || undefined,
       group_id: data.groupId,
@@ -54,6 +57,12 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
       setValue('conductedById', '');
     }
   }, [type]);
+
+  useEffect(() => {
+    if (teachers) {
+      setValue('conductedById', lesson?.conductedBy.id.toString() || '');
+    }
+  }, [teachers]);
 
   return (
     <div
@@ -73,16 +82,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
           </button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
-          <FormField
-            name="type"
-            control={control}
-            label="Тип"
-            required
-            selectOptions={[
-              { value: 'GROUP', label: 'Групповой' },
-              { value: 'INDIVIDUAL', label: 'Индивидуальный' },
-            ]}
-          />
+          <CourseTypeField control={control} />
           <FormField name="topic" control={control} label="Тема урока" />
           {type === 'GROUP' && (
             <>
@@ -101,6 +101,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
                 control={control}
                 label="Преподаватель"
                 required
+                disabled={isTeacher}
                 selectOptions={teachers.map(teacher => ({
                   value: teacher.id,
                   label: teacher.user.fullname,
@@ -125,6 +126,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
                 control={control}
                 label="Преподаватель"
                 required
+                disabled={isTeacher}
                 selectOptions={
                   individualCourses
                     .find(course => course.id.toString() === courseId)
@@ -168,6 +170,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
               value: cabinet.id,
               label: `${cabinet.number} (${cabinet.address.address})`,
             }))}
+            allowEmptySelect
           />
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -192,6 +195,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
             )}
           <FormButtons
             submitButtonText={action === 'CREATE' ? 'Создать' : 'Сохранить'}
+            submitButtonDisabled={lessonMutation.isPending}
             onCancelButtonClick={closeModal}
           />
         </form>

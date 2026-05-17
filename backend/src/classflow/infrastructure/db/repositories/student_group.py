@@ -29,6 +29,22 @@ class StudentGroupRepositoryImpl(StudentGroupRepository):
         )
         return await self.session.scalar(stmt)
 
+    async def has_students(
+        self,
+        group_id: int,
+        students_ids: list[int],
+    ) -> bool:
+        stmt = (
+            select(func.count())
+            .select_from(student_groups_table)
+            .where(
+                student_groups_table.c.group_id == group_id,
+                student_groups_table.c.student_id.in_(students_ids),
+                student_groups_table.c.status == StudentStatus.ACTIVE,
+            )
+        )
+        return await self.session.scalar(stmt) == len(students_ids)
+
     async def update(
         self,
         student_id: int,

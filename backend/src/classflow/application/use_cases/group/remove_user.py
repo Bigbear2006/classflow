@@ -13,6 +13,7 @@ class RemoveUserFromGroupDTO:
     group_id: int
 
 
+# Deprecated
 class RemoveUserFromGroup:
     def __init__(
         self,

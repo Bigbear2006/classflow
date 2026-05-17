@@ -1,8 +1,10 @@
 import {
+  changeUserPassword,
   loginUser,
   logoutUser,
   registerUser,
   resendCode,
+  updateUser,
   verifyUser,
 } from '../../api/users/requests.ts';
 import { isAxiosError } from 'axios';
@@ -90,5 +92,24 @@ export const useLogoutUserMutation = ({ navigate }: UserMutationProps) => {
     onSuccess: () => {
       queryClient.resetQueries().then(() => navigate('/login', { replace: true }));
     },
+  });
+};
+
+export const useEditUserMutation = () => {
+  return useCustomMutation({
+    mutationFn: updateUser,
+    toastErrorMessage: 'Не удалось сохранить изменения',
+    onSuccess: data => {
+      queryClient.setQueryData(['user'], data);
+      toast.success('Данные сохранены');
+    },
+  });
+};
+
+export const useChangePasswordMutation = () => {
+  return useCustomMutation({
+    mutationFn: changeUserPassword,
+    onSuccess: () => toast.success('Пароль изменен'),
+    toastErrorMessage: 'Не удалось изменить пароль',
   });
 };

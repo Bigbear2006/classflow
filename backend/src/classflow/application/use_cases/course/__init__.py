@@ -13,11 +13,18 @@ from classflow.application.use_cases.course.create import (
 from classflow.application.use_cases.course.cts_with_payments import (
     GetCourseTeacherStudentsWithPayments,
 )
+from classflow.application.use_cases.course.delete import (
+    DeleteCourse,
+    DeleteCourseDTO,
+)
 from classflow.application.use_cases.course.delete_teacher import (
     DeleteTeacherFromCourse,
     DeleteTeacherFromCourseDTO,
 )
-from classflow.application.use_cases.course.get_all import GetAllCourses
+from classflow.application.use_cases.course.get_all import (
+    GetAllCourses,
+    GetAllCoursesDTO,
+)
 from classflow.application.use_cases.course.get_groups import (
     GetCourseGroups,
     GetCourseGroupsDTO,
@@ -56,9 +63,12 @@ __all__ = (
     'AddTeacherToCourseDTO',
     'CreateCourse',
     'CreateCourseDTO',
+    'DeleteCourse',
+    'DeleteCourseDTO',
     'DeleteTeacherFromCourse',
     'DeleteTeacherFromCourseDTO',
     'GetAllCourses',
+    'GetAllCoursesDTO',
     'GetCourseGroups',
     'GetCourseGroupsDTO',
     'GetCourseTeacherStudents',
@@ -72,6 +82,6 @@ __all__ = (
     'UpdateCourseDTO',
     'UpdateCourseTeacher',
     'UpdateCourseTeacherDTO',
-    UpdateCourseTeacherStudent,
-    UpdateCourseTeacherStudentDTO,
+    'UpdateCourseTeacherStudent',
+    'UpdateCourseTeacherStudentDTO',
 )

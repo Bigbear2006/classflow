@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -57,6 +58,8 @@ def create_app(_container: AsyncContainer | None = None) -> FastAPI:
 
 if __name__ == '__main__':
     configure_logging()
+    logger = logging.getLogger('classflow')
+    logger.info('Application started')
     uvicorn.run(
         app=create_app(),
         host='0.0.0.0',

@@ -13,7 +13,7 @@ export const AddressForm = () => {
         <input
           {...register('address')}
           placeholder="Добавить новый адрес..."
-          className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+          className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
         />
       </div>
       <button

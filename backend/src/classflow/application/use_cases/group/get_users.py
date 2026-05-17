@@ -10,6 +10,7 @@ class GetGroupUsersDTO:
     id: int
 
 
+# Deprecated
 class GetGroupUsers:
     def __init__(
         self,

@@ -1,23 +1,10 @@
 import { BookOpen, Calendar, DollarSign, UserCheck, UserPlus, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import type { OrganizationStats } from '../../entities';
-import { getOrganizationStats } from '../../api/organizations/requests.ts';
 import { useNavigate } from 'react-router';
+import { useOrganizationStats } from '../../hooks/queries/organization.ts';
 
 export const OrganizationStatsBlock = () => {
-  const [orgStats, setOrgStats] = useState<OrganizationStats>({
-    courses: 0,
-    teachers: 0,
-    students: 0,
-    groups: 0,
-    todayLessons: 0,
-    totalIncome: 0,
-  });
+  const { data: orgStats } = useOrganizationStats();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getOrganizationStats().then(setOrgStats);
-  }, []);
 
   const stats = [
     {

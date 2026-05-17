@@ -4,6 +4,7 @@ from classflow.domain.entities import Lesson
 from classflow.domain.exceptions import PermissionDeniedError
 
 
+# Deprecated
 class GetMyLessons:
     def __init__(
         self,

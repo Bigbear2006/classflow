@@ -26,6 +26,18 @@ class LessonRepository(Protocol):
     async def get(self, id: int) -> Lesson:
         pass
 
+    async def is_time_available(
+        self,
+        *,
+        start_date: date,
+        end_date: date,
+        conducted_by_id: int,
+        cabinet_id: int | None = None,
+        group_id: int | None = None,
+        course_teacher_student_id: int | None = None,
+    ) -> bool:
+        pass
+
     async def get_all(
         self,
         *,

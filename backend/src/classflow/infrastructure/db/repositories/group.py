@@ -1,6 +1,7 @@
 from typing import Any, cast
 
-from sqlalchemy import Select, and_, func, select, update
+from sqlalchemy import Select, and_, delete, func, select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import (
     joinedload,
@@ -17,6 +18,7 @@ from classflow.domain.entities import (
     User,
 )
 from classflow.domain.enums import CourseTeacherStatus, StudentStatus
+from classflow.domain.exceptions import CannotDeleteEntityError
 from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     course_teachers_table,
@@ -205,6 +207,13 @@ class GroupRepositoryImpl(GroupRepository):
 
         rows = await self.session.scalars(stmt)
         return cast(list[Group], rows.unique().all())
+
+    async def delete(self, id: int) -> None:
+        stmt = delete(Group).where(groups_table.c.id == id)
+        try:
+            await self.session.execute(stmt)
+        except IntegrityError as e:
+            raise CannotDeleteEntityError('Group has related students') from e
 
 
 def set_group_joins[T: tuple[Any, ...]](stmt: Select[T]) -> Select[T]:

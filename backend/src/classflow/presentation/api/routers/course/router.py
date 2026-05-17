@@ -9,9 +9,12 @@ from classflow.application.use_cases.course import (
     AddTeacherToCourseDTO,
     CreateCourse,
     CreateCourseDTO,
+    DeleteCourse,
+    DeleteCourseDTO,
     DeleteTeacherFromCourse,
     DeleteTeacherFromCourseDTO,
     GetAllCourses,
+    GetAllCoursesDTO,
     GetCourseGroups,
     GetCourseGroupsDTO,
     GetCourseTeachers,
@@ -28,6 +31,7 @@ from classflow.application.use_cases.course import (
     UpdateCourseTeacherStudent,
     UpdateCourseTeacherStudentDTO,
 )
+from classflow.domain.enums import CourseType
 from classflow.presentation.api.routers.course.models import (
     CourseDetailResponse,
     CourseResponse,
@@ -65,8 +69,10 @@ async def create_course_router(
 @course_router.get('/')
 async def get_courses_router(
     get_all_courses: FromDishka[GetAllCourses],
+    type: CourseType | None = None,
 ) -> list[CourseDetailResponse]:
-    courses = await get_all_courses()
+    dto = GetAllCoursesDTO(type=type)
+    courses = await get_all_courses(dto)
     return [CourseDetailResponse.model_validate(course) for course in courses]
 
 
@@ -142,8 +148,12 @@ async def update_course_teacher_router(
 async def get_course_teachers_router(
     course_id: int,
     get_course_teachers: FromDishka[GetCourseTeachers],
+    exclude_paused: bool = False,
 ) -> list[OrganizationMemberDetailResponse]:
-    dto = GetCourseTeachersDTO(course_id=course_id)
+    dto = GetCourseTeachersDTO(
+        course_id=course_id,
+        exclude_paused=exclude_paused,
+    )
     teachers = await get_course_teachers(dto)
     return [
         OrganizationMemberDetailResponse.model_validate(teacher)
@@ -224,3 +234,12 @@ async def get_course_teacher_students_payments_router(
         CourseTeacherStudentWithPaymentsResponse.model_validate(student)
         for student in students
     ]
+
+
+@course_router.delete('/{course_id}/', status_code=204)
+async def delete_course_router(
+    course_id: int,
+    delete_course: FromDishka[DeleteCourse],
+) -> None:
+    dto = DeleteCourseDTO(id=course_id)
+    await delete_course(dto)

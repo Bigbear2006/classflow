@@ -30,7 +30,7 @@ export const loginUser = (data: LoginUserData) => {
 };
 
 export const updateUser = (data: UpdateUserData) => {
-  return axiosInstance.patch('users/me/', data);
+  return axiosInstance.put<User>('users/me/', data).then(rsp => rsp.data);
 };
 
 export const changeUserPassword = (data: ChangeUserPasswordData) => {

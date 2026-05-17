@@ -4,10 +4,10 @@ import type { LessonDetail } from '../../entities';
 interface LessonTableProps {
   lessons: LessonDetail[];
   openEdit: (lesson: LessonDetail) => void;
-  onDeleteLesson: (id: number) => void;
+  handleDeleteLesson: (id: number) => void;
 }
 
-export const LessonsTable = ({ lessons, openEdit, onDeleteLesson }: LessonTableProps) => {
+export const LessonsTable = ({ lessons, openEdit, handleDeleteLesson }: LessonTableProps) => {
   return (
     <table className="w-full">
       <thead>
@@ -32,7 +32,7 @@ export const LessonsTable = ({ lessons, openEdit, onDeleteLesson }: LessonTableP
             key={lesson.id}
             lesson={lesson}
             openEdit={openEdit}
-            onDeleteLesson={onDeleteLesson}
+            handleDeleteLesson={handleDeleteLesson}
           />
         ))}
         {lessons.length === 0 && (

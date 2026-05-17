@@ -1,21 +1,27 @@
 import { Lock, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { changeUserPassword } from '../../api/users/requests.ts';
-import { toast } from 'sonner';
-
-interface ChangeUserPasswordFields {
-  oldPassword: string;
-  newPassword: string;
-  repeatNewPassword: string;
-}
+import {
+  type ChangeUserPasswordFields,
+  useChangePasswordForm,
+} from '../../hooks/forms/changePassword.ts';
+import { useChangePasswordMutation } from '../../hooks/mutations/user.ts';
+import { FormField } from '../common/FormField.tsx';
 
 export const ChangeUserPassword = () => {
-  const { register, handleSubmit } = useForm<ChangeUserPasswordFields>();
+  const { control, handleSubmit } = useChangePasswordForm();
+  const changePasswordMutation = useChangePasswordMutation();
+
   const passwordFields = [
     { value: 'oldPassword', label: 'Текущий пароль' },
     { value: 'newPassword', label: 'Новый пароль' },
     { value: 'repeatNewPassword', label: 'Подтвердить пароль' },
   ];
+
+  const onSubmit = handleSubmit(data =>
+    changePasswordMutation.mutate({
+      old_password: data.oldPassword,
+      new_password: data.newPassword,
+    }),
+  );
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6">
@@ -23,32 +29,24 @@ export const ChangeUserPassword = () => {
         <Lock size={18} />
         Смена пароля
       </h3>
-      <div className="space-y-3">
+      <form onSubmit={onSubmit} className="space-y-3">
         {passwordFields.map(field => (
-          <div key={field.value}>
-            <label className="block text-sm text-slate-600 mb-1.5">{field.label}</label>
-            <input
-              {...register(field.value as keyof ChangeUserPasswordFields)}
-              placeholder="••••••••"
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          <FormField
+            name={field.value as keyof ChangeUserPasswordFields}
+            control={control}
+            label={field.label}
+            required
+            type="password"
+          />
         ))}
         <button
-          onClick={handleSubmit(data => {
-            changeUserPassword({
-              old_password: data.oldPassword,
-              new_password: data.newPassword,
-            }).then(() => toast.success('Пароль изменен'));
-          })}
-          className={
-            'flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium transition-all bg-indigo-600 hover:bg-indigo-700 text-white'
-          }
+          type="submit"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium transition-all bg-indigo-600 hover:bg-indigo-700 text-white"
         >
           <Save size={16} />
           Сменить пароль
         </button>
-      </div>
+      </form>
     </div>
   );
 };

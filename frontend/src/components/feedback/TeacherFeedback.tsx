@@ -37,7 +37,7 @@ export const TeacherFeedback = ({ selectedTeacher }: TeacherFeedbackProps) => {
                 {...register('text')}
                 // placeholder="Поделитесь впечатлениями о преподавателе..."
                 // rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none"
               />
             </div>
             {submitted ? (

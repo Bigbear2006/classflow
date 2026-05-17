@@ -74,3 +74,18 @@ class GroupStudentsLimitExceededError(ApplicationError):
             'Group students limit exceeded',
             **context,
         )
+
+
+class InvalidAttendanceList(ValidationError):
+    def __init__(self) -> None:
+        super().__init__(
+            'One of the students ids in is not presented '
+            'in lesson group or course_teacher_student',
+        )
+
+
+class TooManyAttendanceStudents(ValidationError):
+    def __init__(self) -> None:
+        super().__init__(
+            'Attendance list must contain one element if lesson is individual',
+        )

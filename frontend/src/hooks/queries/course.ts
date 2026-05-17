@@ -6,12 +6,13 @@ import {
   getCourseTeacherStudentsWithPayments,
   getIndividualCourses,
 } from '../../api/courses/requests.ts';
+import type { GetAllCoursesParams, GetCourseTeachersParams } from '../../api/courses/types.ts';
 
-export const useCourses = () => {
+export const useCourses = (params?: GetAllCoursesParams) => {
   return useQuery({
     initialData: [],
-    queryKey: ['courses'],
-    queryFn: getCourses,
+    queryKey: ['courses', params],
+    queryFn: () => getCourses(params),
   });
 };
 
@@ -35,11 +36,15 @@ export const useCourseGroups = ({ courseId }: UseCourseProps) => {
   });
 };
 
-export const useCourseTeachers = ({ courseId }: UseCourseProps) => {
+interface UseCourseTeachersProps extends UseCourseProps {
+  params?: GetCourseTeachersParams;
+}
+
+export const useCourseTeachers = ({ courseId, params }: UseCourseTeachersProps) => {
   return useQuery({
     initialData: [],
-    queryKey: ['courses', courseId, 'teachers'],
-    queryFn: () => getCourseTeachers(courseId),
+    queryKey: ['courses', courseId, 'teachers', params],
+    queryFn: () => getCourseTeachers(courseId, params),
     enabled: !!courseId,
   });
 };
