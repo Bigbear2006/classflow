@@ -12,7 +12,6 @@ import {
   MapPin,
   TrendingUp,
   User as UserIcon,
-  // UserCheck,
   Users,
 } from 'lucide-react';
 
@@ -28,6 +27,7 @@ const myOrgs = {
   path: '/orgs',
   icon: <Building2 size={19} />,
 };
+
 const individualStudents = {
   label: 'Индивидуальные',
   path: '/individuals',
@@ -104,6 +104,7 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
         path: '/schedule',
         icon: <Calendar size={18} />,
       },
+      myOrgs,
     ];
 
   if (role === 'STUDENT')
@@ -126,7 +127,7 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
       },
       {
         label: 'Прогресс',
-        path: '/progress',
+        path: '/attendance',
         icon: <TrendingUp size={18} />,
       },
       {
@@ -134,11 +135,7 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
         path: '/payments',
         icon: <DollarSign size={18} />,
       },
-      // {
-      //   label: 'Отзывы',
-      //   path: '/feedback',
-      //   icon: <UserCheck size={18} />,
-      // },
+      myOrgs,
     ];
 
   return [myOrgs];

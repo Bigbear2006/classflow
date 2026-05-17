@@ -17,7 +17,7 @@ import { DashboardPage } from './pages/DashboardPage.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { createLoader, organizationMembersLoader } from './loaders.ts';
 import { FeedbackPage } from './pages/FeedbackPage.tsx';
-import { ProgressPage } from './pages/student/ProgressPage.tsx';
+import { AttendancePage } from './pages/student/AttendancePage.tsx';
 import { IndividualCoursesPage } from './pages/IndividualCoursesPage.tsx';
 
 export const router = createBrowserRouter([
@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
       { path: 'individuals', Component: IndividualCoursesPage },
       { path: 'schedule', Component: SchedulePage },
       { path: 'payments', Component: PaymentsPage },
-      { path: 'progress', Component: ProgressPage },
+      { path: 'attendance', Component: AttendancePage },
       { path: 'feedback', Component: FeedbackPage },
     ],
   },

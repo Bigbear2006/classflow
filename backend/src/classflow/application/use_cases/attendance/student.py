@@ -1,9 +1,9 @@
 from classflow.application.repositories.attendance import AttendanceRepository
 from classflow.application.services.permission import PermissionService
-from classflow.domain.entities import AttendanceStats
+from classflow.domain.entities import Attendance
 
 
-class GetAttendanceStats:
+class GetStudentAttendance:
     def __init__(
         self,
         attendance_repository: AttendanceRepository,
@@ -12,6 +12,8 @@ class GetAttendanceStats:
         self.attendance_repository = attendance_repository
         self.permission_service = permission_service
 
-    async def __call__(self) -> AttendanceStats:
+    async def __call__(self) -> list[Attendance]:
         student = await self.permission_service.ensure_student()
-        return await self.attendance_repository.get_stats(student.id)
+        return await self.attendance_repository.get_student_attendance(
+            student.id,
+        )

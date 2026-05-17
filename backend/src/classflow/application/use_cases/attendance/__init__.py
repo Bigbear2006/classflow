@@ -3,8 +3,14 @@ from classflow.application.use_cases.attendance.bulk_create import (
     BulkCreateAttendanceDTO,
     CreateAttendanceDTO,
 )
+from classflow.application.use_cases.attendance.get_courses_stats import (
+    GetCoursesAttendanceStats,
+)
 from classflow.application.use_cases.attendance.get_stats import (
     GetAttendanceStats,
+)
+from classflow.application.use_cases.attendance.student import (
+    GetStudentAttendance,
 )
 
 __all__ = (
@@ -12,4 +18,6 @@ __all__ = (
     'BulkCreateAttendanceDTO',
     'CreateAttendanceDTO',
     'GetAttendanceStats',
+    'GetCoursesAttendanceStats',
+    'GetStudentAttendance',
 )

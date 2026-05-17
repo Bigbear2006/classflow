@@ -1,14 +1,13 @@
 import { TrendingUp } from 'lucide-react';
-import { ProgressStatsBlock } from '../../components/student/attendance/ProgressStatsBlock.tsx';
+import { AttendanceStatsBlock } from '../../components/student/attendance/AttendanceStatsBlock.tsx';
 import { AttendanceStatsChart } from '../../components/student/attendance/AttendanceStatsChart.tsx';
 import { LessonsByWeeks } from '../../components/student/attendance/LessonsByWeeks.tsx';
 import { CourseAttendance } from '../../components/student/attendance/CourseAttendance.tsx';
 import { AttendanceCard } from '../../components/student/attendance/AttendanceCard.tsx';
-import type { AttendanceDetail } from '../../entities';
-import { useCoursesAttendanceStats } from '../../hooks/queries/attendance.ts';
+import { useCoursesAttendanceStats, useMyAttendance } from '../../hooks/queries/attendance.ts';
 
-export const ProgressPage = () => {
-  const attendanceList: AttendanceDetail[] = [];
+export const AttendancePage = () => {
+  const { data: attendanceList } = useMyAttendance();
   const { data: coursesAttendance } = useCoursesAttendanceStats();
 
   return (
@@ -17,7 +16,7 @@ export const ProgressPage = () => {
         <h1 className="text-slate-900 text-2xl font-semibold">Прогресс и посещаемость</h1>
         <p className="text-slate-500 text-sm mt-0.5">Статистика за всё время обучения</p>
       </div>
-      <ProgressStatsBlock />
+      <AttendanceStatsBlock />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AttendanceStatsChart />

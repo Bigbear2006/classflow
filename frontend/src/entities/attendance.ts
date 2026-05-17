@@ -8,9 +8,8 @@ export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'EXCUSED';
 interface BaseAttendance {
   id: string;
   status: AttendanceStatus;
-
-  comment: string;
 }
+
 export interface Attendance extends BaseAttendance {
   lessonId: string;
   studentId: string;
@@ -22,11 +21,10 @@ export interface AttendanceDetail extends BaseAttendance {
 }
 
 export interface AttendanceStats {
-  total: number;
-  rate: number;
   present: number;
   absent: number;
   excused: number;
+  total: number;
 }
 
 export interface WeekAttendanceStats {

@@ -3,17 +3,19 @@ from typing import cast
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import contains_eager
+from sqlalchemy.orm import contains_eager, joinedload
 
 from classflow.application.repositories.attendance import AttendanceRepository
 from classflow.domain.entities import (
     Attendance,
+    AttendanceStats,
     Course,
     CourseAttendanceStats,
     Group,
     OrganizationMember,
 )
 from classflow.domain.enums import AttendanceStatus
+from classflow.infrastructure.db.repositories.lesson import set_lessons_joins
 from classflow.infrastructure.db.tables import (
     attendance_table,
     course_teacher_students_table,
@@ -57,6 +59,23 @@ class AttendanceRepositoryImpl(AttendanceRepository):
             set_={'status': stmt.excluded.status},
         ).returning(Attendance)
 
+        rows = await self.session.scalars(stmt)
+        return cast(list[Attendance], rows.all())
+
+    async def get_student_attendance(
+        self,
+        student_id: int,
+    ) -> list[Attendance]:
+        stmt = (
+            select(Attendance)
+            .options(
+                set_lessons_joins(joinedload(Attendance.lesson)),
+                joinedload(Attendance.student).joinedload(
+                    OrganizationMember.user,
+                ),
+            )
+            .where(attendance_table.c.student_id == student_id)
+        )
         rows = await self.session.scalars(stmt)
         return cast(list[Attendance], rows.all())
 
@@ -178,3 +197,26 @@ class AttendanceRepositoryImpl(AttendanceRepository):
                 ),
             )
         return result
+
+    async def get_stats(self, student_id: int) -> AttendanceStats:
+        stmt = select(
+            func.count().filter(
+                attendance_table.c.status == AttendanceStatus.PRESENT,
+            ),
+            func.count().filter(
+                attendance_table.c.status == AttendanceStatus.ABSENT,
+            ),
+            func.count().filter(
+                attendance_table.c.status == AttendanceStatus.EXCUSED,
+            ),
+            func.count(),
+        ).where(attendance_table.c.student_id == student_id)
+
+        rows = await self.session.execute(stmt)
+        row = rows.one()
+        return AttendanceStats(
+            present=row[0],
+            absent=row[1],
+            excused=row[2],
+            total=row[3],
+        )

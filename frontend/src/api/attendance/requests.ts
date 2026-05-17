@@ -1,10 +1,24 @@
-import type { CourseAttendanceStatsResponse, BulkCreateAttendanceData } from './types.ts';
+import type {
+  CourseAttendanceStatsResponse,
+  BulkCreateAttendanceData,
+  AttendanceDetailResponse,
+} from './types.ts';
 import { axiosInstance } from '../base.ts';
-import type { CourseAttendanceStats } from '../../entities';
-import { mapCourseAttendanceStats } from './mappers.ts';
+import type { AttendanceStats, CourseAttendanceStats } from '../../entities';
+import { mapAttendanceDetail, mapCourseAttendanceStats } from './mappers.ts';
 
 export const bulkCreateAttendance = (data: BulkCreateAttendanceData) => {
   return axiosInstance.post('/attendance/', data);
+};
+
+export const getMyAttendance = () => {
+  return axiosInstance
+    .get<AttendanceDetailResponse[]>('/attendance/my/')
+    .then(rsp => rsp.data.map(mapAttendanceDetail));
+};
+
+export const getAttendanceStats = () => {
+  return axiosInstance.get<AttendanceStats>('/attendance/stats/').then(rsp => rsp.data);
 };
 
 export const getCoursesAttendanceStats = (): Promise<CourseAttendanceStats[]> => {
