@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DollarSign } from 'lucide-react';
-import type { CourseType, FormAction, OrganizationStats, Payment, PaymentMeta } from '../entities';
-import { getOrganizationStats } from '../api/organizations/requests.ts';
+import type { CourseType, FormAction, PaymentMeta } from '../entities';
 import { PaymentForm } from '../components/payments/PaymentForm.tsx';
 import { GroupPayments } from '../components/payments/GroupPayments.tsx';
 import { IndividualPayments } from '../components/payments/IndividualPayments.tsx';
@@ -9,15 +8,6 @@ import { useGroupsWithPayments } from '../hooks/queries/group.ts';
 import { useCourseTeacherStudentsWithPayments } from '../hooks/queries/course.ts';
 
 export const PaymentsPage = () => {
-  const [orgStats, setOrgStats] = useState<OrganizationStats>({
-    courses: 0,
-    teachers: 0,
-    students: 0,
-    groups: 0,
-    todayLessons: 0,
-    totalIncome: 0,
-  });
-  const [payments, setPayments] = useState<Payment[]>([]);
   const { data: groups } = useGroupsWithPayments();
   const { data: courseTeacherStudents } = useCourseTeacherStudentsWithPayments();
   const [type, setType] = useState<CourseType>('GROUP');
@@ -39,36 +29,11 @@ export const PaymentsPage = () => {
     setAction(undefined);
   };
 
-  useEffect(() => {
-    getOrganizationStats().then(setOrgStats);
-    setPayments([]);
-  }, []);
-
   return (
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-slate-900 text-2xl font-semibold">Оплаты</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Отслеживание платежей учеников</p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-200 p-5">
-          <div className="text-slate-500 text-sm mb-1">Всего поступлений</div>
-          <div className="text-2xl font-bold text-slate-900">
-            {orgStats.totalIncome.toLocaleString('ru')} ₽
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-200 p-5">
-          <div className="text-slate-500 text-sm mb-1">Платежей</div>
-          <div className="text-2xl font-bold text-slate-900">{payments.length}</div>
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-200 p-5">
-          <div className="text-slate-500 text-sm mb-1">Сегодня</div>
-          <div className="text-2xl font-bold text-slate-900">
-            {/*TODO: add today payments amount*/}
-            {payments.length}
-          </div>
-        </div>
+        <p className="text-slate-500 text-sm mt-0.5">Учет оплат</p>
       </div>
 
       <div className="flex gap-1 bg-slate-100 rounded-xl p-1 w-fit">

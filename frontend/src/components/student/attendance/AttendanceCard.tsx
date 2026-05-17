@@ -1,6 +1,6 @@
 import { Check, Minus, X } from 'lucide-react';
 import type { AttendanceDetail } from '../../../entities';
-import {displayShortMonth, displayTime} from '../../../labels/date.ts';
+import { displayShortMonth, displayTime } from '../../../labels/date.ts';
 import { displayAttendanceStatus, getAttendanceStatusStyles } from '../../../labels/attendance.ts';
 
 interface AttendanceCardProps {
@@ -10,9 +10,9 @@ interface AttendanceCardProps {
 export const AttendanceCard = ({ attendance }: AttendanceCardProps) => {
   let course;
   if (attendance.lesson.group) {
-    course = attendance.lesson.group.course
+    course = attendance.lesson.group.course;
   } else if (attendance.lesson.courseTeacherStudent) {
-    course = attendance.lesson.courseTeacherStudent.courseTeacher.course
+    course = attendance.lesson.courseTeacherStudent.courseTeacher.course;
   }
 
   return (
@@ -26,7 +26,9 @@ export const AttendanceCard = ({ attendance }: AttendanceCardProps) => {
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-slate-900">{course?.subject.name || ''}: {attendance.lesson.topic}</div>
+        <div className="text-sm font-medium text-slate-900">
+          {course?.subject.name || ''}: {attendance.lesson.topic}
+        </div>
         <div className="text-xs text-slate-400">{displayTime(attendance.lesson.startDate)}</div>
       </div>
       <span

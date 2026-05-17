@@ -36,9 +36,6 @@ export const mapMyOrg = (data: MyOrganizationResponse): MyOrganization => {
     createdById: data.created_by_id,
     createdAt: new Date(data.created_at),
     role: data.role,
-    // TODO: add counts
-    coursesCount: 0,
-    membersCount: 0,
   };
 };
 

@@ -6,7 +6,6 @@ from classflow.presentation.api.routers.attendance.router import (
 )
 from classflow.presentation.api.routers.cabinet import cabinet_router
 from classflow.presentation.api.routers.course.router import course_router
-from classflow.presentation.api.routers.feedback.router import feedback_router
 from classflow.presentation.api.routers.group import group_router
 from classflow.presentation.api.routers.lesson import lesson_router
 from classflow.presentation.api.routers.organization import organization_router

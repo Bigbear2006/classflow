@@ -18,8 +18,6 @@ export interface OrganizationDetail extends Organization {
 
 export interface MyOrganization extends Organization {
   role: UserRole;
-  coursesCount: number;
-  membersCount: number;
 }
 
 export interface OrganizationMember {
