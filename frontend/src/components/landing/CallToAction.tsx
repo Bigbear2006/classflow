@@ -8,12 +8,10 @@ interface HeroProps {
 export const CallToAction = ({ scrollTo }: HeroProps) => {
   return (
     <section className="relative min-h-screen flex items-center bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 overflow-hidden pt-16">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-900/30 rounded-full blur-3xl" />
-        {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -91,54 +89,9 @@ export const CallToAction = ({ scrollTo }: HeroProps) => {
               ))}
             </div>
           </div>
-
-          {/*<div className="relative lg:block">*/}
-          {/*  <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-1 shadow-2xl">*/}
-          {/*    <img*/}
-          {/*      src="https://images.unsplash.com/photo-1764720573370-5008f1ccc9fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50cyUyMGxlYXJuaW5nJTIwY2xhc3Nyb29tJTIwbW9kZXJufGVufDF8fHx8MTc3NDI1ODA5NXww&ixlib=rb-4.1.0&q=80&w=1080"*/}
-          {/*      alt="Students learning"*/}
-          {/*      className="w-full h-72 lg:h-96 object-cover rounded-2xl"*/}
-          {/*    />*/}
-          {/*    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent rounded-2xl" />*/}
-          {/*  </div>*/}
-
-          {/*  /!* Floating cards *!/*/}
-          {/*  <div className="absolute -left-4 top-8 bg-white rounded-2xl shadow-xl p-3.5 flex items-center gap-3 border border-slate-100 min-w-[170px]">*/}
-          {/*    <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">*/}
-          {/*      <Users size={17} className="text-emerald-600" />*/}
-          {/*    </div>*/}
-          {/*    <div>*/}
-          {/*      <div className="font-bold text-slate-900 text-sm">248 учеников</div>*/}
-          {/*      <div className="text-emerald-600 text-xs font-medium">+12 за неделю</div>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-
-          {/*  <div className="absolute -right-4 bottom-12 bg-white rounded-2xl shadow-xl p-3.5 border border-slate-100 min-w-[175px]">*/}
-          {/*    <div className="flex items-center gap-2 mb-2">*/}
-          {/*      <div className="w-7 h-7 rounded-lg bg-indigo-100 flex items-center justify-center">*/}
-          {/*        <Calendar size={14} className="text-indigo-600" />*/}
-          {/*      </div>*/}
-          {/*      <span className="text-xs font-semibold text-slate-700">Занятие сегодня</span>*/}
-          {/*    </div>*/}
-          {/*    <div className="text-sm font-bold text-slate-900">Английский B2</div>*/}
-          {/*    <div className="flex items-center gap-1.5 mt-1">*/}
-          {/*      <Clock size={11} className="text-slate-400" />*/}
-          {/*      <span className="text-xs text-slate-500">16:00 — 17:30 · Каб. 3</span>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-
-          {/*  <div className="absolute -right-2 top-6 bg-white rounded-xl shadow-lg p-2.5 border border-slate-100">*/}
-          {/*    <div className="flex items-center gap-1.5">*/}
-          {/*      <Bell size={13} className="text-indigo-500" />*/}
-          {/*      <span className="text-xs font-medium text-slate-700">Новая запись</span>*/}
-          {/*    </div>*/}
-          {/*    <div className="text-xs text-slate-500 mt-0.5">Курс: Математика ЕГЭ</div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
         </div>
       </div>
 
-      {/* Wave bottom */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg
           viewBox="0 0 1440 80"

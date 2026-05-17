@@ -14,8 +14,6 @@ interface BaseLesson {
   endDate: Date;
   url?: string;
   createdAt: Date;
-  // TODO: add
-  paymentId?: number;
 }
 
 export interface Lesson extends BaseLesson {

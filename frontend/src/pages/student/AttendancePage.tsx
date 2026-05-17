@@ -1,7 +1,5 @@
 import { TrendingUp } from 'lucide-react';
 import { AttendanceStatsBlock } from '../../components/student/attendance/AttendanceStatsBlock.tsx';
-import { AttendanceStatsChart } from '../../components/student/attendance/AttendanceStatsChart.tsx';
-import { LessonsByWeeks } from '../../components/student/attendance/LessonsByWeeks.tsx';
 import { CourseAttendance } from '../../components/student/attendance/CourseAttendance.tsx';
 import { AttendanceCard } from '../../components/student/attendance/AttendanceCard.tsx';
 import { useCoursesAttendanceStats, useMyAttendance } from '../../hooks/queries/attendance.ts';
@@ -17,11 +15,6 @@ export const AttendancePage = () => {
         <p className="text-slate-500 text-sm mt-0.5">Статистика за всё время обучения</p>
       </div>
       <AttendanceStatsBlock />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AttendanceStatsChart />
-        <LessonsByWeeks />
-      </div>
 
       <div>
         <h2 className="font-semibold text-slate-900 mb-4">Посещаемость по курсам</h2>

@@ -27,7 +27,7 @@ routers = [
     lesson_router,
     attendance_router,
     payment_router,
-    feedback_router,
+    # feedback_router,
 ]
 for router in routers:
     root_router.include_router(router)

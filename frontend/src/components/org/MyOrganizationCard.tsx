@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Building2, Edit2, Users } from 'lucide-react';
+import { ArrowRight, Building2, Edit2 } from 'lucide-react';
 import { navigateToOrganization } from '../../utils.ts';
 import type { MyOrganization } from '../../entities';
 import { roleConfig } from '../../labels/role.tsx';
@@ -43,16 +43,6 @@ export const MyOrganizationCard = ({ org, openEdit }: MyOrganizationCardProps) =
             {roleOptions.icon} {roleOptions.label}
           </span>
         )}
-      </div>
-
-      <div className="flex gap-4 text-xs text-slate-500 mb-4">
-        <span className="flex items-center gap-1.5">
-          <BookOpen size={12} /> {org.coursesCount} {org.coursesCount === 1 ? 'курс' : 'курсов'}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Users size={12} /> {org.membersCount}{' '}
-          {org.membersCount === 1 ? 'участник' : 'участников'}
-        </span>
       </div>
 
       {window.location.hostname.startsWith(`${org.slug}.`) ? (

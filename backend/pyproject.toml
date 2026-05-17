@@ -66,3 +66,6 @@ line-ending = "auto"
 python_version = "3.13"
 strict = true
 disable_error_code = ["union-attr", "var-annotated"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:randomly"

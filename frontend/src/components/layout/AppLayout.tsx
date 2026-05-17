@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
-import { Bell, Menu, ChevronDown } from 'lucide-react';
+import { Menu, ChevronDown } from 'lucide-react';
 import { useAppContext } from '../../context.tsx';
 import { Sidebar } from '../common/Sidebar.tsx';
 import { roleConfig } from '../../labels/role.tsx';
@@ -12,8 +12,6 @@ export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const roleCfg = member?.role ? roleConfig[member.role] : null;
-  // TODO: add
-  const upcomingCount = 0;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
@@ -42,19 +40,6 @@ export function AppLayout() {
 
           {user && (
             <>
-              <button
-                onClick={() => navigate('/notifications')}
-                className="relative p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
-                title="Уведомления"
-              >
-                <Bell size={19} />
-                {upcomingCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-indigo-500 text-white text-[10px] flex items-center justify-center font-bold">
-                    {upcomingCount > 9 ? '9+' : upcomingCount}
-                  </span>
-                )}
-              </button>
-
               <button
                 onClick={() => navigate('/profile')}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"

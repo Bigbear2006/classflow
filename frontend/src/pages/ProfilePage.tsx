@@ -9,7 +9,6 @@ import { useLogoutUserMutation } from '../hooks/mutations/user.ts';
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, member, organization } = useAppContext();
-  // const [notifs, setNotifs] = useState({ email: true, push: true });
   const logoutMutation = useLogoutUserMutation({ navigate });
 
   return (
@@ -47,37 +46,6 @@ export const ProfilePage = () => {
         {user && <EditUserForm user={user} />}
       </div>
       <ChangeUserPassword />
-
-      {/*<div className="bg-white rounded-2xl border border-slate-200 p-6">*/}
-      {/*  <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">*/}
-      {/*    <Bell size={18} />*/}
-      {/*    Уведомления*/}
-      {/*  </h3>*/}
-      {/*  <div className="space-y-3">*/}
-      {/*    {[*/}
-      {/*      { key: 'email' as const, label: 'Email-уведомления' },*/}
-      {/*      { key: 'push' as const, label: 'Push-уведомления' },*/}
-      {/*    ].map(item => (*/}
-      {/*      <div key={item.key} className="flex items-center justify-between">*/}
-      {/*        <span className="text-sm text-slate-900">{item.label}</span>*/}
-      {/*        <button*/}
-      {/*          onClick={() =>*/}
-      {/*            setNotifs(prev => ({*/}
-      {/*              ...prev,*/}
-      {/*              [item.key]: !prev[item.key],*/}
-      {/*            }))*/}
-      {/*          }*/}
-      {/*          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${notifs[item.key] ? 'bg-indigo-600' : 'bg-slate-200'}`}*/}
-      {/*        >*/}
-      {/*          <span*/}
-      {/*            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${notifs[item.key] ? 'translate-x-6' : 'translate-x-1'}`}*/}
-      {/*          />*/}
-      {/*        </button>*/}
-      {/*      </div>*/}
-      {/*    ))}*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-
       <div className="flex gap-3">
         <button
           onClick={() => logoutMutation.mutate()}
