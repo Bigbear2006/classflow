@@ -4,7 +4,7 @@ import {
   useOrganizationForm,
 } from '../../hooks/forms/organization.ts';
 import { useOrganizationMutation } from '../../hooks/mutations/organization.ts';
-import { CustomTextField } from '../common/CustomTextField.tsx';
+import { FormField } from '../common/FormField.tsx';
 import type { FormAction, MyOrganization } from '../../entities';
 
 interface OrganizationFormProps {
@@ -34,14 +34,14 @@ export const OrganizationForm = ({ org, action, closeForm }: OrganizationFormPro
         onSubmit={handleSubmit((data: OutputOrganizationFields) => mutation.mutate(data))}
         className="space-y-4"
       >
-        <CustomTextField
+        <FormField
           name="name"
           label="Название организации"
           control={control}
           placeholder="Моя организация"
           required
         />
-        <CustomTextField
+        <FormField
           name="slug"
           label="Адрес (поддомен)"
           control={control}

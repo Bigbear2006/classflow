@@ -62,3 +62,17 @@ export interface OrganizationStats {
   todayLessons: number;
   totalIncome: number;
 }
+
+export interface StudentStats {
+  courses: number;
+  completedLessons: number;
+  todayLessons: number;
+  totalPaid: number;
+}
+
+export interface TeacherStats {
+  courses: number;
+  students: number;
+  todayLessons: number;
+  completedLessons: number;
+}

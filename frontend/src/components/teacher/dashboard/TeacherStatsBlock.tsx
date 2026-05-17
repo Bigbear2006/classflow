@@ -1,29 +1,30 @@
 import { BookOpen, Calendar, Clock, Users } from 'lucide-react';
+import { useTeacherStats } from '../../../hooks/queries/organization.ts';
 
 export const TeacherStatsBlock = () => {
-  // TODO: add
+  const { data: teacherStats } = useTeacherStats();
   const stats = [
     {
       label: 'Курсов',
-      value: 0,
+      value: teacherStats.courses,
       icon: <BookOpen size={18} />,
       color: 'text-indigo-600 bg-indigo-50',
     },
     {
       label: 'Учеников',
-      value: 0,
+      value: teacherStats.students,
       icon: <Users size={18} />,
       color: 'text-emerald-600 bg-emerald-50',
     },
     {
       label: 'Занятий сегодня',
-      value: 0,
+      value: teacherStats.todayLessons,
       icon: <Calendar size={18} />,
       color: 'text-violet-600 bg-violet-50',
     },
     {
-      label: 'Всего занятий',
-      value: 0,
+      label: 'Проведено занятий',
+      value: teacherStats.completedLessons,
       icon: <Clock size={18} />,
       color: 'text-amber-600 bg-amber-50',
     },

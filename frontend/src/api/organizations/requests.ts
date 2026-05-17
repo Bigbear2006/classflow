@@ -12,6 +12,9 @@ import type {
   OrganizationResponse,
   RoleCountResponse,
   UpdateOrganizationMemberData,
+  JoinOrganizationData,
+  StudentStatsResponse,
+  TeacherStatsResponse,
 } from './types.ts';
 import {
   mapMyOrg,
@@ -19,6 +22,8 @@ import {
   mapOrganizationStats,
   mapOrgMember,
   mapOrgMemberDetail,
+  mapStudentStats,
+  mapTeacherStats,
 } from './mappers.ts';
 
 export const getOrganizations = (params: GetOrganizationsParams) => {
@@ -75,8 +80,8 @@ export const createOrganization = (data: CreateOrganizationData) => {
   return axiosInstance.post('organizations/', data);
 };
 
-export const joinOrganization = () => {
-  return axiosInstance.post('organizations/current/members/');
+export const joinOrganization = (data: JoinOrganizationData) => {
+  return axiosInstance.post(`organizations/${data.orgId}/members/`);
 };
 
 export const inviteOrganizationMember = (data: InviteOrganizationMemberData) => {
@@ -85,4 +90,16 @@ export const inviteOrganizationMember = (data: InviteOrganizationMemberData) => 
 
 export const updateOrganizationMember = (user_id: number, data: UpdateOrganizationMemberData) => {
   return axiosInstance.patch(`organizations/current/members/${user_id}/`, data);
+};
+
+export const getStudentStats = () => {
+  return axiosInstance
+    .get<StudentStatsResponse>('organizations/current/members/me/student/stats/')
+    .then(rsp => mapStudentStats(rsp.data));
+};
+
+export const getTeacherStats = () => {
+  return axiosInstance
+    .get<TeacherStatsResponse>('organizations/current/members/me/teacher/stats/')
+    .then(rsp => mapTeacherStats(rsp.data));
 };

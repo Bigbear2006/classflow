@@ -5,7 +5,7 @@ from classflow.domain.entities.address import Cabinet
 from classflow.domain.entities.course import CourseTeacherStudent
 from classflow.domain.entities.group import Group
 from classflow.domain.entities.organization import OrganizationMember
-from classflow.domain.exceptions import ValidationError
+from classflow.domain.exceptions import PermissionDeniedError, ValidationError
 
 
 @dataclass
@@ -53,3 +53,10 @@ class Lesson:
                 'group_id and course_teacher_student_id '
                 'cannot both be provided',
             )
+
+    def teacher_has_access(self, teacher_id: int) -> bool:
+        return teacher_id == self.conducted_by_id
+
+    def ensure_teacher_access(self, teacher_id: int) -> None:
+        if not self.teacher_has_access(teacher_id):
+            raise PermissionDeniedError()

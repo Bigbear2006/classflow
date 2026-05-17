@@ -1,9 +1,9 @@
-import type { CourseAttendanceStatsResponse, CreateAttendanceData } from './types.ts';
+import type { CourseAttendanceStatsResponse, BulkCreateAttendanceData } from './types.ts';
 import { axiosInstance } from '../base.ts';
 import type { CourseAttendanceStats } from '../../entities';
 import { mapCourseAttendanceStats } from './mappers.ts';
 
-export const bulkCreateAttendance = (data: CreateAttendanceData[]) => {
+export const bulkCreateAttendance = (data: BulkCreateAttendanceData) => {
   return axiosInstance.post('/attendance/', data);
 };
 

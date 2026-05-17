@@ -23,6 +23,10 @@ export interface UpdateOrganizationMemberData {
   role: UserRole;
 }
 
+export interface JoinOrganizationData {
+  orgId: number;
+}
+
 export interface OrganizationResponse {
   id: number;
   name: string;
@@ -64,4 +68,18 @@ export interface OrganizationStatsResponse {
   groups: number;
   today_lessons: number;
   total_income: number;
+}
+
+export interface StudentStatsResponse {
+  courses: number;
+  completed_lessons: number;
+  today_lessons: number;
+  total_paid: number;
+}
+
+export interface TeacherStatsResponse {
+  courses: number;
+  students: number;
+  today_lessons: number;
+  completed_lessons: number;
 }

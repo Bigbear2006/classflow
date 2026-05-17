@@ -57,13 +57,13 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
     _attendanceList: Record<number, AttendanceStatus>,
     _lessonId: number,
   ) => {
-    attendanceMutation.mutate(
-      Array.from(Object.entries(_attendanceList)).map(([studentId, status]) => ({
-        lesson_id: _lessonId,
+    attendanceMutation.mutate({
+      attendance_list: Array.from(Object.entries(_attendanceList)).map(([studentId, status]) => ({
         student_id: +studentId,
         status,
       })),
-    );
+      lesson_id: _lessonId,
+    });
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useState } from 'react';
 import { useRegistrationForm } from '../../hooks/forms/register.ts';
 import { useRegisterUserMutation } from '../../hooks/mutations/user.ts';
-import { CustomTextField } from './CustomTextField.tsx';
+import { FormField } from './FormField.tsx';
 
 export const RegisterForm = () => {
   const { control, setError, handleSubmit } = useRegistrationForm();
@@ -14,7 +14,7 @@ export const RegisterForm = () => {
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-8">
       <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="space-y-4">
-        <CustomTextField
+        <FormField
           name="fullname"
           control={control}
           label="ФИО"
@@ -22,7 +22,7 @@ export const RegisterForm = () => {
           icon={User}
           required
         />
-        <CustomTextField
+        <FormField
           name="email"
           control={control}
           label="Почта"
@@ -30,7 +30,7 @@ export const RegisterForm = () => {
           icon={Mail}
           required
         />
-        <CustomTextField
+        <FormField
           name="phone"
           control={control}
           label="Телефон"
@@ -38,7 +38,7 @@ export const RegisterForm = () => {
           icon={Phone}
           required
         />
-        <CustomTextField
+        <FormField
           name="password"
           control={control}
           label="Пароль"
@@ -56,7 +56,7 @@ export const RegisterForm = () => {
           type={showPassword ? 'text' : 'password'}
           required
         />
-        <CustomTextField
+        <FormField
           name="confirmPassword"
           control={control}
           label="Подтвердить пароль"

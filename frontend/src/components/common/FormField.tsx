@@ -1,4 +1,4 @@
-import { Description, FieldError, Input, Label, TextField } from '@heroui/react';
+import { Description, FieldError, Input, Label, TextArea, TextField } from '@heroui/react';
 import { type LucideIcon } from 'lucide-react';
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form';
 import type { ReactNode } from 'react';
@@ -17,9 +17,10 @@ type CustomTextFieldProps<
   button?: ReactNode;
   required?: boolean;
   type?: React.HTMLInputTypeAttribute;
+  isTextArea?: boolean;
 };
 
-export const CustomTextField = <
+export const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TContext = any,
   TTransformedValues = TFieldValues,
@@ -33,6 +34,7 @@ export const CustomTextField = <
   button,
   required,
   type = 'text',
+  isTextArea = false,
 }: CustomTextFieldProps<TFieldValues, TContext, TTransformedValues>) => {
   return (
     <Controller
@@ -48,12 +50,21 @@ export const CustomTextField = <
               />
             )}
 
-            <Input
-              {...field}
-              type={type}
-              placeholder={placeholder}
-              className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500`}
-            />
+            {isTextArea ? (
+              <TextArea
+                {...field}
+                placeholder={placeholder}
+                rows={5}
+                className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              />
+            ) : (
+              <Input
+                {...field}
+                type={type}
+                placeholder={placeholder}
+                className={`w-full ${Icon ? 'pl-9' : 'pl-4'} pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500`}
+              />
+            )}
 
             {button}
           </div>

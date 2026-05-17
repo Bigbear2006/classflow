@@ -26,7 +26,16 @@ from classflow.application.use_cases.organization.get_role_counts import (
 from classflow.application.use_cases.organization.get_stats import (
     GetOrganizationStats,
 )
-from classflow.application.use_cases.organization.join import JoinOrganization
+from classflow.application.use_cases.organization.get_student_stats import (
+    GetStudentStats,
+)
+from classflow.application.use_cases.organization.get_teacher_stats import (
+    GetTeacherStats,
+)
+from classflow.application.use_cases.organization.join import (
+    JoinOrganization,
+    JoinOrganizationDTO,
+)
 from classflow.application.use_cases.organization.update_current import (
     UpdateCurrentOrganization,
     UpdateCurrentOrganizationDTO,
@@ -49,7 +58,10 @@ __all__ = (
     'GetMyOrganizations',
     'GetOrganizationStats',
     'GetRoleCounts',
+    'GetStudentStats',
+    'GetTeacherStats',
     'JoinOrganization',
+    'JoinOrganizationDTO',
     'UpdateCurrentOrganization',
     'UpdateCurrentOrganizationDTO',
     'UpdateOrganizationMember',

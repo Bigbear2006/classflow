@@ -1,6 +1,7 @@
 import { useCustomMutation } from '../useCustomMutation.ts';
 import {
   createOrganization,
+  joinOrganization,
   updateCurrentOrganization,
 } from '../../api/organizations/requests.ts';
 import type { FormAction } from '../../entities';
@@ -17,5 +18,12 @@ export const useOrganizationMutation = ({ action, onSuccess }: OrganizationMutat
     toastErrorMessage:
       action === 'CREATE' ? 'Не удалось создать организацию' : 'Не удалось обновить организацию',
     onSuccess,
+  });
+};
+
+export const useJoinOrganizationMutation = () => {
+  return useCustomMutation({
+    mutationFn: joinOrganization,
+    invalidateQueryKeyOnSuccess: ['organizations', 'my'],
   });
 };

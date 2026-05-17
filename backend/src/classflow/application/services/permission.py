@@ -62,3 +62,6 @@ class PermissionService:
 
     async def ensure_student(self) -> OrganizationMember:
         return await self.ensure_any_role([UserRole.STUDENT])
+
+    async def ensure_teacher(self) -> OrganizationMember:
+        return await self.ensure_any_role([UserRole.TEACHER])

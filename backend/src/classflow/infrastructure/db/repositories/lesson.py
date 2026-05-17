@@ -16,7 +16,7 @@ from classflow.domain.entities import (
     Lesson,
     OrganizationMember,
 )
-from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     attendance_table,
     course_teacher_students_table,
@@ -64,6 +64,13 @@ class LessonRepositoryImpl(LessonRepository):
         )
         rows = await self.session.execute(stmt)
         return rows.scalar_one()
+
+    async def get(self, id: int) -> Lesson:
+        stmt = set_lessons_joins(
+            select(Lesson).where(lessons_table.c.id == id),
+        )
+        rows = await self.session.execute(stmt)
+        return get_one(rows)
 
     async def get_all(
         self,

@@ -13,7 +13,10 @@ import type {
   OrganizationMemberResponse,
   OrganizationMemberWithAttendanceResponse,
   OrganizationResponse,
+  StudentStatsResponse,
+  TeacherStatsResponse,
 } from './types.ts';
+import type { StudentStats, TeacherStats } from '../../entities/organization.ts';
 
 export const mapOrg = (data: OrganizationResponse): Organization => {
   return {
@@ -78,5 +81,23 @@ export const mapOrganizationStats = (data: OrganizationStatsResponse): Organizat
     groups: data.groups,
     todayLessons: data.today_lessons,
     totalIncome: data.total_income,
+  };
+};
+
+export const mapStudentStats = (data: StudentStatsResponse): StudentStats => {
+  return {
+    courses: data.courses,
+    completedLessons: data.completed_lessons,
+    todayLessons: data.today_lessons,
+    totalPaid: data.total_paid,
+  };
+};
+
+export const mapTeacherStats = (data: TeacherStatsResponse): TeacherStats => {
+  return {
+    courses: data.courses,
+    students: data.students,
+    completedLessons: data.completed_lessons,
+    todayLessons: data.today_lessons,
   };
 };

@@ -2,6 +2,7 @@ import type { FormAction, Subject } from '../../../entities';
 import { X } from 'lucide-react';
 import { useSubjectForm } from '../../../hooks/forms/subject.ts';
 import { useSubjectMutation } from '../../../hooks/mutations/subject.ts';
+import { FormField } from '../../common/FormField.tsx';
 
 interface SubjectFormProps {
   action: FormAction;
@@ -10,12 +11,7 @@ interface SubjectFormProps {
 }
 
 export const SubjectForm = ({ action, subject, closeModal }: SubjectFormProps) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useSubjectForm({ initialValues: subject });
-  console.log(errors);
+  const { control, handleSubmit } = useSubjectForm({ initialValues: subject });
 
   const mutation = useSubjectMutation({
     action: action,
@@ -41,32 +37,9 @@ export const SubjectForm = ({ action, subject, closeModal }: SubjectFormProps) =
           </button>
         </div>
         <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Название</label>
-            <input
-              {...register('name')}
-              className={`w-full px-3 py-2.5 border ${errors.name ? 'border-red-200' : 'border-slate-200'} rounded-xl text-sm focus:outline-none focus:ring-2 ${errors.name ? 'focus:ring-red-500' : 'focus:ring-indigo-500'}`}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Описание</label>
-            <textarea
-              {...register('description')}
-              rows={3}
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Обложка (URL)
-            </label>
-            <input
-              {...register('image')}
-              required={!!subject}
-              type="file"
-              className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          <FormField name="name" control={control} label="Название" required />
+          <FormField name="description" control={control} label="Описание" required isTextArea />
+          <FormField name="image" control={control} label="Обложка" required type="file" />
           <div className="flex gap-3 pt-2">
             <button
               type="submit"

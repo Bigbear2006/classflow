@@ -62,6 +62,8 @@ from classflow.application.use_cases.organization import (
     GetMyOrganizations,
     GetOrganizationStats,
     GetRoleCounts,
+    GetStudentStats,
+    GetTeacherStats,
     JoinOrganization,
     UpdateCurrentOrganization,
     UpdateOrganizationMember,
@@ -109,6 +111,8 @@ class UseCasesProvider(Provider):
         GetAllCurrentOrganizationMembers,
         GetRoleCounts,
         GetOrganizationStats,
+        GetStudentStats,
+        GetTeacherStats,
         UpdateOrganizationMember,
         UpdateCurrentOrganization,
     )

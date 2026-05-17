@@ -120,3 +120,19 @@ class OrganizationStats:
     groups: int
     today_lessons: int
     total_income: int
+
+
+@dataclass
+class StudentStats:
+    courses: int
+    completed_lessons: int
+    today_lessons: int
+    total_paid: int
+
+
+@dataclass
+class TeacherStats:
+    courses: int
+    students: int
+    today_lessons: int
+    completed_lessons: int

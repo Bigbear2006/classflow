@@ -22,6 +22,9 @@ class LessonRepository(Protocol):
     ) -> Lesson:
         pass
 
+    async def get(self, id: int) -> Lesson:
+        pass
+
     async def get_all(
         self,
         *,

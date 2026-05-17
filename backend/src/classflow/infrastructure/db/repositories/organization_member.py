@@ -1,6 +1,7 @@
+from datetime import UTC, datetime
 from typing import cast
 
-from sqlalchemy import func, or_, select, update
+from sqlalchemy import Date, func, or_, select, update
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager
@@ -8,13 +9,23 @@ from sqlalchemy.orm import contains_eager
 from classflow.application.repositories.organization_member import (
     OrganizationMemberRepository,
 )
-from classflow.domain.entities import OrganizationMember, TeacherWithFeedback
-from classflow.domain.enums import UserRole
+from classflow.domain.entities import (
+    OrganizationMember,
+    StudentStats,
+    TeacherStats,
+)
+from classflow.domain.enums import CourseTeacherStatus, StudentStatus, UserRole
 from classflow.domain.exceptions import AlreadyExistsError, NotFoundError
 from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
-    feedback_table,
+    course_teacher_students_table,
+    course_teachers_table,
+    courses_table,
+    groups_table,
+    lessons_table,
     organization_members_table,
+    payments_table,
+    student_groups_table,
     users_table,
 )
 
@@ -106,11 +117,141 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
         rows = await self.session.scalars(stmt)
         return cast(list[OrganizationMember], rows.all())
 
-    async def get_teachers_with_feedback(self) -> list[TeacherWithFeedback]:
-        stmt = select(
-            OrganizationMember,
-            func.round(func.avg(feedback_table.c.rating)),
+    async def get_student_stats(self, student_id: int) -> StudentStats:
+        courses_subquery = (
+            select(func.count('*'))
+            .select_from(courses_table)
+            .outerjoin(course_teachers_table)
+            .outerjoin(course_teacher_students_table)
+            .outerjoin(groups_table)
+            .outerjoin(student_groups_table)
+            .where(
+                (student_groups_table.c.student_id == student_id)
+                | (course_teacher_students_table.c.student_id == student_id),
+            )
+            .distinct()
         )
-        # TODO: finish or remove
-        print(stmt)
-        return []
+
+        completed_lessons_subquery = (
+            select(func.count('*'))
+            .select_from(lessons_table)
+            .outerjoin(course_teacher_students_table)
+            .outerjoin(groups_table)
+            .outerjoin(student_groups_table)
+            .where(
+                (student_groups_table.c.student_id == student_id)
+                | (course_teacher_students_table.c.student_id == student_id),
+            )
+            .distinct()
+        )
+
+        today_lessons_subquery = (
+            select(func.count('*'))
+            .select_from(lessons_table)
+            .outerjoin(course_teacher_students_table)
+            .outerjoin(groups_table)
+            .outerjoin(student_groups_table)
+            .where(
+                lessons_table.c.start_date.cast(Date)
+                == datetime.now(UTC).date(),
+                (student_groups_table.c.student_id == student_id)
+                | (course_teacher_students_table.c.student_id == student_id),
+            )
+            .distinct()
+        )
+
+        total_paid_subquery = (
+            select(func.coalesce(func.sum(payments_table.c.amount), 0))
+            .select_from(payments_table)
+            .outerjoin(course_teacher_students_table)
+            .outerjoin(student_groups_table)
+            .where(
+                (student_groups_table.c.student_id == student_id)
+                | (course_teacher_students_table.c.student_id == student_id),
+            )
+            .distinct()
+        )
+
+        courses = await self.session.scalar(courses_subquery)
+        completed_lessons = await self.session.scalar(
+            completed_lessons_subquery,
+        )
+        today_lessons = await self.session.scalar(today_lessons_subquery)
+        total_paid = await self.session.scalar(total_paid_subquery)
+        return StudentStats(
+            courses=courses,
+            completed_lessons=completed_lessons,
+            today_lessons=today_lessons,
+            total_paid=total_paid,
+        )
+
+    async def get_teacher_stats(self, teacher_id: int) -> TeacherStats:
+        courses_subquery = (
+            select(func.count('*'))
+            .select_from(courses_table)
+            .outerjoin(course_teachers_table)
+            .where(
+                course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+            .distinct()
+        )
+
+        individual_students_subquery = (
+            select(func.count('*'))
+            .select_from(course_teacher_students_table)
+            .join(course_teachers_table)
+            .where(
+                course_teacher_students_table.c.status == StudentStatus.ACTIVE,
+                course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+            .distinct()
+        )
+
+        group_students_subquery = (
+            select(func.count('*'))
+            .select_from(student_groups_table)
+            .join(groups_table)
+            .join(courses_table)
+            .join(course_teachers_table)
+            .where(
+                student_groups_table.c.status == StudentStatus.ACTIVE,
+                course_teachers_table.c.teacher_id == teacher_id,
+                course_teachers_table.c.status != CourseTeacherStatus.DELETED,
+            )
+            .distinct()
+        )
+
+        completed_lessons_subquery = (
+            select(func.count('*'))
+            .select_from(lessons_table)
+            .where(lessons_table.c.conducted_by_id == teacher_id)
+        )
+
+        today_lessons_subquery = (
+            select(func.count('*'))
+            .select_from(lessons_table)
+            .where(
+                lessons_table.c.conducted_by_id == teacher_id,
+                lessons_table.c.start_date.cast(Date)
+                == datetime.now(UTC).date(),
+            )
+        )
+
+        courses = await self.session.scalar(courses_subquery)
+        individual_students = await self.session.scalar(
+            individual_students_subquery,
+        )
+        group_students = await self.session.scalar(group_students_subquery)
+        completed_lessons = await self.session.scalar(
+            completed_lessons_subquery,
+        )
+        today_lessons = await self.session.scalar(today_lessons_subquery)
+
+        return TeacherStats(
+            courses=courses,
+            students=individual_students + group_students,
+            completed_lessons=completed_lessons,
+            today_lessons=today_lessons,
+        )

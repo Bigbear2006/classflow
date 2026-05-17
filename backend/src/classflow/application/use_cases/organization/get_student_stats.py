@@ -1,0 +1,21 @@
+from classflow.application.repositories.organization_member import (
+    OrganizationMemberRepository,
+)
+from classflow.application.services.permission import PermissionService
+from classflow.domain.entities import StudentStats
+
+
+class GetStudentStats:
+    def __init__(
+        self,
+        organization_member_repository: OrganizationMemberRepository,
+        permission_service: PermissionService,
+    ) -> None:
+        self.organization_member_repository = organization_member_repository
+        self.permission_service = permission_service
+
+    async def __call__(self) -> StudentStats:
+        student = await self.permission_service.ensure_student()
+        return await self.organization_member_repository.get_student_stats(
+            student.id,
+        )

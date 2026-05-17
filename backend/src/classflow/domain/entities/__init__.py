@@ -16,6 +16,8 @@ from classflow.domain.entities.organization import (
     OrganizationMember,
     OrganizationStats,
     RoleCount,
+    StudentStats,
+    TeacherStats,
     TeacherWithFeedback,
 )
 from classflow.domain.entities.payment import Payment
@@ -39,7 +41,9 @@ __all__ = (
     'Payment',
     'RoleCount',
     'StudentGroup',
+    'StudentStats',
     'Subject',
+    'TeacherStats',
     'TeacherWithFeedback',
     'User',
 )

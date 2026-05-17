@@ -17,13 +17,21 @@ from classflow.application.use_cases.organization import (
     GetMyOrganizations,
     GetOrganizationStats,
     GetRoleCounts,
+    GetStudentStats,
+    GetTeacherStats,
     JoinOrganization,
+    JoinOrganizationDTO,
     UpdateCurrentOrganization,
     UpdateCurrentOrganizationDTO,
     UpdateOrganizationMember,
     UpdateOrganizationMemberDTO,
 )
-from classflow.domain.entities import OrganizationStats, RoleCount
+from classflow.domain.entities import (
+    OrganizationStats,
+    RoleCount,
+    StudentStats,
+    TeacherStats,
+)
 from classflow.domain.enums import UserRole
 from classflow.presentation.api.common.cookie import cookie_scheme
 from classflow.presentation.api.routers.organization.models import (
@@ -103,11 +111,13 @@ async def get_my_organizations_router(
     return [MyOrganizationResponse.model_validate(org) for org in orgs]
 
 
-@organization_router.post('/current/members/', status_code=201)
+@organization_router.post('/{org_id}/members/', status_code=201)
 async def join_organization_router(
+    org_id: int,
     join_organization: FromDishka[JoinOrganization],
 ) -> OrganizationMemberResponse:
-    member = await join_organization()
+    dto = JoinOrganizationDTO(org_id=org_id)
+    member = await join_organization(dto)
     return OrganizationMemberResponse.model_validate(member)
 
 
@@ -131,6 +141,20 @@ async def get_current_organization_member_router(
 ) -> OrganizationMemberResponse:
     member = await get_organization_member()
     return OrganizationMemberResponse.model_validate(member)
+
+
+@organization_router.get('/current/members/me/student/stats/')
+async def get_current_organization_student_stats_router(
+    get_student_stats: FromDishka[GetStudentStats],
+) -> StudentStats:
+    return await get_student_stats()
+
+
+@organization_router.get('/current/members/me/teacher/stats/')
+async def get_current_organization_teacher_stats_router(
+    get_teacher_stats: FromDishka[GetTeacherStats],
+) -> TeacherStats:
+    return await get_teacher_stats()
 
 
 @organization_router.patch('/current/members/{user_id}/')

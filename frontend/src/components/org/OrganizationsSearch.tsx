@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue.ts';
 import { useOrganizations } from '../../hooks/queries/organization.ts';
 import { Building2, LogIn, Search } from 'lucide-react';
-import { navigateToOrganization } from '../../utils.ts';
-import { joinOrganization } from '../../api/organizations/requests.ts';
+import { useJoinOrganizationMutation } from '../../hooks/mutations/organization.ts';
 
 export const OrganizationsSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams(window.location.search);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const debouncedSearch = useDebouncedValue(search, 500);
   const { data: foundOrgs } = useOrganizations({ query: debouncedSearch });
+  const joinOrganizationMutation = useJoinOrganizationMutation();
 
   useEffect(() => {
     setSearchParams(
@@ -70,14 +70,12 @@ export const OrganizationsSearch = () => {
                         <div className="font-semibold text-slate-800 text-sm truncate">
                           {org.name}
                         </div>
-                        <div className="text-xs text-slate-400 mt-0.5">/{org.slug}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{org.slug}</div>
                       </div>
                     </div>
 
                     <button
-                      onClick={() =>
-                        joinOrganization().finally(() => navigateToOrganization(org.slug))
-                      }
+                      onClick={() => joinOrganizationMutation.mutate({ orgId: org.id })}
                       className="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white rounded-xl text-sm font-medium transition-colors"
                     >
                       <LogIn size={14} />

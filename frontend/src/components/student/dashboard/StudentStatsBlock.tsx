@@ -1,29 +1,30 @@
 import { BookOpen, Calendar, Clock, DollarSign } from 'lucide-react';
+import { useStudentStats } from '../../../hooks/queries/organization.ts';
 
 export const StudentStatsBlock = () => {
+  const { data: studentStats } = useStudentStats();
   const stats = [
-    // TODO: add
     {
       label: 'Моих курсов',
-      value: 0,
+      value: studentStats.courses,
       icon: <BookOpen size={18} />,
       color: 'text-indigo-600 bg-indigo-50',
     },
     {
-      label: 'Занятий всего',
-      value: 0,
+      label: 'Проведено занятий',
+      value: studentStats.completedLessons,
       icon: <Clock size={18} />,
       color: 'text-emerald-600 bg-emerald-50',
     },
     {
-      label: 'Ближайших',
-      value: 0,
+      label: 'Занятий сегодня',
+      value: studentStats.todayLessons,
       icon: <Calendar size={18} />,
       color: 'text-violet-600 bg-violet-50',
     },
     {
       label: 'Оплачено ₽',
-      value: 0,
+      value: studentStats.totalPaid,
       icon: <DollarSign size={18} />,
       color: 'text-amber-600 bg-amber-50',
     },

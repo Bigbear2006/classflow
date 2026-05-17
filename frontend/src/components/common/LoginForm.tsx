@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 import { ErrorsBlock } from './ErrorsBlock.tsx';
 import { useLoginForm } from '../../hooks/forms/login.ts';
-import { CustomTextField } from './CustomTextField.tsx';
+import { FormField } from './FormField.tsx';
 import { useLoginUserMutation } from '../../hooks/mutations/user.ts';
 
 export const LoginForm = () => {
@@ -21,7 +21,7 @@ export const LoginForm = () => {
     <div className="bg-white rounded-2xl shadow-2xl p-8">
       <ErrorsBlock errors={Object.values(errors)} />
       <form onSubmit={handleSubmit(data => mutation.mutate(data))} className="space-y-5">
-        <CustomTextField
+        <FormField
           name="email"
           control={control}
           label="Почта"
@@ -29,7 +29,7 @@ export const LoginForm = () => {
           icon={Mail}
           required
         />
-        <CustomTextField
+        <FormField
           name="password"
           control={control}
           label="Пароль"

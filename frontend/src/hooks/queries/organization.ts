@@ -6,6 +6,8 @@ import {
   getOrganizations,
   getOrganizationTeachers,
   getRoleCounts,
+  getStudentStats,
+  getTeacherStats,
 } from '../../api/organizations/requests.ts';
 import type { GetOrganizationsParams } from '../../api/organizations/types.ts';
 import { queryClient } from '../../loaders.ts';
@@ -69,5 +71,31 @@ export const useRoleCounts = () => {
   return useSuspenseQuery({
     ...roleCountsOptions,
     initialData: () => queryClient.getQueryData(roleCountsOptions.queryKey),
+  });
+};
+
+export const useStudentStats = () => {
+  return useQuery({
+    initialData: {
+      courses: 0,
+      completedLessons: 0,
+      todayLessons: 0,
+      totalPaid: 0,
+    },
+    queryKey: ['student', 'stats'],
+    queryFn: getStudentStats,
+  });
+};
+
+export const useTeacherStats = () => {
+  return useQuery({
+    initialData: {
+      courses: 0,
+      students: 0,
+      todayLessons: 0,
+      completedLessons: 0,
+    },
+    queryKey: ['teacher', 'stats'],
+    queryFn: getTeacherStats,
   });
 };

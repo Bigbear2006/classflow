@@ -4,9 +4,13 @@ import type { GroupResponse } from '../groups/types.ts';
 import type { OrganizationMemberDetailResponse } from '../organizations/types.ts';
 
 export interface CreateAttendanceData {
-  lesson_id: number;
   student_id: number;
   status: AttendanceStatus;
+}
+
+export interface BulkCreateAttendanceData {
+  lesson_id: number;
+  attendance_list: CreateAttendanceData[];
 }
 
 export interface CourseAttendanceStatsResponse {

@@ -23,7 +23,12 @@ class GetStudentsWithAttendance:
         self,
         data: GetStudentsWithAttendanceDTO,
     ) -> list[OrganizationMember]:
-        await self.permission_service.ensure_teacher_or_more()
+        member = await self.permission_service.ensure_teacher_or_more()
+
+        if member.is_teacher:
+            lesson = await self.lesson_repository.get(data.lesson_id)
+            lesson.ensure_teacher_access(member.id)
+
         return await self.lesson_repository.get_students_with_attendance(
             data.lesson_id,
         )
