@@ -1,9 +1,15 @@
 import { useNavigate } from 'react-router';
 import { useLessons } from '../../hooks/queries/lesson.ts';
-import { displayTime } from '../../labels/date.ts';
+import { displayShortMonth, displayTime, getDateString } from '../../labels/date.ts';
 
 export const UpcomingLessons = () => {
-  const { data: upcomingLessons } = useLessons();
+  const start = new Date();
+  let end = new Date();
+  end.setDate(end.getDate() + 7);
+  const { data: upcomingLessons } = useLessons({
+    start_date: getDateString(start),
+    end_date: getDateString(end),
+  });
   const navigate = useNavigate();
 
   return (
@@ -28,9 +34,7 @@ export const UpcomingLessons = () => {
                   {lesson.startDate.getDate()}
                 </span>
                 <span className="text-indigo-500 text-[9px]">
-                  {lesson.startDate.toLocaleDateString('ru', {
-                    month: 'short',
-                  })}
+                  {displayShortMonth(lesson.startDate)}
                 </span>
               </div>
               <div className="min-w-0 flex-1">

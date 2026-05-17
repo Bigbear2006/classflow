@@ -18,14 +18,14 @@ class StudentGroupRepositoryImpl(StudentGroupRepository):
         return await create(self.session, student_group)
 
     async def get_students_count(self, group_id: int) -> int:
-        stmt = (
-            select(func.count('*'))
-            .select_from(student_groups_table)
+        stmt = select(func.count()).select_from(
+            select(student_groups_table.c.id)
             .where(
                 student_groups_table.c.group_id == group_id,
                 student_groups_table.c.status == StudentStatus.ACTIVE,
             )
             .with_for_update()
+            .subquery(),
         )
         return await self.session.scalar(stmt)
 

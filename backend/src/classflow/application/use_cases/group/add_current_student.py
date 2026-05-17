@@ -33,7 +33,7 @@ class AddCurrentStudentToGroup:
 
         group = await self.group_repository.get_by_id(data.group_id)
         students_count = (
-            await self.student_group_repository.get_students_count(student)
+            await self.student_group_repository.get_students_count(group.id)
         )
         if students_count >= group.max_users_count:
             raise GroupStudentsLimitExceededError()
