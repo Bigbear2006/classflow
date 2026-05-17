@@ -1,5 +1,8 @@
 from classflow.domain.entities.address import Address, Cabinet
-from classflow.domain.entities.attendance import Attendance
+from classflow.domain.entities.attendance import (
+    Attendance,
+    CourseAttendanceStats,
+)
 from classflow.domain.entities.course import (
     Course,
     CourseTeacher,
@@ -24,6 +27,7 @@ __all__ = (
     'Attendance',
     'Cabinet',
     'Course',
+    'CourseAttendanceStats',
     'CourseTeacher',
     'CourseTeacherStudent',
     'Feedback',

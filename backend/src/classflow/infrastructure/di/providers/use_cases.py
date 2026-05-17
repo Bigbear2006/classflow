@@ -6,7 +6,10 @@ from classflow.application.use_cases.address import (
     GetAllAddresses,
     UpdateAddress,
 )
-from classflow.application.use_cases.attendance import BulkCreateAttendance
+from classflow.application.use_cases.attendance import (
+    BulkCreateAttendance,
+    GetAttendanceStats,
+)
 from classflow.application.use_cases.cabinet import (
     CreateCabinet,
     DeleteCabinet,
@@ -161,4 +164,4 @@ class UseCasesProvider(Provider):
         DeleteLesson,
     )
     payment = provide_all(CreatePayment, DeletePayment)
-    attendance = provide_all(BulkCreateAttendance)
+    attendance = provide_all(BulkCreateAttendance, GetAttendanceStats)

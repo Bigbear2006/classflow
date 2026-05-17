@@ -1,4 +1,4 @@
-import { getRateColor } from '../../../labels/attendance.ts';
+import { getRateBgColor, getRateColor } from '../../../labels/attendance.ts';
 import type { CourseAttendanceStats } from '../../../entities';
 
 interface CourseAttendanceProps {
@@ -7,6 +7,8 @@ interface CourseAttendanceProps {
 
 export const CourseAttendance = ({ stats }: CourseAttendanceProps) => {
   const rateColor = getRateColor(stats.rate);
+  const bgColor = getRateBgColor(stats.rate);
+
   return (
     <div
       key={stats.group?.id || stats.teacher?.id}
@@ -24,7 +26,7 @@ export const CourseAttendance = ({ stats }: CourseAttendanceProps) => {
       </div>
       <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${rateColor}`}
+          className={`h-full rounded-full transition-all ${bgColor}`}
           style={{ width: `${stats.rate}%` }}
         />
       </div>

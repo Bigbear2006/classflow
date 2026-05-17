@@ -34,7 +34,7 @@ class BulkCreateAttendance:
         self,
         data: BulkCreateAttendanceDTO,
     ) -> list[Attendance]:
-        await self.permission_service.ensure_admin_or_more()
+        await self.permission_service.ensure_teacher_or_more()
         async with self.uow:
             attendance_list = [
                 Attendance(**asdict(attendance))

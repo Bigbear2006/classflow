@@ -19,6 +19,11 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
       <td className="px-5 py-3">
         <div className="font-medium text-sm text-slate-900">Урок #{lesson.id}</div>
         <div className="text-xs text-slate-400">{lesson.conductedBy.user.fullname}</div>
+        {lesson.group && (
+          <div className="text-xs text-slate-400">
+            {lesson.group.course.subject.name} ({lesson.group.name})
+          </div>
+        )}
       </td>
       <td className="px-5 py-3 text-sm text-slate-700">
         <div>{displayShortDate(lesson.startDate)}</div>

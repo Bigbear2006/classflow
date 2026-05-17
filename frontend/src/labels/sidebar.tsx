@@ -12,7 +12,7 @@ import {
   MapPin,
   TrendingUp,
   User as UserIcon,
-  UserCheck,
+  // UserCheck,
   Users,
 } from 'lucide-react';
 
@@ -134,11 +134,11 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
         path: '/payments',
         icon: <DollarSign size={18} />,
       },
-      {
-        label: 'Отзывы',
-        path: '/feedback',
-        icon: <UserCheck size={18} />,
-      },
+      // {
+      //   label: 'Отзывы',
+      //   path: '/feedback',
+      //   icon: <UserCheck size={18} />,
+      // },
     ];
 
   return [myOrgs];

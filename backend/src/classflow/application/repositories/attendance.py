@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from classflow.domain.entities import Attendance
+from classflow.domain.entities import Attendance, CourseAttendanceStats
 
 
 class AttendanceRepository(Protocol):
@@ -8,4 +8,10 @@ class AttendanceRepository(Protocol):
         self,
         attendance_list: list[Attendance],
     ) -> list[Attendance]:
+        pass
+
+    async def get_courses_stats(
+        self,
+        student_id: int,
+    ) -> list[CourseAttendanceStats]:
         pass

@@ -23,7 +23,7 @@ import { mapOrgMemberDetail } from '../organizations/mappers.ts';
 import { mapLesson } from '../lessons/mappers.ts';
 import { mapPayment } from '../payments/mappers.ts';
 
-const mapCourse = (data: CourseResponse): Course => {
+export const mapCourse = (data: CourseResponse): Course => {
   return {
     id: data.id,
     subject: data.subject,

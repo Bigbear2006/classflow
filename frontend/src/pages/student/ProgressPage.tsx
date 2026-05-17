@@ -4,11 +4,12 @@ import { AttendanceStatsChart } from '../../components/student/attendance/Attend
 import { LessonsByWeeks } from '../../components/student/attendance/LessonsByWeeks.tsx';
 import { CourseAttendance } from '../../components/student/attendance/CourseAttendance.tsx';
 import { AttendanceCard } from '../../components/student/attendance/AttendanceCard.tsx';
-import type { AttendanceDetail, CourseAttendanceStats } from '../../entities';
+import type { AttendanceDetail } from '../../entities';
+import { useCoursesAttendanceStats } from '../../hooks/queries/attendance.ts';
 
 export const ProgressPage = () => {
   const attendanceList: AttendanceDetail[] = [];
-  const coursesAttendance: CourseAttendanceStats[] = [];
+  const { data: coursesAttendance } = useCoursesAttendanceStats();
 
   return (
     <div className="p-6 space-y-6">

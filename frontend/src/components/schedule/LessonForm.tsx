@@ -53,6 +53,19 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
   const attendanceListInitializedRef = useRef(false);
   const skipMutationRef = useRef(true);
 
+  const saveAttendance = (
+    _attendanceList: Record<number, AttendanceStatus>,
+    _lessonId: number,
+  ) => {
+    attendanceMutation.mutate(
+      Array.from(Object.entries(_attendanceList)).map(([studentId, status]) => ({
+        lesson_id: _lessonId,
+        student_id: +studentId,
+        status,
+      })),
+    );
+  };
+
   useEffect(() => {
     if (students.length === 0 || attendanceListInitializedRef.current) {
       return;
@@ -69,13 +82,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
       skipMutationRef.current = false;
       return;
     }
-    attendanceMutation.mutate(
-      Array.from(Object.entries(debouncedAttendanceList)).map(([studentId, status]) => ({
-        lesson_id: lesson.id,
-        student_id: +studentId,
-        status,
-      })),
-    );
+    saveAttendance(debouncedAttendanceList, lesson.id);
   }, [debouncedAttendanceList]);
 
   const lessonMutation = useLessonMutation({ action, lessonId: lesson?.id, closeModal });
@@ -299,7 +306,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
           {/*    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"*/}
           {/*  />*/}
           {/*</div>*/}
-          {students && attendanceList && (
+          {action === 'EDIT' && students && attendanceList && (
             <div>
               <h3 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
                 {lesson?.group ? <Users size={16} /> : <User size={16} />}

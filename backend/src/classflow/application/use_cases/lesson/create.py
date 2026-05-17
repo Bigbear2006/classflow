@@ -34,7 +34,7 @@ class CreateLesson:
         self.uow = uow
 
     async def __call__(self, data: CreateLessonDTO) -> Lesson:
-        await self.permission_service.ensure_admin_or_more()
+        await self.permission_service.ensure_teacher_or_more()
 
         if not data.url and not data.cabinet_id:
             if not data.group_id:

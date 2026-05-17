@@ -53,8 +53,9 @@ export const useLessonForm = (props?: UseLessonFormProps) => {
     resolver: zodResolver(LessonSchema),
     defaultValues: lesson
       ? {
-          type: 'GROUP',
+          type: lesson.group ? 'GROUP' : 'INDIVIDUAL',
           groupId: lesson.group?.id.toString() || '',
+          courseId: lesson.courseTeacherStudent?.courseTeacher.course.id.toString() || '',
           courseTeacherStudentId: lesson.courseTeacherStudent?.id.toString(),
           conductedById: lesson.conductedBy.id.toString(),
           url: lesson.url,

@@ -3,7 +3,7 @@ from typing import cast
 
 from sqlalchemy import Date, Select, delete, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import contains_eager, joinedload
 
 from classflow.application.repositories.lesson import LessonRepository
 from classflow.domain.entities import (
@@ -20,9 +20,11 @@ from classflow.infrastructure.db.repositories.base import create
 from classflow.infrastructure.db.tables import (
     attendance_table,
     course_teacher_students_table,
+    groups_table,
     lessons_table,
     organization_members_table,
     student_groups_table,
+    users_table,
 )
 
 
@@ -123,12 +125,43 @@ class LessonRepositoryImpl(LessonRepository):
     ) -> list[OrganizationMember]:
         stmt = (
             select(OrganizationMember, Attendance.status)
-            .options(joinedload(OrganizationMember.user))
+            .options(contains_eager(OrganizationMember.user))
+            .join(
+                users_table,
+                organization_members_table.c.user_id == users_table.c.id,
+            )
             .outerjoin(
                 attendance_table,
-                organization_members_table.c.id
-                == attendance_table.c.student_id,
+                (
+                    organization_members_table.c.id
+                    == attendance_table.c.student_id
+                )
+                & (attendance_table.c.lesson_id == lesson_id),
             )
+            .outerjoin(
+                course_teacher_students_table,
+                organization_members_table.c.id
+                == course_teacher_students_table.c.student_id,
+            )
+            .outerjoin(
+                student_groups_table,
+                organization_members_table.c.id
+                == student_groups_table.c.student_id,
+            )
+            .outerjoin(
+                groups_table,
+                student_groups_table.c.group_id == groups_table.c.id,
+            )
+            .join(
+                lessons_table,
+                (lessons_table.c.group_id == groups_table.c.id)
+                | (
+                    lessons_table.c.course_teacher_student_id
+                    == course_teacher_students_table.c.id
+                ),
+            )
+            .where(lessons_table.c.id == lesson_id)
+            .distinct()
         )
         rows = await self.session.execute(stmt)
         result = []

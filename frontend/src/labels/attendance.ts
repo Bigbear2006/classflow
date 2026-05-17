@@ -25,6 +25,10 @@ export const getRateColor = (rate: number) => {
   return rate >= 90 ? 'text-emerald-600' : rate >= 75 ? 'text-amber-600' : 'text-red-600';
 };
 
+export const getRateBgColor = (rate: number) => {
+  return rate >= 90 ? 'bg-emerald-600' : rate >= 75 ? 'bg-amber-600' : 'bg-red-600';
+};
+
 export const getRateStyles = (rate: number) => {
   return rate >= 90
     ? 'bg-emerald-50 text-emerald-600'

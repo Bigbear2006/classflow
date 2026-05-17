@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from classflow.application.repositories.address import AddressRepository
 from classflow.domain.entities import Address
 from classflow.domain.exceptions import CannotDeleteEntityError
-from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import addresses_table
 
 
@@ -27,7 +27,7 @@ class AddressRepositoryImpl(AddressRepository):
             .returning(Address)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(self) -> list[Address]:
         rows = await self.session.scalars(

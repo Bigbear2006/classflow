@@ -1,7 +1,7 @@
 import type { LessonDetail } from './lesson.ts';
 import type { OrganizationMemberDetail } from './organization.ts';
 import type { Group } from './group.ts';
-import type { CourseDetail } from './course.ts';
+import type { Course } from './course.ts';
 
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'EXCUSED';
 
@@ -35,7 +35,7 @@ export interface WeekAttendanceStats {
 }
 
 export interface CourseAttendanceStats {
-  course: CourseDetail;
+  course: Course;
   group: Group | null;
   teacher: OrganizationMemberDetail | null;
   conductedLessons: number;
