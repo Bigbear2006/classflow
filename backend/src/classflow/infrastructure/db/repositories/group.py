@@ -17,7 +17,7 @@ from classflow.domain.entities import (
     User,
 )
 from classflow.domain.enums import CourseTeacherStatus, StudentStatus
-from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     course_teachers_table,
     courses_table,
@@ -57,12 +57,12 @@ class GroupRepositoryImpl(GroupRepository):
             .returning(Group)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_by_id(self, id: int) -> Group:
         stmt = set_group_joins(select(Group)).where(groups_table.c.id == id)
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(self, teacher_id: int | None = None) -> list[Group]:
         stmt = set_group_joins(select(Group))

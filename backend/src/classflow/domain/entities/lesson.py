@@ -11,6 +11,7 @@ from classflow.domain.exceptions import PermissionDeniedError, ValidationError
 @dataclass
 class Lesson:
     id: int = field(init=False)
+    topic: str
     organization_id: int = field(init=False)
     conducted_by_id: int
     conducted_by: OrganizationMember | None = field(init=False, default=None)

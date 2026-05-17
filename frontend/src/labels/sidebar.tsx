@@ -28,10 +28,35 @@ const myOrgs = {
   icon: <Building2 size={19} />,
 };
 
+const dashboard = {
+  label: 'Дашборд',
+  path: '/',
+  icon: <LayoutDashboard size={18} />,
+  end: true,
+};
+
+const groups = {
+  label: 'Группы',
+  path: '/groups',
+  icon: <GraduationCap size={18} />,
+};
+
 const individualStudents = {
   label: 'Индивидуальные',
   path: '/individuals',
   icon: <UserIcon size={18} />,
+};
+
+const schedule = {
+  label: 'Расписание',
+  path: '/schedule',
+  icon: <Calendar size={18} />,
+};
+
+const payments = {
+  label: 'Оплаты',
+  path: '/payments',
+  icon: <DollarSign size={18} />,
 };
 
 export const getNavItems = (role?: string, user?: User): NavItem[] => {
@@ -52,12 +77,7 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
 
   if (role === 'OWNER' || role === 'ADMIN')
     return [
-      {
-        label: 'Дашборд',
-        path: '/',
-        icon: <LayoutDashboard size={18} />,
-        end: true,
-      },
+      dashboard,
       { label: 'Участники', path: '/members', icon: <Users size={18} /> },
       {
         label: 'Предметы',
@@ -66,75 +86,30 @@ export const getNavItems = (role?: string, user?: User): NavItem[] => {
       },
       { label: 'Курсы', path: '/courses', icon: <BookOpen size={18} /> },
       { label: 'Адреса', path: '/addresses', icon: <MapPin size={18} /> },
-      {
-        label: 'Группы',
-        path: '/groups',
-        icon: <GraduationCap size={18} />,
-      },
+      groups,
       individualStudents,
-      {
-        label: 'Расписание',
-        path: '/schedule',
-        icon: <Calendar size={18} />,
-      },
-      {
-        label: 'Оплаты',
-        path: '/payments',
-        icon: <DollarSign size={18} />,
-      },
+      schedule,
+      payments,
       myOrgs,
     ];
 
-  if (role === 'TEACHER')
-    return [
-      {
-        label: 'Дашборд',
-        path: '/',
-        icon: <LayoutDashboard size={18} />,
-        end: true,
-      },
-      {
-        label: 'Группы',
-        path: '/groups',
-        icon: <GraduationCap size={18} />,
-      },
-      individualStudents,
-      {
-        label: 'Расписание',
-        path: '/schedule',
-        icon: <Calendar size={18} />,
-      },
-      myOrgs,
-    ];
+  if (role === 'TEACHER') return [dashboard, groups, individualStudents, schedule, myOrgs];
 
   if (role === 'STUDENT')
     return [
-      {
-        label: 'Дашборд',
-        path: '/',
-        icon: <LayoutDashboard size={18} />,
-        end: true,
-      },
+      dashboard,
       {
         label: 'Каталог курсов',
         path: '/courses',
         icon: <BookOpen size={18} />,
       },
+      schedule,
       {
-        label: 'Расписание',
-        path: '/schedule',
-        icon: <Calendar size={18} />,
-      },
-      {
-        label: 'Прогресс',
+        label: 'Посещаемость',
         path: '/attendance',
         icon: <TrendingUp size={18} />,
       },
-      {
-        label: 'Оплаты',
-        path: '/payments',
-        icon: <DollarSign size={18} />,
-      },
+      payments,
       myOrgs,
     ];
 

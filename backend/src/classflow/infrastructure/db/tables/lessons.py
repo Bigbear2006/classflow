@@ -6,6 +6,7 @@ from sqlalchemy import (
     String,
     Table,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.orm import relationship
 
@@ -29,6 +30,7 @@ lessons_table = Table(
     metadata,
     Column('id', BIGINT, primary_key=True),
     organization_id_fk(),
+    Column('topic', String(100), server_default=text("''"), nullable=False),
     Column(
         'group_id',
         BIGINT,

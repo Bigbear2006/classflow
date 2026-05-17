@@ -33,7 +33,7 @@ async def create_cabinet_router(
 @cabinet_router.get('/')
 async def get_all_cabinets_router(
     get_all_cabinets: FromDishka[GetAllCabinets],
-) -> list[CabinetResponse]:
+) -> list[CabinetDetailResponse]:
     cabinets = await get_all_cabinets()
     return [
         CabinetDetailResponse.model_validate(cabinet) for cabinet in cabinets

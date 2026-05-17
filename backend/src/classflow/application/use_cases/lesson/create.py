@@ -11,6 +11,7 @@ from classflow.domain.exceptions import DefaultCabinetIsNotSetError
 
 @dataclass
 class CreateLessonDTO:
+    topic: str
     conducted_by_id: int
     start_date: datetime
     end_date: datetime

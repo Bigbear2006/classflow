@@ -7,6 +7,7 @@ import { optionalInt, requiredInt } from './base.ts';
 const LessonSchema = z
   .object({
     type: z.string(),
+    topic: z.string(),
     groupId: optionalInt(),
     courseId: optionalInt(),
     courseTeacherStudentId: optionalInt(),

@@ -17,7 +17,7 @@ from classflow.application.use_cases.lesson.get_students import (
 )
 from classflow.application.use_cases.lesson.update import (
     UpdateLesson,
-    UpdateLessonDto,
+    UpdateLessonDTO,
 )
 
 __all__ = (
@@ -31,5 +31,5 @@ __all__ = (
     'GetStudentsWithAttendance',
     'GetStudentsWithAttendanceDTO',
     'UpdateLesson',
-    'UpdateLessonDto',
+    'UpdateLessonDTO',
 )

@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import cast
 
 from sqlalchemy import Date, func, or_, select, update
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager
 
@@ -15,8 +15,8 @@ from classflow.domain.entities import (
     TeacherStats,
 )
 from classflow.domain.enums import CourseTeacherStatus, StudentStatus, UserRole
-from classflow.domain.exceptions import AlreadyExistsError, NotFoundError
-from classflow.infrastructure.db.repositories.base import create
+from classflow.domain.exceptions import AlreadyExistsError
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     course_teachers_table,
@@ -61,7 +61,7 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
             .returning(OrganizationMember)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get(
         self,
@@ -73,10 +73,7 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
             organization_members_table.c.user_id == user_id,
         )
         rows = await self.session.execute(stmt)
-        try:
-            return rows.scalar_one()
-        except NoResultFound as e:
-            raise NotFoundError() from e
+        return get_one(rows)
 
     async def get_organization_members(
         self,

@@ -9,11 +9,11 @@ export type LessonStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
 
 interface BaseLesson {
   id: number;
+  topic: string;
   startDate: Date;
   endDate: Date;
   url?: string;
   createdAt: Date;
-  // status: LessonStatus;
   // TODO: add
   paymentId?: number;
 }

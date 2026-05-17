@@ -9,6 +9,7 @@ export interface GetLessonsParams {
 }
 
 export interface LessonData {
+  topic: string;
   conducted_by_id: number;
   start_date: string;
   end_date: string;
@@ -20,6 +21,7 @@ export interface LessonData {
 
 interface BaseLessonResponse {
   id: number;
+  topic: string;
   start_date: string;
   end_date: string;
   url?: string;

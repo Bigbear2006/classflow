@@ -9,7 +9,9 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from classflow.domain.entities import (
-    Attendance, Lesson, OrganizationMember,
+    Attendance,
+    Lesson,
+    OrganizationMember,
 )
 from classflow.domain.enums import AttendanceStatus
 from classflow.infrastructure.db.tables.base import (
@@ -49,8 +51,11 @@ attendance_table = Table(
     UniqueConstraint('lesson_id', 'student_id'),
 )
 
-mapper_registry.map_imperatively(Attendance, attendance_table,
-                                 properties={
-                                     'lesson': relationship(Lesson),
-                                     'student': relationship(OrganizationMember),
-                                 })
+mapper_registry.map_imperatively(
+    Attendance,
+    attendance_table,
+    properties={
+        'lesson': relationship(Lesson),
+        'student': relationship(OrganizationMember),
+    },
+)

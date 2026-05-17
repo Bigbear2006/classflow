@@ -16,6 +16,7 @@ from classflow.presentation.api.routers.organization.models import (
 
 
 class UpdateLessonRequest(BaseModel):
+    topic: str
     conducted_by_id: int
     start_date: datetime
     end_date: datetime

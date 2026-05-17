@@ -25,12 +25,13 @@ export const MobileLessonCard = ({ lesson, openEdit, onDeleteLesson }: MobileLes
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm text-slate-900 truncate">Урок #{lesson.id}</div>
-        {/*TODO: add subtitle*/}
-        {/*{sub && <div className="text-xs text-slate-400">{sub}</div>}*/}
+        <div className="font-medium text-sm text-slate-900 truncate">{lesson.topic}</div>
+        <div className="text-xs text-slate-400">
+          {lesson.group?.name || lesson.courseTeacherStudent?.courseTeacher.teacher.user.fullname}
+        </div>
         <div className="text-xs text-slate-500 mt-0.5">
           {displayTime(lesson.startDate)} — {displayTime(lesson.endDate)}
-          {` · каб. ${lesson.cabinet?.number}`}
+          {lesson.cabinet ? ` · каб. ${lesson.cabinet.number}` : ` · ${lesson.url}`}
         </div>
         <span
           className={`inline-block mt-1.5 px-2 py-0.5 rounded-lg text-xs font-medium ${cfg.color}`}

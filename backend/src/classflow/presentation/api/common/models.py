@@ -18,6 +18,7 @@ class AddressResponse(BaseModel):
 
 class BaseLessonResponse(BaseModel):
     id: int
+    topic: str
     start_date: datetime
     end_date: datetime
     url: str | None = None

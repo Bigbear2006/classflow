@@ -66,3 +66,11 @@ class DefaultCabinetIsNotSetError(ValidationError):
         super().__init__(
             'Field cabinet_id is required because default cabinet is not set',
         )
+
+
+class GroupStudentsLimitExceededError(ApplicationError):
+    def __init__(self, **context: Any) -> None:
+        super().__init__(
+            'Group students limit exceeded',
+            **context,
+        )

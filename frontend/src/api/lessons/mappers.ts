@@ -7,6 +7,7 @@ import { mapOrgMemberDetail } from '../organizations/mappers.ts';
 export const mapLesson = (data: LessonResponse): Lesson => {
   return {
     id: data.id,
+    topic: data.topic,
     startDate: new Date(data.start_date),
     endDate: new Date(data.end_date),
     url: data.url,
@@ -21,6 +22,7 @@ export const mapLesson = (data: LessonResponse): Lesson => {
 export const mapLessonDetail = (data: LessonDetailResponse): LessonDetail => {
   return {
     id: data.id,
+    topic: data.topic,
     startDate: new Date(data.start_date),
     endDate: new Date(data.end_date),
     url: data.url,

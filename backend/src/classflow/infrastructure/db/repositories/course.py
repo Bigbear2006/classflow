@@ -21,7 +21,7 @@ from classflow.domain.enums import (
     CourseType,
     LessonType,
 )
-from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.repositories.group import set_group_joins
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
@@ -72,7 +72,7 @@ class CourseRepositoryImpl(CourseRepository):
             .returning(Course)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(
         self,

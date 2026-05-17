@@ -4,12 +4,12 @@ import { getRateColor } from '../../../labels/attendance.ts';
 export const AttendanceStatsChart = () => {
   let stats: AttendanceStats = {
     total: 0,
-    rate: 0,
     present: 0,
     absent: 0,
     excused: 0,
   };
-  const rateColor = getRateColor(stats.rate);
+  const rate = stats.total !== 0 ? (stats.present / stats.total) * 100 : 0;
+  const rateColor = getRateColor(rate);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6">
@@ -26,13 +26,13 @@ export const AttendanceStatsChart = () => {
                 fill="none"
                 stroke="#4F46E5"
                 strokeWidth="3.5"
-                strokeDasharray={`${stats.rate} ${100 - stats.rate}`}
+                strokeDasharray={`${rate} ${100 - rate}`}
                 strokeLinecap="round"
               />
             )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className={`text-2xl font-bold ${rateColor}`}>{stats.rate}%</div>
+            <div className={`text-2xl font-bold ${rateColor}`}>{rate}%</div>
             <div className="text-xs text-slate-400">Посещ.</div>
           </div>
         </div>

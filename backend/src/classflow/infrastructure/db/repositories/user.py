@@ -5,7 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from classflow.application.repositories.user import UserRepository
 from classflow.domain.entities import User
 from classflow.domain.exceptions import AlreadyExistsError
-from classflow.infrastructure.db.repositories.base import create, exclude_none
+from classflow.infrastructure.db.repositories.base import (
+    create,
+    exclude_none,
+    get_one,
+)
 from classflow.infrastructure.db.tables import users_table
 
 
@@ -58,6 +62,6 @@ class UserRepositoryImpl(UserRepository):
         )
         rows = await self.session.execute(stmt)
         try:
-            return rows.scalar_one()
+            return get_one(rows)
         except IntegrityError as e:
             raise AlreadyExistsError('User already exists') from e

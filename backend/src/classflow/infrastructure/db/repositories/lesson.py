@@ -39,6 +39,7 @@ class LessonRepositoryImpl(LessonRepository):
         self,
         id: int,
         *,
+        topic: str,
         conducted_by_id: int,
         start_date: datetime,
         end_date: datetime,
@@ -48,6 +49,7 @@ class LessonRepositoryImpl(LessonRepository):
         course_teacher_student_id: int | None = None,
     ) -> Lesson:
         data = {
+            'topic': topic,
             'conducted_by_id': conducted_by_id,
             'start_date': start_date,
             'end_date': end_date,
@@ -63,7 +65,7 @@ class LessonRepositoryImpl(LessonRepository):
             .returning(Lesson)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get(self, id: int) -> Lesson:
         stmt = set_lessons_joins(

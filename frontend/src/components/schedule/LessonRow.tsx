@@ -17,7 +17,7 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
   return (
     <tr key={lesson.id} className="hover:bg-slate-50">
       <td className="px-5 py-3">
-        <div className="font-medium text-sm text-slate-900">Урок #{lesson.id}</div>
+        <div className="font-medium text-sm text-slate-900">{lesson.topic}</div>
         <div className="text-xs text-slate-400">{lesson.conductedBy.user.fullname}</div>
         {lesson.group && (
           <div className="text-xs text-slate-400">
@@ -32,9 +32,7 @@ export const LessonRow = ({ lesson, openEdit, onDeleteLesson }: LessonRowProps) 
         </div>
       </td>
       <td className="px-5 py-3 text-sm text-slate-600">{lesson.cabinet?.number || lesson.url}</td>
-      {/*<td className="px-5 py-3 text-sm text-slate-600 hidden lg:table-cell">*/}
-      {/*  {lesson.topic || '—'}*/}
-      {/*</td>*/}
+      <td className="px-5 py-3 text-sm text-slate-600 hidden lg:table-cell">{lesson.topic}</td>
       <td className="px-5 py-3">
         <span className={`px-2 py-1 rounded-lg text-xs font-medium ${cfg.color}`}>
           {cfg.label}

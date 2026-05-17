@@ -15,7 +15,7 @@ from classflow.application.use_cases.lesson import (
     GetStudentsWithAttendance,
     GetStudentsWithAttendanceDTO,
     UpdateLesson,
-    UpdateLessonDto,
+    UpdateLessonDTO,
 )
 from classflow.presentation.api.common.models import LessonResponse
 from classflow.presentation.api.routers.lesson.models import (
@@ -48,7 +48,7 @@ async def update_lesson_router(
     data: UpdateLessonRequest,
     update_lesson: FromDishka[UpdateLesson],
 ) -> LessonResponse:
-    dto = UpdateLessonDto(id=lesson_id, **data.model_dump())
+    dto = UpdateLessonDTO(id=lesson_id, **data.model_dump())
     lesson = await update_lesson(dto)
     return LessonResponse.model_validate(lesson)
 

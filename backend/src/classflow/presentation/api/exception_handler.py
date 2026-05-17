@@ -7,6 +7,7 @@ from classflow.domain.exceptions import (
     AlreadyExistsError,
     ApplicationError,
     CannotDeleteEntityError,
+    GroupStudentsLimitExceededError,
     InvalidCredentialsError,
     InvalidVerificationCodeError,
     NotAuthenticatedError,
@@ -32,6 +33,7 @@ CODES_MAPPING = {
     OrganizationNotResolvedError: 'ORGANIZATION_NOT_RESOLVED',
     PermissionDeniedError: 'PERMISSION_DENIED',
     ValidationError: 'BAD_REQUEST',
+    GroupStudentsLimitExceededError: 'BAD_REQUEST',
 }
 
 STATUSES_MAPPING = {
@@ -46,6 +48,7 @@ STATUSES_MAPPING = {
     OrganizationNotResolvedError: 400,
     PermissionDeniedError: 403,
     ValidationError: 422,
+    GroupStudentsLimitExceededError: 409,
 }
 
 
@@ -54,7 +57,7 @@ async def application_exception_handler(
     exc: ApplicationError,
 ) -> JSONResponse:
     exc_type = type(exc)
-    if isinstance(exc_type, ValidationError):
+    if issubclass(exc_type, ValidationError):
         exc_type = ValidationError
 
     code = CODES_MAPPING.get(exc_type, 'INTERNAL_SERVER_ERROR')

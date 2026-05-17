@@ -12,6 +12,7 @@ class LessonRepository(Protocol):
         self,
         id: int,
         *,
+        topic: str,
         conducted_by_id: int,
         start_date: datetime,
         end_date: datetime,

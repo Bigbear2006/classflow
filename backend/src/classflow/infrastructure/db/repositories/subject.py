@@ -5,7 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.subject import SubjectRepository
 from classflow.domain.entities import Subject
-from classflow.infrastructure.db.repositories.base import create, exclude_none
+from classflow.infrastructure.db.repositories.base import (
+    create,
+    exclude_none,
+    get_one,
+)
 from classflow.infrastructure.db.tables import courses_table, subjects_table
 
 
@@ -32,7 +36,7 @@ class SubjectRepositoryImpl(SubjectRepository):
             .returning(Subject)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(self) -> list[Subject]:
         stmt = select(Subject).order_by(subjects_table.c.name)
@@ -55,7 +59,7 @@ class SubjectRepositoryImpl(SubjectRepository):
     async def get_by_id(self, id: int) -> Subject:
         stmt = select(Subject).where(subjects_table.c.id == id)
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def delete(self, id: int) -> None:
         stmt = delete(Subject).where(subjects_table.c.id == id)

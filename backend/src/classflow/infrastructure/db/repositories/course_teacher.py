@@ -9,7 +9,7 @@ from classflow.application.repositories.course_teacher import (
 )
 from classflow.domain.entities import CourseTeacher, User
 from classflow.domain.enums import CourseTeacherStatus
-from classflow.infrastructure.db.repositories.base import create
+from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     course_teachers_table,
@@ -52,7 +52,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
             .returning(CourseTeacher)
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get(self, course_id: int, teacher_id: int) -> CourseTeacher:
         stmt = select(CourseTeacher).where(
@@ -60,7 +60,7 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
             course_teachers_table.c.teacher_id == teacher_id,
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_all(self) -> list[CourseTeacher]:
         stmt = select(CourseTeacher).where(

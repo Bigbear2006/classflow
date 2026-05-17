@@ -1,4 +1,13 @@
-import { Description, FieldError, Input, Label, TextArea, TextField } from '@heroui/react';
+import {
+  Description,
+  FieldError,
+  Input,
+  Label,
+  ListBox,
+  Select,
+  TextArea,
+  TextField,
+} from '@heroui/react';
 import { type LucideIcon } from 'lucide-react';
 import { type Control, Controller, type FieldPath, type FieldValues } from 'react-hook-form';
 import type { ReactNode } from 'react';
@@ -18,6 +27,7 @@ type CustomTextFieldProps<
   required?: boolean;
   type?: React.HTMLInputTypeAttribute;
   isTextArea?: boolean;
+  selectOptions?: { value: string | number; label: string }[];
 };
 
 export const FormField = <
@@ -35,6 +45,7 @@ export const FormField = <
   required,
   type = 'text',
   isTextArea = false,
+  selectOptions,
 }: CustomTextFieldProps<TFieldValues, TContext, TTransformedValues>) => {
   return (
     <Controller
@@ -50,14 +61,46 @@ export const FormField = <
               />
             )}
 
-            {isTextArea ? (
+            {isTextArea && (
               <TextArea
                 {...field}
                 placeholder={placeholder}
                 rows={5}
                 className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
-            ) : (
+            )}
+
+            {selectOptions && (
+              <Select
+                {...field}
+                value={field.value || ''}
+                aria-label={label}
+                placeholder={placeholder}
+              >
+                <Select.Trigger className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {selectOptions.map(elem => (
+                      <ListBox.Item
+                        id={elem.value.toString()}
+                        key={elem.value}
+                        textValue={
+                          typeof elem.value == 'string' ? elem.value : elem.value.toString()
+                        }
+                      >
+                        {elem.label}
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+            )}
+
+            {!isTextArea && !selectOptions && (
               <Input
                 {...field}
                 type={type}

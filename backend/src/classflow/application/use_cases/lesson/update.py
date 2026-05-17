@@ -8,8 +8,9 @@ from classflow.domain.entities import Lesson
 
 
 @dataclass
-class UpdateLessonDto:
+class UpdateLessonDTO:
     id: int
+    topic: str
     conducted_by_id: int
     start_date: datetime
     end_date: datetime
@@ -30,7 +31,7 @@ class UpdateLesson:
         self.permission_service = permission_service
         self.uow = uow
 
-    async def __call__(self, data: UpdateLessonDto) -> Lesson:
+    async def __call__(self, data: UpdateLessonDTO) -> Lesson:
         await self.permission_service.ensure_admin_or_more()
         async with self.uow:
             return await self.lesson_repository.update(**asdict(data))

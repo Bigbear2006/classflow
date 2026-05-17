@@ -98,7 +98,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
             .distinct()
         )
         rows = await self.session.execute(stmt)
-        return rows.scalar_one()
+        return get_one(rows)
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
         stmt = (

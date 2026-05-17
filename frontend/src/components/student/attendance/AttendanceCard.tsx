@@ -1,6 +1,6 @@
 import { Check, Minus, X } from 'lucide-react';
 import type { AttendanceDetail } from '../../../entities';
-import { displayTime} from '../../../labels/date.ts';
+import { displayTime } from '../../../labels/date.ts';
 import { displayAttendanceStatus, getAttendanceStatusStyles } from '../../../labels/attendance.ts';
 
 interface AttendanceCardProps {
@@ -21,9 +21,7 @@ export const AttendanceCard = ({ attendance }: AttendanceCardProps) => {
       <div className="flex-1 min-w-0">
         {/*// TODO: add topic*/}
         <div className="text-sm font-medium text-slate-900">{'Занятие'}</div>
-        <div className="text-xs text-slate-400">
-          {displayTime(attendance.lesson.startDate)}
-        </div>
+        <div className="text-xs text-slate-400">{displayTime(attendance.lesson.startDate)}</div>
       </div>
       {attendance.status ? (
         <span

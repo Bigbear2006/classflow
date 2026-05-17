@@ -1,4 +1,4 @@
-from sqlalchemy import update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from classflow.application.repositories.student_group import (
@@ -16,6 +16,18 @@ class StudentGroupRepositoryImpl(StudentGroupRepository):
 
     async def create(self, student_group: StudentGroup) -> StudentGroup:
         return await create(self.session, student_group)
+
+    async def get_students_count(self, group_id: int) -> int:
+        stmt = (
+            select(func.count('*'))
+            .select_from(student_groups_table)
+            .where(
+                student_groups_table.c.group_id == group_id,
+                student_groups_table.c.status == StudentStatus.ACTIVE,
+            )
+            .with_for_update()
+        )
+        return await self.session.scalar(stmt)
 
     async def update(
         self,

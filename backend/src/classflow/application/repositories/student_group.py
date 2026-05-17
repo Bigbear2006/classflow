@@ -8,6 +8,9 @@ class StudentGroupRepository(Protocol):
     async def create(self, student_group: StudentGroup) -> StudentGroup:
         pass
 
+    async def get_students_count(self, group_id: int) -> int:
+        pass
+
     async def update(
         self,
         student_id: int,
