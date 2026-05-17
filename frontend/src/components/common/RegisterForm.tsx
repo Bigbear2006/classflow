@@ -9,6 +9,7 @@ export const RegisterForm = () => {
   const { control, setError, handleSubmit } = useRegistrationForm();
   const [_, setSearchParams] = useSearchParams(window.location.search);
   const [showPassword, setShowPassword] = useState(false);
+  const [agreedToPolitics, setAgreedToPolitics] = useState(false);
   const mutation = useRegisterUserMutation({ setSearchParams, setError });
 
   return (
@@ -65,9 +66,23 @@ export const RegisterForm = () => {
           type={showPassword ? 'text' : 'password'}
           required
         />
+        <div className="flex items-center gap-3 text-left text-sm text-slate-500 mt-2">
+          <input
+            type="checkbox"
+            className="w-7 h-7"
+            checked={agreedToPolitics}
+            onChange={e => setAgreedToPolitics(e.target.checked)}
+          />
+          <p>
+            Согласен с{' '}
+            <Link to="/politics" className="text-indigo-600 hover:underline font-medium">
+              пользовательским соглашением и политикой конфиденциальности
+            </Link>
+          </p>
+        </div>
         <button
           type="submit"
-          disabled={mutation.isPending}
+          disabled={mutation.isPending || !agreedToPolitics}
           className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition-colors mt-2"
         >
           {mutation.isPending ? 'Регистрация...' : 'Зарегистрироваться'}

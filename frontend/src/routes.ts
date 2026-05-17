@@ -19,6 +19,7 @@ import { createLoader, organizationMembersLoader } from './loaders.ts';
 import { FeedbackPage } from './pages/FeedbackPage.tsx';
 import { AttendancePage } from './pages/student/AttendancePage.tsx';
 import { IndividualCoursesPage } from './pages/IndividualCoursesPage.tsx';
+import { PoliticsPage } from './pages/PoliticsPage.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -73,5 +74,9 @@ export const router = createBrowserRouter([
       { path: 'profile', Component: ProfilePage },
       { path: 'notifications', Component: NotificationsPage },
     ],
+  },
+  {
+    path: '/politics',
+    Component: PoliticsPage,
   },
 ]);

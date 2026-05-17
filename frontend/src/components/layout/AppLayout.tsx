@@ -5,7 +5,7 @@ import { useAppContext } from '../../context.tsx';
 import { Sidebar } from '../common/Sidebar.tsx';
 import { roleConfig } from '../../labels/role.tsx';
 
-export function AppLayout() {
+export const AppLayout = () => {
   const { user, member } = useAppContext();
 
   const navigate = useNavigate();
@@ -68,4 +68,4 @@ export function AppLayout() {
       </div>
     </div>
   );
-}
+};

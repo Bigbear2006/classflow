@@ -8,7 +8,7 @@ import { MyOrganizationCard } from '../components/org/MyOrganizationCard.tsx';
 import { useMyOrganizations } from '../hooks/queries/organization.ts';
 import type { FormAction, MyOrganization } from '../entities';
 
-export function OrganizationsPage() {
+export const OrganizationsPage = () => {
   const { user } = useAppContext();
 
   const [action, setAction] = useState<FormAction | null>(null);
@@ -100,4 +100,4 @@ export function OrganizationsPage() {
       </div>
     </div>
   );
-}
+};
