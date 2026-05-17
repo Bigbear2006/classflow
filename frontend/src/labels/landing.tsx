@@ -1,4 +1,4 @@
-import { Star, TrendingUp, Users, Zap } from 'lucide-react';
+import { TrendingUp, Users, Zap } from 'lucide-react';
 
 export const navLinkOptions = [
   {
@@ -21,12 +21,5 @@ export const navLinkOptions = [
     icon: <TrendingUp size={18} />,
     color: 'text-emerald-600',
     bg: 'bg-emerald-50',
-  },
-  {
-    id: 'reviews',
-    label: 'Отзывы',
-    icon: <Star size={18} />,
-    color: 'text-amber-600',
-    bg: 'bg-amber-50',
   },
 ];
