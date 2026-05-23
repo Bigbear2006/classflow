@@ -14,7 +14,7 @@ from classflow.domain.entities import (
     Group,
     OrganizationMember,
 )
-from classflow.domain.enums import AttendanceStatus
+from classflow.domain.enums import AttendanceStatus, StudentStatus
 from classflow.infrastructure.db.repositories.lesson import set_lessons_joins
 from classflow.infrastructure.db.tables import (
     attendance_table,
@@ -169,8 +169,17 @@ class AttendanceRepositoryImpl(AttendanceRepository):
                 contains_eager(OrganizationMember.user),
             )
             .where(
-                (student_groups_table.c.student_id == student_id)
-                | (course_teacher_students_table.c.student_id == student_id),
+                (
+                    (student_groups_table.c.student_id == student_id)
+                    & (student_groups_table.c.status == StudentStatus.ACTIVE)
+                )
+                | (
+                    (course_teacher_students_table.c.student_id == student_id)
+                    & (
+                        course_teacher_students_table.c.status
+                        == StudentStatus.ACTIVE
+                    )
+                ),
             )
             # .group_by(
             #     courses_table.c.id,
@@ -179,6 +188,7 @@ class AttendanceRepositoryImpl(AttendanceRepository):
             #     subjects_table.c.id,
             #     users_table.c.id,
             # )
+            .distinct()
         )
 
         rows = await self.session.execute(stmt)

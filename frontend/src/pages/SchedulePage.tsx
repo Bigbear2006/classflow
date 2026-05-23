@@ -25,7 +25,7 @@ import { useAppContext } from '../context.tsx';
 import { useConfirm } from '../hooks/useConfirm.ts';
 
 export const SchedulePage = () => {
-  const { isTeacherOrMore } = useAppContext();
+  const { isAdminOrOwner } = useAppContext();
 
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStartDay());
   const [selectedDayIdx, setSelectedDayIdx] = useState(getTodayWeekDay());
@@ -93,7 +93,7 @@ export const SchedulePage = () => {
           <h1 className="text-slate-900 text-xl sm:text-2xl font-semibold">Расписание</h1>
           <p className="text-slate-500 text-sm mt-0.5 hidden sm:block">Управление занятиями</p>
         </div>
-        {isTeacherOrMore && (
+        {isAdminOrOwner && (
           <button
             onClick={() => setAction('CREATE')}
             className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-colors shadow-sm flex-shrink-0"

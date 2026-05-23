@@ -16,6 +16,7 @@ from classflow.domain.entities import (
     Lesson,
     OrganizationMember,
 )
+from classflow.domain.enums import StudentStatus
 from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     attendance_table,
@@ -121,12 +122,19 @@ class LessonRepositoryImpl(LessonRepository):
             set_lessons_joins(select(Lesson))
             .outerjoin(
                 student_groups_table,
-                lessons_table.c.group_id == student_groups_table.c.group_id,
+                (lessons_table.c.group_id == student_groups_table.c.group_id)
+                & (student_groups_table.c.status == StudentStatus.ACTIVE),
             )
             .outerjoin(
                 course_teacher_students_table,
-                lessons_table.c.course_teacher_student_id
-                == course_teacher_students_table.c.id,
+                (
+                    lessons_table.c.course_teacher_student_id
+                    == course_teacher_students_table.c.id
+                )
+                & (
+                    course_teacher_students_table.c.status
+                    == StudentStatus.ACTIVE
+                ),
             )
             .where(
                 or_(
@@ -174,8 +182,14 @@ class LessonRepositoryImpl(LessonRepository):
             )
             .outerjoin(
                 course_teacher_students_table,
-                organization_members_table.c.id
-                == course_teacher_students_table.c.student_id,
+                (
+                    organization_members_table.c.id
+                    == course_teacher_students_table.c.student_id
+                )
+                & (
+                    course_teacher_students_table.c.status
+                    == StudentStatus.ACTIVE
+                ),
             )
             .outerjoin(
                 student_groups_table,
@@ -184,7 +198,8 @@ class LessonRepositoryImpl(LessonRepository):
             )
             .outerjoin(
                 groups_table,
-                student_groups_table.c.group_id == groups_table.c.id,
+                (student_groups_table.c.group_id == groups_table.c.id)
+                & (student_groups_table.c.status == StudentStatus.ACTIVE),
             )
             .join(
                 lessons_table,

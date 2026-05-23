@@ -17,7 +17,7 @@ interface GroupFormProps {
 export const GroupForm = ({ action, group, closeModal }: GroupFormProps) => {
   const { control, handleSubmit } = useGroupForm({ initialValues: group });
 
-  const { data: courses } = useCourses({ type: 'INDIVIDUAL' });
+  const { data: courses } = useCourses({ type: 'GROUP' });
   const { data: cabinets } = useCabinets();
   const mutation = useGroupMutation({
     action: action,

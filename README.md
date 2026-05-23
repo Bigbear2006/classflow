@@ -1,25 +1,32 @@
 # ClassFlow
 
-Сайт для управления учебным процессом дополнительного образования
+Supplementary education management system built with Clean Architecture.
 
-### Features:
-- JWT-аутентификация
-- Подтверждение email
-- Хранение файлов в S3
-- Доступ по ролям
+## Features:
+- Row-Level Security
+- JWT Authentication
+- Role-Based Access
+- Email Verification
+- S3 Storage
 
-## Запуск
+## Stack
+**Backend** - Python, FastAPI  
+**Frontend** - TypeScript, React  
+**Database** - PostgreSQL, Redis  
+**Infrastructure** - Docker, Nginx  
+**Observability** - Prometheus, Grafana
 
-### Клонируйте репозиторий
-```
+## Getting Started
+
+### 1. Clone the repository
+```shell
 git clone https://github.com/Bigbear2006/classflow.git
 ```
 
-### Создайте файл backend/.env
-```
+### 2. Create `backend/.env`
+```dotenv
 JWT_SECRET_KEY=
-# Используется для параметра domain в cookie
-# Для localhost оставьте пустым
+# leave empty when running on localhost
 DOMAIN=.example.com
 
 S3_BUCKET_NAME=
@@ -49,10 +56,11 @@ FROM_EMAIL=admin@example.com
 GF_SECURITY_ADMIN_PASSWORD=
 ```
 
-### Запустите
-```
-docker-compose up --build -d
-# или
+### 3. Run
+```shell
 make
+# or
+docker-compose up --build -d
 ```
-После этого сайт будет доступен по адресу http://localhost
+
+Open http://localhost in your browser

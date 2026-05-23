@@ -13,11 +13,16 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     OrganizationMember,
 )
-from classflow.domain.enums import CourseTeacherStatus, StudentStatus
+from classflow.domain.enums import (
+    CourseTeacherStatus,
+    CourseType,
+    StudentStatus,
+)
 from classflow.infrastructure.db.repositories.base import create, get_one
 from classflow.infrastructure.db.tables import (
     course_teacher_students_table,
     course_teachers_table,
+    courses_table,
 )
 
 
@@ -88,6 +93,9 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
                 joinedload(CourseTeacherStudent.lessons),
                 joinedload(CourseTeacherStudent.payments),
             )
+            .join(course_teachers_table)
+            .join(courses_table)
+            .where(courses_table.c.id == CourseType.INDIVIDUAL)
             .order_by(course_teacher_students_table.c.created_at.desc())
             .distinct()
         )

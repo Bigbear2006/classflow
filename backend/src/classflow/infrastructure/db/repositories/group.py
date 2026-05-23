@@ -153,6 +153,14 @@ class GroupRepositoryImpl(GroupRepository):
             group.total_paid = total_paid
             for student in group.students:
                 student.total_paid = sum([p.amount for p in student.payments])
+
+            if student_id:
+                group.students = [
+                    student
+                    for student in group.students
+                    if student.student_id == student_id
+                ]
+
             result.append(group)
         return result
 
