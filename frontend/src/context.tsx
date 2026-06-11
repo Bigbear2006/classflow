@@ -3,9 +3,9 @@ import type { Organization, OrganizationMember, User } from './entities';
 import { useCurrentInfo } from './hooks/useCurrentInfo.ts';
 
 interface AppContextType {
-  user?: User;
-  member?: OrganizationMember;
-  organization?: Organization;
+  user?: User | null;
+  member?: OrganizationMember | null;
+  organization?: Organization | null;
   isStudent: boolean;
   isTeacher: boolean;
   isAdminOrOwner: boolean;

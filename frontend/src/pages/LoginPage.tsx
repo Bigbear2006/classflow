@@ -1,7 +1,7 @@
 import { LoginForm } from '../components/common/LoginForm.tsx';
 import { ClassFlowBlock } from '../components/common/ClassFlowBlock.tsx';
 import { useAppContext } from '../context.tsx';
-import { Navigate } from 'react-router';
+import { Navigate } from '@tanstack/react-router';
 
 export const LoginPage = () => {
   const { user } = useAppContext();

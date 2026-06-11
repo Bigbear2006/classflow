@@ -6,7 +6,7 @@ import { UpdateOrgMemberForm } from './UpdateOrgMemberForm.tsx';
 
 interface MemberCardProps {
   currentUser: User;
-  currentMember?: OrganizationMember;
+  currentMember?: OrganizationMember | null;
   member: OrganizationMemberDetail;
 }
 

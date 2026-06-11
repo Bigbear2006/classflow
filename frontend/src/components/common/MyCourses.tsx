@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { BookOpen } from 'lucide-react';
 import { useCourses } from '../../hooks/queries/course.ts';
 
@@ -11,7 +11,7 @@ export const MyCourses = () => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-slate-900">Курсы организации</h2>
         <button
-          onClick={() => navigate('/courses')}
+          onClick={() => navigate({ to: '/courses' })}
           className="text-indigo-600 text-sm hover:underline"
         >
           Все →

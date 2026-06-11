@@ -1,5 +1,5 @@
 import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from '@tanstack/react-router';
 
 interface HeroProps {
   scrollTo: (id: string) => void;

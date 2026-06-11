@@ -1,5 +1,5 @@
 import { BookOpen, Calendar, DollarSign, UserCheck, UserPlus, Users } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useOrganizationStats } from '../../hooks/queries/organization.ts';
 
 export const OrganizationStatsBlock = () => {
@@ -56,7 +56,7 @@ export const OrganizationStatsBlock = () => {
       {stats.map(s => (
         <button
           key={s.label}
-          onClick={() => navigate(s.path)}
+          onClick={() => navigate({ to: s.path })}
           className="bg-white rounded-2xl border border-slate-200 p-4 text-left hover:shadow-md transition-shadow"
         >
           <div className={`w-9 h-9 rounded-xl ${s.color} flex items-center justify-center mb-3`}>

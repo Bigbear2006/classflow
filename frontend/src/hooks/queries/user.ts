@@ -1,16 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '../../api/users/requests.ts';
-import { queryClient } from '../../loaders.ts';
 
-export const useCurrentUserOptions = {
+export const useCurrentUserOptions = queryOptions({
   queryKey: ['user'],
   queryFn: getCurrentUser,
-};
+  staleTime: 10 * 1000,
+});
 
 export const useCurrentUser = () => {
-  return useQuery({
-    ...useCurrentUserOptions,
-    initialData: () => queryClient.getQueryData(useCurrentUserOptions.queryKey),
-    staleTime: 10 * 1000,
-  });
+  return useSuspenseQuery(useCurrentUserOptions);
 };

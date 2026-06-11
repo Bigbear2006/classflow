@@ -1,4 +1,4 @@
-import { axiosInstance } from '../base.ts';
+import { axiosInstance, handleError } from '../base.ts';
 import type { OrganizationStats, RoleCount } from '../../entities';
 import type {
   CreateOrganizationData,
@@ -35,7 +35,8 @@ export const getOrganizations = (params: GetOrganizationsParams) => {
 export const getCurrentOrganization = () => {
   return axiosInstance
     .get<OrganizationResponse>('organizations/current/')
-    .then(rsp => mapOrg(rsp.data));
+    .then(rsp => mapOrg(rsp.data))
+    .catch(handleError);
 };
 
 export const updateCurrentOrganization = (data: CreateOrganizationData) => {
@@ -51,7 +52,8 @@ export const getMyOrganizations = () => {
 export const getCurrentOrganizationMember = () => {
   return axiosInstance
     .get<OrganizationMemberResponse>('organizations/current/members/me/')
-    .then(rsp => mapOrgMember(rsp.data));
+    .then(rsp => mapOrgMember(rsp.data))
+    .catch(handleError);
 };
 
 export const getOrganizationMembers = (params?: GetOrganizationMembersParams) => {

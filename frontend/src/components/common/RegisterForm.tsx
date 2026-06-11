@@ -1,5 +1,5 @@
 import { Mail, Lock, Eye, EyeOff, User, Phone } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router';
+import { useNavigate, Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useRegistrationForm } from '../../hooks/forms/register.ts';
 import { useRegisterUserMutation } from '../../hooks/mutations/user.ts';
@@ -7,10 +7,10 @@ import { FormField } from './FormField.tsx';
 
 export const RegisterForm = () => {
   const { control, setError, handleSubmit } = useRegistrationForm();
-  const [_, setSearchParams] = useSearchParams(window.location.search);
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToPolitics, setAgreedToPolitics] = useState(false);
-  const mutation = useRegisterUserMutation({ setSearchParams, setError });
+  const navigate = useNavigate();
+  const mutation = useRegisterUserMutation({ navigate, setError });
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-8">

@@ -1,5 +1,5 @@
 import { School, Send } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from '@tanstack/react-router';
 
 const LINKS = [
   ['features', 'Возможности'],

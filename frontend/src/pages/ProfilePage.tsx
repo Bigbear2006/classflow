@@ -1,5 +1,5 @@
 import { Building2, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { EditUserForm } from '../components/profile/EditUserForm.tsx';
 import { ChangeUserPassword } from '../components/profile/ChangeUserPassword.tsx';
 import { roleColors, roleLabels } from '../labels/role.tsx';

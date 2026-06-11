@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useNavigate } from '@tanstack/react-router';
 import { Menu, ChevronDown } from 'lucide-react';
 import { useAppContext } from '../../context.tsx';
 import { Sidebar } from '../common/Sidebar.tsx';
@@ -41,7 +41,7 @@ export const AppLayout = () => {
           {user && (
             <>
               <button
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate({ to: '/profile' })}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 {user.avatar ? (

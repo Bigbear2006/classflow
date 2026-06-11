@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from '@tanstack/react-router';
 import { School } from 'lucide-react';
 
 export const ClassFlowBlock = () => {

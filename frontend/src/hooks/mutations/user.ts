@@ -9,28 +9,28 @@ import {
 } from '../../api/users/requests.ts';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
-import type { NavigateFunction, SetURLSearchParams } from 'react-router';
 import { useCustomMutation } from '../useCustomMutation.ts';
-import { queryClient } from '../../loaders.ts';
 import type { UseFormSetError } from 'react-hook-form';
 import type { RegisterUserFields } from '../forms/register.ts';
+import type { UseNavigateResult } from '@tanstack/react-router';
 
 interface UserMutationProps {
-  navigate: NavigateFunction;
+  navigate: UseNavigateResult<string>;
 }
 
-interface RegisterUserMutationProps {
-  setSearchParams: SetURLSearchParams;
+interface RegisterUserMutationProps extends UserMutationProps {
   setError: UseFormSetError<RegisterUserFields>;
 }
 
-export const useRegisterUserMutation = ({
-  setSearchParams,
-  setError,
-}: RegisterUserMutationProps) => {
+export const useRegisterUserMutation = ({ navigate, setError }: RegisterUserMutationProps) => {
   return useCustomMutation({
     mutationFn: registerUser,
-    onSuccess: data => setSearchParams(prev => ({ ...prev, verificationToken: data.token })),
+    onSuccess: data =>
+      navigate({
+        to: '.',
+        search: prev => ({ ...prev, verificationToken: data.token }),
+        replace: true,
+      }),
     onError: err => {
       if (isAxiosError(err) && err.response?.status === 409) {
         setError('email', { message: 'Почта уже используется' });
@@ -45,20 +45,19 @@ export const useVerifyUserMutation = ({ navigate }: UserMutationProps) => {
   return useCustomMutation({
     mutationFn: verifyUser,
     onSuccess: () => {
-      navigate('/login');
-      toast.success('Аккаунт верифицирован');
+      navigate({ to: '/login' }).then(() => toast.success('Аккаунт верифицирован'));
     },
-    onError: err => {
+    onError: async err => {
       if (!isAxiosError(err)) {
         toast.error('Не удалось верифицировать аккаунт');
         return;
       }
       if (err.response?.status === 429) {
         toast.error('Слишком много попыток');
-        navigate('/register');
+        await navigate({ to: '/register' });
       } else if (err.response?.status === 409) {
         toast.error('Пользователь с таким email уже существует');
-        navigate('/register');
+        await navigate({ to: '/register' });
       } else {
         toast.error('Неверный код');
       }
@@ -81,7 +80,8 @@ interface LoginUserMutationProps extends UserMutationProps {
 export const useLoginUserMutation = ({ navigate, setError }: LoginUserMutationProps) => {
   return useCustomMutation({
     mutationFn: loginUser,
-    onSuccess: () => queryClient.resetQueries().then(() => navigate('/orgs')),
+    onSuccess: (_d, _v, _r, { client }) =>
+      client.resetQueries().then(() => navigate({ to: '/orgs' })),
     onError: () => setError('root', { message: 'Неверная почта или пароль' }),
   });
 };
@@ -89,8 +89,8 @@ export const useLoginUserMutation = ({ navigate, setError }: LoginUserMutationPr
 export const useLogoutUserMutation = ({ navigate }: UserMutationProps) => {
   return useCustomMutation({
     mutationFn: logoutUser,
-    onSuccess: () => {
-      queryClient.resetQueries().then(() => navigate('/login', { replace: true }));
+    onSuccess: (_d, _v, _r, { client }) => {
+      client.resetQueries().then(() => navigate({ to: '/login', replace: true }));
     },
   });
 };
@@ -99,8 +99,8 @@ export const useEditUserMutation = () => {
   return useCustomMutation({
     mutationFn: updateUser,
     toastErrorMessage: 'Не удалось сохранить изменения',
-    onSuccess: data => {
-      queryClient.setQueryData(['user'], data);
+    onSuccess: (data, _v, _r, { client }) => {
+      client.setQueryData(['user'], data);
       toast.success('Данные сохранены');
     },
   });

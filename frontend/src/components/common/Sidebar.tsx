@@ -1,5 +1,5 @@
 import { School } from 'lucide-react';
-import { NavLink } from 'react-router';
+import { Link } from '@tanstack/react-router';
 import { useAppContext } from '../../context.tsx';
 import type { Dispatch, SetStateAction } from 'react';
 import { roleConfig } from '../../labels/role.tsx';
@@ -48,22 +48,16 @@ export const Sidebar = ({ setSidebarOpen }: SidebarProps) => {
 
       <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
         {navItems.map(item => (
-          <NavLink
+          <Link
             key={item.path}
             to={item.path}
-            end={item.end}
             onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
-                isActive
-                  ? 'bg-indigo-500/20 text-indigo-300 font-medium'
-                  : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
-              }`
-            }
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"
+            activeProps={{ className: 'bg-indigo-500/20 text-indigo-300 font-medium' }}
           >
             {item.icon}
             <span>{item.label}</span>
-          </NavLink>
+          </Link>
         ))}
       </nav>
     </div>

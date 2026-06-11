@@ -1,18 +1,13 @@
-import { redirect } from 'react-router';
+import { redirect } from '@tanstack/react-router';
 import { QueryClient } from '@tanstack/react-query';
 import {
-  roleCountsOptions,
   useCurrentOrganizationMemberOptions,
   useCurrentOrganizationOptions,
 } from './hooks/queries/organization.ts';
-import { organizationMembersOptions } from './hooks/queries/member.ts';
 import { useCurrentUserOptions } from './hooks/queries/user.ts';
+import type { RootRouteContext } from './routes/__root.tsx';
 
-export const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false, refetchOnMount: true }, mutations: { retry: false } },
-});
-
-export const loadBaseContext = async () => {
+export const loadBaseContext = async (queryClient: QueryClient) => {
   await queryClient.ensureQueryData(useCurrentUserOptions).catch(() => undefined);
   await queryClient.ensureQueryData(useCurrentOrganizationOptions).catch(() => undefined);
   await queryClient.ensureQueryData(useCurrentOrganizationMemberOptions).catch(() => undefined);
@@ -25,28 +20,28 @@ type LoaderConfig = {
 };
 
 export const createLoader = (config?: LoaderConfig) => {
-  return async () => {
-    await loadBaseContext();
+  return async ({ context: { queryClient } }: { context: RootRouteContext }) => {
+    await loadBaseContext(queryClient);
 
     if (config?.requireUser && !queryClient.getQueryData(useCurrentUserOptions.queryKey)) {
-      return redirect('/login');
+      return redirect({ to: '/login' });
     }
     if (
       config?.requireOrganization &&
       !queryClient.getQueryData(useCurrentOrganizationOptions.queryKey)
     ) {
-      return redirect('/');
+      return redirect({ to: '/' });
     }
     if (
       config?.requireMember &&
       !queryClient.getQueryData(useCurrentOrganizationMemberOptions.queryKey)
     ) {
-      return redirect('/orgs');
+      return redirect({ to: '/orgs' });
     }
   };
 };
 
-export const organizationMembersLoader = async (): Promise<void> => {
-  await queryClient.ensureQueryData(organizationMembersOptions({ query: '' }));
-  await queryClient.ensureQueryData(roleCountsOptions);
-};
+// export const organizationMembersLoader = async (): Promise<void> => {
+//   await globalQueryClient.ensureQueryData(organizationMembersOptions({ query: '' }));
+//   await globalQueryClient.ensureQueryData(roleCountsOptions);
+// };

@@ -1,6 +1,5 @@
 import { useCustomMutation } from '../useCustomMutation.ts';
 import { createPayment, deletePayment } from '../../api/payments/requests.ts';
-import { queryClient } from '../../loaders.ts';
 
 interface CreatePaymentMutationProps {
   closeModal: () => void;
@@ -18,10 +17,10 @@ export const useCreatePaymentMutation = ({ closeModal }: CreatePaymentMutationPr
 export const useDeletePaymentMutation = () => {
   return useCustomMutation({
     mutationFn: deletePayment,
-    onSuccess: () => {
+    onSuccess: (_d, _v, _r, { client }) => {
       Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['groups', 'payments'] }),
-        queryClient.invalidateQueries({
+        client.invalidateQueries({ queryKey: ['groups', 'payments'] }),
+        client.invalidateQueries({
           queryKey: ['courses', 'teachers', 'students', 'payments'],
         }),
       ]);

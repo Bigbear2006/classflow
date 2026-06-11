@@ -1,4 +1,4 @@
-import { axiosInstance } from '../base.ts';
+import { axiosInstance, handleError } from '../base.ts';
 import type { User, VerificationToken } from '../../entities';
 import type {
   ChangeUserPasswordData,
@@ -8,9 +8,13 @@ import type {
   UpdateUserData,
   VerifyUserData,
 } from './types.ts';
+import { useAxios } from '../../hooks/useAxios.ts';
 
 export const getCurrentUser = () => {
-  return axiosInstance.get<User>('users/me/').then(rsp => rsp.data);
+  return useAxios()
+    .get<User>('users/me/')
+    .then(rsp => rsp.data)
+    .catch(handleError);
 };
 
 export const registerUser = (data: RegisterUserData) => {

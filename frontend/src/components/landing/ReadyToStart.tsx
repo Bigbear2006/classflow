@@ -1,6 +1,6 @@
 import { FadeIn } from './FadeIn.tsx';
 import { ArrowRight, Zap } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from '@tanstack/react-router';
 
 export const ReadyToStart = () => {
   return (

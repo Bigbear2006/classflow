@@ -59,7 +59,7 @@ const payments = {
   icon: <DollarSign size={18} />,
 };
 
-export const getNavItems = (role?: string, user?: User): NavItem[] => {
+export const getNavItems = (role?: string, user?: User | null): NavItem[] => {
   if (!user) {
     return [
       {

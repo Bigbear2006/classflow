@@ -1,30 +1,26 @@
-import { useSearchParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue.ts';
 import { useOrganizations } from '../../hooks/queries/organization.ts';
 import { Building2, LogIn, Search } from 'lucide-react';
 import { useJoinOrganizationMutation } from '../../hooks/mutations/organization.ts';
+import { getRouteApi } from '@tanstack/react-router';
+
+const routeApi = getRouteApi('/_layout/orgs');
 
 export const OrganizationsSearch = () => {
-  const [searchParams, setSearchParams] = useSearchParams(window.location.search);
-  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const searchParams = routeApi.useSearch();
+  const navigate = routeApi.useNavigate();
+  const [search, setSearch] = useState(searchParams.q || '');
   const debouncedSearch = useDebouncedValue(search, 500);
   const { data: foundOrgs } = useOrganizations({ query: debouncedSearch });
   const joinOrganizationMutation = useJoinOrganizationMutation();
 
   useEffect(() => {
-    setSearchParams(
-      prevParams => {
-        const params = new URLSearchParams(prevParams);
-        if (debouncedSearch) {
-          params.set('q', debouncedSearch);
-        } else {
-          params.delete('q');
-        }
-        return params;
-      },
-      { replace: true },
-    );
+    navigate({
+      to: '.',
+      search: () => ({ q: debouncedSearch || undefined }),
+      replace: true,
+    }).then();
   }, [debouncedSearch]);
 
   return (

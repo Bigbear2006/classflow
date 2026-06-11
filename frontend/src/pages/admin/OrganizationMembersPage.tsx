@@ -6,12 +6,16 @@ import { MemberCard } from '../../components/admin/members/MemberCard.tsx';
 import { useAppContext } from '../../context.tsx';
 import { useOrganizationMembers } from '../../hooks/queries/member.ts';
 import { useRoleCounts } from '../../hooks/queries/organization.ts';
-import { useSearchParams } from 'react-router';
+import { getRouteApi } from '@tanstack/react-router';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue.ts';
 
+const routeApi = getRouteApi('/_layout/members');
+
 export const OrganizationMembersPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams(window.location.search);
-  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const searchParams = routeApi.useSearch();
+  const navigate = routeApi.useNavigate();
+
+  const [search, setSearch] = useState(searchParams.q || '');
   const [roleFilter, setRoleFilter] = useState<UserRole>();
 
   const debouncedSearch = useDebouncedValue(search, 500);
@@ -25,23 +29,11 @@ export const OrganizationMembersPage = () => {
   const { user, member: currentMember } = useAppContext();
 
   useEffect(() => {
-    setSearchParams(
-      prevParams => {
-        const params = new URLSearchParams(prevParams);
-        if (debouncedSearch) {
-          params.set('q', debouncedSearch);
-        } else {
-          params.delete('q');
-        }
-        if (debouncedRoleFilter) {
-          params.set('role', debouncedRoleFilter);
-        } else {
-          params.delete('role');
-        }
-        return params;
-      },
-      { replace: true },
-    );
+    navigate({
+      to: '.',
+      search: () => ({ q: debouncedSearch || undefined, role: debouncedRoleFilter || undefined }),
+      replace: true,
+    }).then();
   }, [debouncedSearch, debouncedRoleFilter]);
 
   return (

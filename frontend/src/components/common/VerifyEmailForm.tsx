@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useResendCodeMutation, useVerifyUserMutation } from '../../hooks/mutations/user.ts';
 import { Button, InputOTP } from '@heroui/react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 interface VerifyEmailFormProps {
   verificationToken: string;

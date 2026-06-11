@@ -1,5 +1,5 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { ErrorsBlock } from './ErrorsBlock.tsx';
 import { useLoginForm } from '../../hooks/forms/login.ts';

@@ -23,7 +23,7 @@ export const LessonForm = ({ action, lesson, closeModal }: LessonFormProps) => {
   const { isTeacher } = useAppContext();
   const { control, watch, setValue, handleSubmit } = useLessonForm({ initialValues: lesson });
   const type = watch('type');
-  const groupId = watch('groupId');
+  const groupId = watch('groupId') as string;
   const courseId = watch('courseId');
   const conductedById = watch('conductedById');
 

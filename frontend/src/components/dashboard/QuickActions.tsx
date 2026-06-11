@@ -1,5 +1,5 @@
 import { BookOpen, Calendar, DollarSign, School, TrendingUp, Users } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 const actions = [
   {
@@ -50,7 +50,7 @@ export const QuickActions = () => {
         {actions.map(item => (
           <button
             key={item.label}
-            onClick={() => navigate(item.path)}
+            onClick={() => navigate({ to: item.path })}
             className={`flex items-center gap-2 p-3 rounded-xl text-sm font-medium transition-colors ${item.color}`}
           >
             {item.icon}

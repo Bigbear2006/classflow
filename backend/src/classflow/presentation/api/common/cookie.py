@@ -29,7 +29,7 @@ def set_refresh_cookie(
     response.set_cookie(
         'refresh',
         refresh,
-        path='/api/v1/users/refresh-token/',
+        # path='/api/v1/users/refresh-token/',
         domain=domain,
         secure=True,
         httponly=True,

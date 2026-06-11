@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useLessons } from '../../hooks/queries/lesson.ts';
 import { displayShortMonth, displayTime, getDateString } from '../../labels/date.ts';
 
@@ -17,7 +17,7 @@ export const UpcomingLessons = () => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-slate-900">Ближайшие занятия</h2>
         <button
-          onClick={() => navigate('/schedule')}
+          onClick={() => navigate({ to: '/schedule' })}
           className="text-indigo-600 text-sm hover:underline"
         >
           Все →

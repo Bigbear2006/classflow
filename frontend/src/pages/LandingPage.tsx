@@ -8,7 +8,7 @@ import { ReadyToStart } from '../components/landing/ReadyToStart.tsx';
 import { Footer } from '../components/landing/Footer.tsx';
 import { DesktopNav } from '../components/landing/DesktopNav.tsx';
 import { useAppContext } from '../context.tsx';
-import { Navigate } from 'react-router';
+import { Navigate } from '@tanstack/react-router';
 
 export const LandingPage = () => {
   const { user, organization } = useAppContext();

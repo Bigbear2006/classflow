@@ -1,11 +1,10 @@
 import { RegisterForm } from '../components/common/RegisterForm.tsx';
 import { ClassFlowBlock } from '../components/common/ClassFlowBlock.tsx';
-import { useSearchParams } from 'react-router';
+import { useSearch } from '@tanstack/react-router';
 import { VerifyEmailForm } from '../components/common/VerifyEmailForm.tsx';
 
 export const RegisterPage = () => {
-  const [searchParams, _] = useSearchParams(window.location.search);
-  const verificationToken = searchParams.get('verificationToken');
+  const { verificationToken } = useSearch({ from: '/register' });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 flex flex-col">

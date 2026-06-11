@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { keepPreviousData, queryOptions, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import {
   getCurrentOrganization,
   getCurrentOrganizationMember,
@@ -11,7 +11,6 @@ import {
   getTeacherStats,
 } from '../../api/organizations/requests.ts';
 import type { GetOrganizationsParams } from '../../api/organizations/types.ts';
-import { queryClient } from '../../loaders.ts';
 
 export const useOrganizations = (params: GetOrganizationsParams) => {
   return useQuery({
@@ -30,30 +29,24 @@ export const useMyOrganizations = () => {
   });
 };
 
-export const useCurrentOrganizationOptions = {
+export const useCurrentOrganizationOptions = queryOptions({
   queryKey: ['organization'],
   queryFn: getCurrentOrganization,
-};
+  staleTime: 10 * 1000,
+});
 
 export const useCurrentOrganization = () => {
-  return useQuery({
-    ...useCurrentOrganizationOptions,
-    initialData: () => queryClient.getQueryData(useCurrentOrganizationOptions.queryKey),
-    staleTime: 10 * 1000,
-  });
+  return useSuspenseQuery(useCurrentOrganizationOptions);
 };
 
-export const useCurrentOrganizationMemberOptions = {
+export const useCurrentOrganizationMemberOptions = queryOptions({
   queryKey: ['member'],
   queryFn: getCurrentOrganizationMember,
-};
+  staleTime: 10 * 1000,
+});
 
 export const useCurrentOrganizationMember = () => {
-  return useQuery({
-    ...useCurrentOrganizationMemberOptions,
-    initialData: () => queryClient.getQueryData(useCurrentOrganizationMemberOptions.queryKey),
-    staleTime: 10 * 1000,
-  });
+  return useSuspenseQuery(useCurrentOrganizationMemberOptions);
 };
 
 export const useCurrentOrganizationTeachers = () => {
@@ -64,16 +57,13 @@ export const useCurrentOrganizationTeachers = () => {
   });
 };
 
-export const roleCountsOptions = {
+export const roleCountsOptions = queryOptions({
   queryKey: ['roleCounts'],
   queryFn: getRoleCounts,
-};
+});
 
 export const useRoleCounts = () => {
-  return useSuspenseQuery({
-    ...roleCountsOptions,
-    initialData: () => queryClient.getQueryData(roleCountsOptions.queryKey),
-  });
+  return useSuspenseQuery(roleCountsOptions);
 };
 
 export const useOrganizationStats = () => {

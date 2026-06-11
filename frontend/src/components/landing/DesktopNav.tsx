@@ -1,5 +1,5 @@
 import { School } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from '@tanstack/react-router';
 import { navLinkOptions } from '../../labels/landing.tsx';
 
 interface DesktopNavProps {
