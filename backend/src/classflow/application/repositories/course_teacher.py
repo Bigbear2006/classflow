@@ -23,7 +23,7 @@ class CourseTeacherRepository(Protocol):
     async def get_by_student(
         self,
         course_teacher_student_id: int,
-    ) -> CourseTeacher:
+    ) -> CourseTeacher | None:
         pass
 
     async def get_all(self) -> list[CourseTeacher]:

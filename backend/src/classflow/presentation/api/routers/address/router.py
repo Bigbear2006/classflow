@@ -11,9 +11,9 @@ from classflow.application.use_cases.address import (
     UpdateAddress,
     UpdateAddressDTO,
 )
+from classflow.presentation.api.common.models import AddressResponse
 from classflow.presentation.api.routers.address.models import (
     AddressDetailResponse,
-    AddressResponse,
     UpdateAddressRequest,
 )
 

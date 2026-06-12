@@ -1,13 +1,13 @@
 from datetime import date, datetime
-from typing import cast
+from typing import Any, cast
 
 from sqlalchemy import Date, Select, delete, exists, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager, joinedload
 
+from classflow.application.common.types import expect
 from classflow.application.repositories.lesson import LessonRepository
 from classflow.domain.entities import (
-    Attendance,
     Cabinet,
     Course,
     CourseTeacher,
@@ -98,7 +98,7 @@ class LessonRepositoryImpl(LessonRepository):
                 == course_teacher_student_id,
             ),
         )
-        return await self.session.scalar(stmt)
+        return expect(await self.session.scalar(stmt))
 
     async def get_all(
         self,
@@ -166,8 +166,8 @@ class LessonRepositoryImpl(LessonRepository):
         lesson_id: int,
     ) -> list[OrganizationMember]:
         stmt = (
-            select(OrganizationMember, Attendance.status)
-            .options(contains_eager(OrganizationMember.user))
+            select(OrganizationMember, attendance_table.c.status)
+            .options(contains_eager(OrganizationMember.user))  # type: ignore[arg-type]
             .join(
                 users_table,
                 organization_members_table.c.user_id == users_table.c.id,
@@ -228,35 +228,35 @@ def set_lessons_joins(stmt: Select[tuple[Lesson]]) -> Select[tuple[Lesson]]:
     return (
         stmt.options(joinedload(Lesson.cabinet).joinedload(Cabinet.address))  # type: ignore[arg-type]
         .options(
-            joinedload(Lesson.conducted_by).joinedload(
-                OrganizationMember.user,
+            joinedload(Lesson.conducted_by).joinedload(  # type: ignore[arg-type]
+                OrganizationMember.user,  # type: ignore[arg-type]
             ),
-        )  # type: ignore[arg-type]
+        )
         .options(
             joinedload(Lesson.group).options(  # type: ignore[arg-type]
-                joinedload(Group.course).joinedload(Course.subject),
-                joinedload(Group.default_cabinet),
+                joinedload(Group.course).joinedload(Course.subject),  # type: ignore[arg-type]
+                joinedload(Group.default_cabinet),  # type: ignore[arg-type]
             ),
         )
         .options(
             joinedload(Lesson.course_teacher_student).options(  # type: ignore[arg-type]
-                joinedload(CourseTeacherStudent.student).joinedload(
-                    OrganizationMember.user,
-                ),  # type: ignore[arg-type]
+                joinedload(CourseTeacherStudent.student).joinedload(  # type: ignore[arg-type]
+                    OrganizationMember.user,  # type: ignore[arg-type]
+                ),
                 joinedload(CourseTeacherStudent.course_teacher).options(  # type: ignore[arg-type]
-                    joinedload(CourseTeacher.course).joinedload(
-                        Course.subject,
-                    ),  # type: ignore[arg-type]
-                    joinedload(CourseTeacher.teacher).joinedload(
-                        OrganizationMember.user,
-                    ),  # type: ignore[arg-type]
+                    joinedload(CourseTeacher.course).joinedload(  # type: ignore[arg-type]
+                        Course.subject,  # type: ignore[arg-type]
+                    ),
+                    joinedload(CourseTeacher.teacher).joinedload(  # type: ignore[arg-type]
+                        OrganizationMember.user,  # type: ignore[arg-type]
+                    ),
                 ),
             ),
         )
     )
 
 
-def add_date_filters[T](
+def add_date_filters[T: tuple[Any, ...]](
     stmt: Select[T],
     *,
     start_date: date | None = None,

@@ -176,10 +176,10 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
         today_lessons = await self.session.scalar(today_lessons_subquery)
         total_paid = await self.session.scalar(total_paid_subquery)
         return StudentStats(
-            courses=courses,
-            completed_lessons=completed_lessons,
-            today_lessons=today_lessons,
-            total_paid=total_paid,
+            courses=courses or 0,
+            completed_lessons=completed_lessons or 0,
+            today_lessons=today_lessons or 0,
+            total_paid=total_paid or 0,
         )
 
     async def get_teacher_stats(self, teacher_id: int) -> TeacherStats:
@@ -236,15 +236,23 @@ class OrganizationMemberRepositoryImpl(OrganizationMemberRepository):
             )
         )
 
-        courses = await self.session.scalar(courses_subquery)
-        individual_students = await self.session.scalar(
-            individual_students_subquery,
+        courses = await self.session.scalar(courses_subquery) or 0
+        individual_students = (
+            await self.session.scalar(
+                individual_students_subquery,
+            )
+            or 0
         )
-        group_students = await self.session.scalar(group_students_subquery)
-        completed_lessons = await self.session.scalar(
-            completed_lessons_subquery,
+        group_students = (
+            await self.session.scalar(group_students_subquery) or 0
         )
-        today_lessons = await self.session.scalar(today_lessons_subquery)
+        completed_lessons = (
+            await self.session.scalar(
+                completed_lessons_subquery,
+            )
+            or 0
+        )
+        today_lessons = await self.session.scalar(today_lessons_subquery) or 0
 
         return TeacherStats(
             courses=courses,

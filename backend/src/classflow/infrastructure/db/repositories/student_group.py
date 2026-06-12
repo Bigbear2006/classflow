@@ -27,7 +27,7 @@ class StudentGroupRepositoryImpl(StudentGroupRepository):
             .with_for_update()
             .subquery(),
         )
-        return await self.session.scalar(stmt)
+        return await self.session.scalar(stmt) or 0
 
     async def has_students(
         self,

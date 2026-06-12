@@ -22,4 +22,4 @@ class GetAllOrganizations:
         self,
         data: GetAllOrganizationsDTO,
     ) -> list[Organization]:
-        return await self.organization_repository.get_all(data.query)
+        return await self.organization_repository.get_all(data.query or '')

@@ -49,7 +49,13 @@ class RegisterUser:
             )
             user = await self.user_repository.create(user)
 
-        data = self.verification_data_generator.generate_data()
-        await self.verification_data_repository.save(data, user_id=user.id)
-        await self.email_sender.send_code(data.code, to=user.email)
-        return data.token
+        verification_data = self.verification_data_generator.generate_data()
+        await self.verification_data_repository.save(
+            verification_data,
+            user_id=user.id,
+        )
+        await self.email_sender.send_code(
+            verification_data.code,
+            to=user.email,
+        )
+        return verification_data.token

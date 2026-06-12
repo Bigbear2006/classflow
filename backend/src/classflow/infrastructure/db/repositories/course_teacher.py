@@ -4,6 +4,7 @@ from sqlalchemy import delete, exists, select, update
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from classflow.application.common.types import expect
 from classflow.application.repositories.course_teacher import (
     CourseTeacherRepository,
 )
@@ -136,4 +137,4 @@ class CourseTeacherRepositoryImpl(CourseTeacherRepository):
                 course_teachers_table.c.status != CourseTeacherStatus.DELETED,
             ),
         )
-        return self.session.scalar(stmt)
+        return expect(await self.session.scalar(stmt))

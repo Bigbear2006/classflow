@@ -104,7 +104,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
 
     async def get_user_organizations(self, user_id: int) -> list[Organization]:
         stmt = (
-            select(Organization, OrganizationMember.role)
+            select(Organization, organization_members_table.c.role)
             .join(
                 organization_members_table,
                 organizations_table.c.id
@@ -118,7 +118,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         for org, role in rows:
             org.role = role
             orgs.append(org)
-        return cast(list[Organization], orgs)
+        return orgs
 
     async def get_role_counts(self, org_id: int) -> list[RoleCount]:
         stmt = select(

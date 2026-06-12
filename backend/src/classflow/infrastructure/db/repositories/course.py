@@ -13,7 +13,6 @@ from classflow.domain.entities import (
     CourseTeacherStudent,
     Group,
     OrganizationMember,
-    StudentGroup,
     User,
 )
 from classflow.domain.enums import (
@@ -122,7 +121,7 @@ class CourseRepositoryImpl(CourseRepository):
 
         if current_member_id:
             student_group_status_subquery = (
-                select(StudentGroup.status)
+                select(student_groups_table.c.status)
                 .select_from(groups_table)
                 .outerjoin(
                     student_groups_table,
@@ -135,11 +134,11 @@ class CourseRepositoryImpl(CourseRepository):
                 .scalar_subquery()
             )
         else:
-            student_group_status_subquery = literal(None)
+            student_group_status_subquery = literal(None)  # type: ignore[assignment]
 
         if current_member_id:
             course_teacher_student_status_subquery = (
-                select(CourseTeacherStudent.status)
+                select(course_teacher_students_table.c.status)
                 .select_from(course_teachers_table)
                 .outerjoin(
                     course_teacher_students_table,
@@ -154,7 +153,7 @@ class CourseRepositoryImpl(CourseRepository):
                 .scalar_subquery()
             )
         else:
-            course_teacher_student_status_subquery = literal(None)
+            course_teacher_student_status_subquery = literal(None)  # type: ignore[assignment]
 
         stmt = select(
             Course,
@@ -210,7 +209,7 @@ class CourseRepositoryImpl(CourseRepository):
                 == course_teachers_table.c.teacher_id,
             )
             .where(course_teachers_table.c.course_id == course_id)
-            .options(joinedload(OrganizationMember.user))
+            .options(joinedload(OrganizationMember.user))  # type: ignore[arg-type]
             .distinct()
         )
 
@@ -288,14 +287,14 @@ class CourseRepositoryImpl(CourseRepository):
         stmt = (
             select(Course)
             .options(
-                contains_eager(Course.subject),
-                joinedload(Course.teachers).options(
-                    joinedload(CourseTeacher.teacher).joinedload(
-                        OrganizationMember.user,
+                contains_eager(Course.subject),  # type: ignore[arg-type]
+                joinedload(Course.teachers).options(  # type: ignore[arg-type]
+                    joinedload(CourseTeacher.teacher).joinedload(  # type: ignore[arg-type]
+                        OrganizationMember.user,  # type: ignore[arg-type]
                     ),
-                    joinedload(CourseTeacher.students)
-                    .joinedload(CourseTeacherStudent.student)
-                    .joinedload(OrganizationMember.user),
+                    joinedload(CourseTeacher.students)  # type: ignore[arg-type]
+                    .joinedload(CourseTeacherStudent.student)  # type: ignore[arg-type]
+                    .joinedload(OrganizationMember.user),  # type: ignore[arg-type]
                 ),
             )
             .join(

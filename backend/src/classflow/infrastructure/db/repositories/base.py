@@ -18,7 +18,7 @@ async def create[T](session: AsyncSession, obj: T) -> T:
         raise e
 
 
-def get_one[T](result: Result[T]) -> T:
+def get_one[T](result: Result[tuple[T]]) -> T:
     try:
         return result.scalar_one()
     except NoResultFound as e:

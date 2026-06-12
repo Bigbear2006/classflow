@@ -1,9 +1,10 @@
 import hashlib
 import hmac
 import logging
-from typing import Any
+from collections.abc import Mapping
+from datetime import timedelta
+from typing import Any, cast
 
-from asyncpg.pgproto.pgproto import timedelta
 from redis.asyncio import Redis
 
 from classflow.application.verification.data_generator import VerificationData
@@ -35,7 +36,7 @@ def _get_resend_resend_unavailable_key(token: str) -> str:
 
 
 class RedisVerificationDataRepository(VerificationDataRepository):
-    def __init__(self, redis: Redis) -> None:
+    def __init__(self, redis: Redis) -> None:  # type: ignore[type-arg]
         self.redis = redis
 
     async def _get_saved_data(self, token: str) -> dict[str, Any]:
@@ -45,9 +46,16 @@ class RedisVerificationDataRepository(VerificationDataRepository):
             raise InvalidVerificationCodeError()
         return saved_data
 
-    async def _set_code_data(self, token: str, data: dict[str, Any]) -> None:
+    async def _set_code_data(
+        self,
+        token: str,
+        data: dict[str, str | int],
+    ) -> None:
         key = _get_verify_email_key(token)
-        await self.redis.hset(key, mapping=data)
+        await self.redis.hset(
+            key,
+            mapping=cast(Mapping[str | bytes, str | int], data),
+        )
         await self.redis.expire(key, CODE_TTL)
 
     async def _set_resend_unavailable(self, token: str) -> None:

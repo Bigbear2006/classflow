@@ -74,7 +74,7 @@ async def get_all_groups_router(
 @group_router.get('/payments/')
 async def get_groups_with_payments_router(
     get_groups_with_payments: FromDishka[GetGroupsWithPayments],
-):
+) -> list[GroupWithPaymentsResponse]:
     groups = await get_groups_with_payments()
     return [
         GroupWithPaymentsResponse.model_validate(group) for group in groups

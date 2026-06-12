@@ -52,5 +52,5 @@ class VerificationProvider(Provider):
         return VerificationDataGeneratorImpl()
 
     @provide(scope=Scope.APP)
-    def provide_repository(self, redis: Redis) -> VerificationDataRepository:
+    def provide_repository(self, redis: Redis) -> VerificationDataRepository:  # type: ignore[type-arg]
         return RedisVerificationDataRepository(redis)

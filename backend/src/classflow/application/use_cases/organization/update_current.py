@@ -6,6 +6,7 @@ from classflow.application.repositories.organization import (
     OrganizationRepository,
 )
 from classflow.application.services.permission import PermissionService
+from classflow.domain.entities import Organization
 
 
 @dataclass
@@ -27,7 +28,10 @@ class UpdateCurrentOrganization:
         self.permission_service = permission_service
         self.uow = uow
 
-    async def __call__(self, data: UpdateCurrentOrganizationDTO) -> None:
+    async def __call__(
+        self,
+        data: UpdateCurrentOrganizationDTO,
+    ) -> Organization:
         await self.permission_service.ensure_owner()
         org = await self.org_id_provider.get_current_organization()
         async with self.uow:

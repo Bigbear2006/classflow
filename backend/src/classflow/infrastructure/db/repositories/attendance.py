@@ -51,7 +51,7 @@ class AttendanceRepositoryImpl(AttendanceRepository):
                 for attendance in attendance_list
             ],
         )
-        stmt = stmt.on_conflict_do_update(
+        stmt = stmt.on_conflict_do_update(  # type: ignore[assignment]
             index_elements=[
                 attendance_table.c.lesson_id,
                 attendance_table.c.student_id,
@@ -69,9 +69,9 @@ class AttendanceRepositoryImpl(AttendanceRepository):
         stmt = (
             select(Attendance)
             .options(
-                set_lessons_joins(joinedload(Attendance.lesson)),
-                joinedload(Attendance.student).joinedload(
-                    OrganizationMember.user,
+                set_lessons_joins(joinedload(Attendance.lesson)),  # type: ignore[arg-type]
+                joinedload(Attendance.student).joinedload(  # type: ignore[arg-type]
+                    OrganizationMember.user,  # type: ignore[arg-type]
                 ),
             )
             .where(attendance_table.c.student_id == student_id)
@@ -165,8 +165,8 @@ class AttendanceRepositoryImpl(AttendanceRepository):
                 users_table.c.id == organization_members_table.c.user_id,
             )
             .options(
-                contains_eager(Course.subject),
-                contains_eager(OrganizationMember.user),
+                contains_eager(Course.subject),  # type: ignore[arg-type]
+                contains_eager(OrganizationMember.user),  # type: ignore[arg-type]
             )
             .where(
                 (

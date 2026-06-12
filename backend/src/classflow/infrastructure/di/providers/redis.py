@@ -10,7 +10,7 @@ class RedisProvider(Provider):
         return RedisConfig()
 
     @provide(scope=Scope.APP)
-    def provide_redis(self, config: RedisConfig) -> Redis:
+    def provide_redis(self, config: RedisConfig) -> Redis:  # type: ignore[type-arg]
         return Redis(
             host=config.HOST,
             port=config.PORT,

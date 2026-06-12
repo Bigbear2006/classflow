@@ -13,7 +13,6 @@ from classflow.domain.entities import (
     Course,
     Group,
     OrganizationMember,
-    Payment,
     StudentGroup,
     User,
 )
@@ -109,7 +108,10 @@ class GroupRepositoryImpl(GroupRepository):
     ) -> list[Group]:
         stmt = (
             set_group_joins(
-                select(Group, func.coalesce(func.sum(Payment.amount), 0)),
+                select(
+                    Group,
+                    func.coalesce(func.sum(payments_table.c.amount), 0),
+                ),
             )
             .outerjoin(
                 student_groups_table,
@@ -120,13 +122,13 @@ class GroupRepositoryImpl(GroupRepository):
                 student_groups_table.c.id == payments_table.c.student_group_id,
             )
             .options(
-                joinedload(Group.students).options(
-                    joinedload(StudentGroup.student).joinedload(
-                        OrganizationMember.user,
+                joinedload(Group.students).options(  # type: ignore[arg-type]
+                    joinedload(StudentGroup.student).joinedload(  # type: ignore[arg-type]
+                        OrganizationMember.user,  # type: ignore[arg-type]
                     ),
-                    joinedload(StudentGroup.payments),
+                    joinedload(StudentGroup.payments),  # type: ignore[arg-type]
                 ),
-                joinedload(Group.lessons),
+                joinedload(Group.lessons),  # type: ignore[arg-type]
             )
             .group_by(groups_table.c.id)
             .distinct()
@@ -173,9 +175,9 @@ class GroupRepositoryImpl(GroupRepository):
         stmt = (
             set_group_joins(select(Group))
             .options(
-                joinedload(Group.students)
-                .joinedload(StudentGroup.student)
-                .joinedload(OrganizationMember.user),
+                joinedload(Group.students)  # type: ignore[arg-type]
+                .joinedload(StudentGroup.student)  # type: ignore[arg-type]
+                .joinedload(OrganizationMember.user),  # type: ignore[arg-type]
             )
             .order_by(groups_table.c.created_at)
         )
@@ -199,10 +201,10 @@ class GroupRepositoryImpl(GroupRepository):
         stmt = (
             join_course_teachers_to_groups(select(Group))
             .options(
-                joinedload(Group.course).joinedload(
-                    Course.subject,
-                    Course.teachers,
-                ),  # type: ignore[arg-type]
+                joinedload(Group.course).joinedload(  # type: ignore[arg-type]
+                    Course.subject,  # type: ignore[arg-type]
+                    Course.teachers,  # type: ignore[arg-type]
+                ),
                 joinedload(Group.default_cabinet).joinedload(Cabinet.address),  # type: ignore[arg-type]
             )
             .where(

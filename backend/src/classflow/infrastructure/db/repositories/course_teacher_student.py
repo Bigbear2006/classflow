@@ -79,19 +79,19 @@ class CourseTeacherStudentRepositoryImpl(CourseTeacherStudentRepository):
         stmt = (
             select(CourseTeacherStudent)
             .options(
-                joinedload(CourseTeacherStudent.course_teacher).options(
-                    joinedload(CourseTeacher.course).joinedload(
-                        Course.subject,
+                joinedload(CourseTeacherStudent.course_teacher).options(  # type: ignore[arg-type]
+                    joinedload(CourseTeacher.course).joinedload(  # type: ignore[arg-type]
+                        Course.subject,  # type: ignore[arg-type]
                     ),
-                    joinedload(CourseTeacher.teacher).joinedload(
-                        OrganizationMember.user,
+                    joinedload(CourseTeacher.teacher).joinedload(  # type: ignore[arg-type]
+                        OrganizationMember.user,  # type: ignore[arg-type]
                     ),
                 ),
-                joinedload(CourseTeacherStudent.student).joinedload(
-                    OrganizationMember.user,
+                joinedload(CourseTeacherStudent.student).joinedload(  # type: ignore[arg-type]
+                    OrganizationMember.user,  # type: ignore[arg-type]
                 ),
-                joinedload(CourseTeacherStudent.lessons),
-                joinedload(CourseTeacherStudent.payments),
+                joinedload(CourseTeacherStudent.lessons),  # type: ignore[arg-type]
+                joinedload(CourseTeacherStudent.payments),  # type: ignore[arg-type]
             )
             .join(course_teachers_table)
             .join(courses_table)

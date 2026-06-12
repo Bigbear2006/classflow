@@ -32,7 +32,7 @@ class Lesson:
     # Manually set this attribute
     payment_id: int | None = field(init=False, default=None)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.start_date.date() != self.end_date.date():
             raise ValidationError(
                 'start_date must be on the same day as end_date',
