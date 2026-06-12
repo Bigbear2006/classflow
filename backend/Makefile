@@ -8,5 +8,6 @@ test:
 
 lint:
 	ruff format
-	ruff check --fix
+	ruff check --fix-only
 	ruff format
+	ruff check

@@ -133,8 +133,12 @@ mapper_registry.map_imperatively(
     Course,
     courses_table,
     properties={
-        'subject': relationship(Subject),
-        'teachers': relationship(CourseTeacher, back_populates='course'),
+        'subject': relationship(Subject, viewonly=True),
+        'teachers': relationship(
+            CourseTeacher,
+            back_populates='course',
+            viewonly=True,
+        ),
     },
 )
 
@@ -142,11 +146,16 @@ mapper_registry.map_imperatively(
     CourseTeacher,
     course_teachers_table,
     properties={
-        'course': relationship(Course, back_populates='teachers'),
-        'teacher': relationship(OrganizationMember),
+        'course': relationship(
+            Course,
+            back_populates='teachers',
+            viewonly=True,
+        ),
+        'teacher': relationship(OrganizationMember, viewonly=True),
         'students': relationship(
             CourseTeacherStudent,
             back_populates='course_teacher',
+            viewonly=True,
         ),
     },
 )
@@ -158,9 +167,10 @@ mapper_registry.map_imperatively(
         'course_teacher': relationship(
             CourseTeacher,
             back_populates='students',
+            viewonly=True,
         ),
-        'student': relationship(OrganizationMember),
-        'lessons': relationship(Lesson),
-        'payments': relationship(Payment),
+        'student': relationship(OrganizationMember, viewonly=True),
+        'lessons': relationship(Lesson, viewonly=True),
+        'payments': relationship(Payment, viewonly=True),
     },
 )

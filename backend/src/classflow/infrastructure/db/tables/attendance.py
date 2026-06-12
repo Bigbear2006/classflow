@@ -55,7 +55,7 @@ mapper_registry.map_imperatively(
     Attendance,
     attendance_table,
     properties={
-        'lesson': relationship(Lesson),
-        'student': relationship(OrganizationMember),
+        'lesson': relationship(Lesson, viewonly=True),
+        'student': relationship(OrganizationMember, viewonly=True),
     },
 )

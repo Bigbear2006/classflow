@@ -44,11 +44,23 @@ cabinets_table = Table(
 mapper_registry.map_imperatively(
     Cabinet,
     cabinets_table,
-    properties={'address': relationship(Address, back_populates='cabinets')},
+    properties={
+        'address': relationship(
+            Address,
+            back_populates='cabinets',
+            viewonly=True,
+        ),
+    },
 )
 
 mapper_registry.map_imperatively(
     Address,
     addresses_table,
-    properties={'cabinets': relationship(Cabinet, back_populates='address')},
+    properties={
+        'cabinets': relationship(
+            Cabinet,
+            back_populates='address',
+            viewonly=True,
+        ),
+    },
 )

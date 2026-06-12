@@ -68,4 +68,8 @@ strict = true
 disable_error_code = ["union-attr", "var-annotated"]
 
 [tool.pytest.ini_options]
-addopts = "-p no:randomly"
+# addopts = "-p no:randomly"
+python_classes = "TestCase"
+filterwarnings = [
+    "ignore:Setting per-request cookies"
+]

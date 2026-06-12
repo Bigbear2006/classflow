@@ -85,10 +85,13 @@ mapper_registry.map_imperatively(
     Lesson,
     lessons_table,
     properties={
-        'group': relationship(Group, back_populates='lessons'),
-        'course_teacher_student': relationship(CourseTeacherStudent),
-        'cabinet': relationship(Cabinet),
-        'conducted_by': relationship(OrganizationMember),
-        'payment': relationship(Payment, uselist=False),
+        'group': relationship(Group, back_populates='lessons', viewonly=True),
+        'course_teacher_student': relationship(
+            CourseTeacherStudent,
+            viewonly=True,
+        ),
+        'cabinet': relationship(Cabinet, viewonly=True),
+        'conducted_by': relationship(OrganizationMember, viewonly=True),
+        'payment': relationship(Payment, uselist=False, viewonly=True),
     },
 )

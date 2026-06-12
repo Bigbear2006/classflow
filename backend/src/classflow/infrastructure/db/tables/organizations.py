@@ -55,5 +55,5 @@ mapper_registry.map_imperatively(Organization, organizations_table)
 mapper_registry.map_imperatively(
     OrganizationMember,
     organization_members_table,
-    properties={'user': relationship(User)},
+    properties={'user': relationship(User, viewonly=True)},
 )
