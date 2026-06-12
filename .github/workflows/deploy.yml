@@ -26,11 +26,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
       - name: Run Tests
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        run: pytest tests
+        run: |
+          pip install --no-cache-dir --upgrade pip
+          pip install --no-cache-dir uv
+          uv pip install -e . --system
+          pytest tests
 
   deploy:
     runs-on: ubuntu-latest
