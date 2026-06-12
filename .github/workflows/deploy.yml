@@ -35,10 +35,11 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         run: |
+          cd backend
           pip install --no-cache-dir --upgrade pip
           pip install --no-cache-dir uv
-          uv pip install -e . --system
-          pytest tests
+          uv sync --all-groups
+          uv run pytest tests
 
   deploy:
     runs-on: ubuntu-latest
