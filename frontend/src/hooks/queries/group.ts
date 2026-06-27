@@ -8,7 +8,7 @@ import {
 
 export const useGroups = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['groups'],
     queryFn: getGroups,
   });
@@ -16,7 +16,7 @@ export const useGroups = () => {
 
 export const useGroupsWithPayments = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['groups', 'payments'],
     queryFn: () => getGroupsWithPayments(),
   });
@@ -28,7 +28,7 @@ interface useGroupsWithStudentsProps {
 
 export const useGroupsWithStudents = ({ courseId }: useGroupsWithStudentsProps) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['groups', 'students', courseId],
     queryFn: () => getGroupsWithStudents({ course_id: courseId }),
   });
@@ -40,7 +40,7 @@ interface UseGroupProps {
 
 export const useGroupStudents = ({ groupId }: UseGroupProps) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['groups', groupId, 'students'],
     queryFn: () => getGroupStudents(groupId),
   });

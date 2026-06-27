@@ -3,7 +3,7 @@ import { getSubjects } from '../../api/subjects/requests.ts';
 
 export const useSubjects = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['subjects'],
     queryFn: getSubjects,
   });

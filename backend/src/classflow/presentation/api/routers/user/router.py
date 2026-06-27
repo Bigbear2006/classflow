@@ -21,13 +21,14 @@ from classflow.application.use_cases.user import (
     VerifyUserEmailDTO,
 )
 from classflow.application.verification.data_generator import VerificationData
-from classflow.infrastructure.auth.config import JWTConfig
 from classflow.infrastructure.auth.token_processor import (
     JWTTokenProcessor,
     TokenType,
 )
 from classflow.presentation.api.common.cookie import (
     cookie_scheme,
+    delete_access_cookie,
+    delete_refresh_cookie,
     set_access_cookie,
     set_refresh_cookie,
 )
@@ -74,20 +75,18 @@ async def login_user_router(
     data: LoginUserDTO,
     login_user: FromDishka[LoginUser],
     token_processor: FromDishka[JWTTokenProcessor],
-    jwt_config: FromDishka[JWTConfig],
     response: Response,
 ) -> None:
     user = await login_user(data)
     token_pair = token_processor.create_token_pair(user.id)
-    set_access_cookie(response, token_pair.access, domain=jwt_config.DOMAIN)
-    set_refresh_cookie(response, token_pair.refresh, domain=jwt_config.DOMAIN)
+    set_access_cookie(response, token_pair.access)
+    set_refresh_cookie(response, token_pair.refresh)
 
 
 @user_router.post('/refresh-token/', status_code=204)
 async def refresh_token_router(
     refresh: Annotated[str, Cookie()],
     token_processor: FromDishka[JWTTokenProcessor],
-    jwt_config: FromDishka[JWTConfig],
     response: Response,
 ) -> None:
     user_id = token_processor.extract_user_id(
@@ -95,13 +94,13 @@ async def refresh_token_router(
         token_type=TokenType.REFRESH,
     )
     access = token_processor.create_access_token(user_id)
-    set_access_cookie(response, access, domain=jwt_config.DOMAIN)
+    set_access_cookie(response, access)
 
 
 @user_router.post('/logout/', status_code=204)
 async def logout_user_router(response: Response) -> None:
-    set_access_cookie(response, '')
-    set_refresh_cookie(response, '')
+    delete_access_cookie(response)
+    delete_refresh_cookie(response)
 
 
 @user_router.get('/me/', dependencies=[Depends(cookie_scheme)])

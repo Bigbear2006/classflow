@@ -5,4 +5,5 @@ import { createLoader } from '../../loaders.ts';
 export const Route = createFileRoute('/_layout/notifications')({
   component: NotificationsPage,
   loader: createLoader({ requireUser: true }),
+  ssr: false,
 });

@@ -8,9 +8,11 @@ import { useCurrentUserOptions } from './hooks/queries/user.ts';
 import type { RootRouteContext } from './routes/__root.tsx';
 
 export const loadBaseContext = async (queryClient: QueryClient) => {
-  await queryClient.ensureQueryData(useCurrentUserOptions).catch(() => undefined);
-  await queryClient.ensureQueryData(useCurrentOrganizationOptions).catch(() => undefined);
-  await queryClient.ensureQueryData(useCurrentOrganizationMemberOptions).catch(() => undefined);
+  await Promise.all([
+    queryClient.ensureQueryData(useCurrentUserOptions),
+    queryClient.ensureQueryData(useCurrentOrganizationOptions),
+    queryClient.ensureQueryData(useCurrentOrganizationMemberOptions),
+  ]);
 };
 
 type LoaderConfig = {

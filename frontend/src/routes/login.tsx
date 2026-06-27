@@ -5,4 +5,5 @@ import { createLoader } from '../loaders.ts';
 export const Route = createFileRoute('/login')({
   component: LoginPage,
   loader: createLoader(),
+  ssr: false,
 });

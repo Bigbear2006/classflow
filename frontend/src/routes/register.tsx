@@ -9,4 +9,5 @@ const RegisterRouteSearch = z.object({
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
   validateSearch: RegisterRouteSearch,
+  ssr: false,
 });

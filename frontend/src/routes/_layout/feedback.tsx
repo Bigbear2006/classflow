@@ -9,4 +9,5 @@ export const Route = createFileRoute('/_layout/feedback')({
     requireOrganization: true,
     requireMember: true,
   }),
+  ssr: false,
 });

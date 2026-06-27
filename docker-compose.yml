@@ -38,6 +38,9 @@ services:
   frontend:
     build:
       context: frontend
+    restart: always
+    ports:
+      - "3000:3000"
     volumes:
       - ./build:/app/dist
 

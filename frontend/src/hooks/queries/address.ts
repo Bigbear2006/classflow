@@ -3,7 +3,7 @@ import { getAddresses } from '../../api/addresses/requests.ts';
 
 export const useAddresses = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['addresses'],
     queryFn: getAddresses,
   });

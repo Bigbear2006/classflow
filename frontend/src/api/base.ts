@@ -1,12 +1,13 @@
 import axios, {
-  type AxiosError,
+  AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
   isAxiosError,
 } from 'axios';
 import { BASE_URL } from '../config.ts';
 import { createServerFn } from '@tanstack/react-start';
-import { getRequest, getResponseHeaders, setResponseHeaders } from '@tanstack/react-start/server';
+import { getRequest, setResponseHeader } from '@tanstack/react-start/server';
+import { addCookieToConfig, getServerBaseURL } from '../lib/axios.ts';
 
 export const axiosInstance = setupInterceptor(createAxiosInstance());
 
@@ -36,17 +37,18 @@ export function createAxiosInstance(props?: { baseURL?: string; cookie?: string 
 
 export const refreshTokenFn = createServerFn({ method: 'POST' }).handler(async () => {
   const request = getRequest();
-  const url = new URL(request.url);
-
-  const refreshURL = `${url.protocol}//${url.host.replace(':5173', ':8000')}/api/v1/users/refresh-token/`;
+  const refreshURL = `${getServerBaseURL(request)}users/refresh-token/`;
   const headers = { cookie: request.headers.get('cookie') };
 
-  axios
+  return axios
     .post(refreshURL, {}, { headers })
     .then(rsp => {
-      const headers = getResponseHeaders()
-      rsp.headers['set-cookie']?.forEach(cookie => headers.set('set-cookie', cookie));
-      setResponseHeaders(headers)
+      const setCookie = rsp.headers['set-cookie'];
+      if (!setCookie || setCookie.length === 0) {
+        return;
+      }
+      setResponseHeader('Set-Cookie', setCookie[0]);
+      return setCookie[0];
     })
     .catch(handleError);
 });
@@ -79,12 +81,15 @@ export function setupInterceptor(instance: AxiosInstance) {
     isRefreshing = true;
 
     return refreshTokenFn()
-      .then(() => {
+      .then(access => {
+        if (!access) {
+          throw new AxiosError('Failed to refresh token');
+        }
         failedRequests.forEach(elem =>
-          instance(elem.config).then(elem.resolve).catch(elem.reject),
+          instance(addCookieToConfig(config!, access)).then(elem.resolve).catch(elem.reject),
         );
         failedRequests = [];
-        return instance(err.config!);
+        return instance(addCookieToConfig(config!, access));
       })
       .catch(err => {
         failedRequests.forEach(req => req.reject(err));

@@ -11,4 +11,5 @@ export const Route = createFileRoute('/_layout/orgs')({
   component: OrganizationsPage,
   loader: createLoader({ requireUser: true }),
   validateSearch: OrgsRouteSearch,
+  ssr: false,
 });

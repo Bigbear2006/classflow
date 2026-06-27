@@ -7,7 +7,7 @@ import {
 
 export const useMyAttendance = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['attendance', 'my'],
     queryFn: getMyAttendance,
   });
@@ -15,7 +15,7 @@ export const useMyAttendance = () => {
 
 export const useAttendanceStats = () => {
   return useQuery({
-    initialData: {
+    placeholderData: {
       present: 0,
       absent: 0,
       excused: 0,
@@ -28,7 +28,7 @@ export const useAttendanceStats = () => {
 
 export const useCoursesAttendanceStats = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['attendance', 'stats', 'courses'],
     queryFn: getCoursesAttendanceStats,
   });

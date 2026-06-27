@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import {useQuery, useSuspenseQuery} from '@tanstack/react-query';
 import {
   getCourseGroups,
   getCourses,
@@ -9,8 +9,7 @@ import {
 import type { GetAllCoursesParams, GetCourseTeachersParams } from '../../api/courses/types.ts';
 
 export const useCourses = (params?: GetAllCoursesParams) => {
-  return useQuery({
-    initialData: [],
+  return useSuspenseQuery({
     queryKey: ['courses', params],
     queryFn: () => getCourses(params),
   });
@@ -18,7 +17,7 @@ export const useCourses = (params?: GetAllCoursesParams) => {
 
 export const useIndividualCourses = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['courses', 'individual'],
     queryFn: getIndividualCourses,
   });
@@ -30,7 +29,7 @@ export interface UseCourseProps {
 
 export const useCourseGroups = ({ courseId }: UseCourseProps) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['courses', courseId, 'groups'],
     queryFn: () => getCourseGroups(courseId),
   });
@@ -42,7 +41,7 @@ interface UseCourseTeachersProps extends UseCourseProps {
 
 export const useCourseTeachers = ({ courseId, params }: UseCourseTeachersProps) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['courses', courseId, 'teachers', params],
     queryFn: () => getCourseTeachers(courseId, params),
     enabled: !!courseId,
@@ -51,7 +50,7 @@ export const useCourseTeachers = ({ courseId, params }: UseCourseTeachersProps) 
 
 export const useCourseTeacherStudentsWithPayments = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['courses', 'teachers', 'students', 'payments'],
     queryFn: getCourseTeacherStudentsWithPayments,
   });

@@ -14,16 +14,15 @@ import type { GetOrganizationsParams } from '../../api/organizations/types.ts';
 
 export const useOrganizations = (params: GetOrganizationsParams) => {
   return useQuery({
-    initialData: [],
+    placeholderData: (previousData) => keepPreviousData(previousData || []),
     queryKey: ['organizations', params],
     queryFn: () => getOrganizations(params),
-    placeholderData: keepPreviousData,
   });
 };
 
 export const useMyOrganizations = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['organizations', 'my'],
     queryFn: getMyOrganizations,
   });
@@ -51,7 +50,7 @@ export const useCurrentOrganizationMember = () => {
 
 export const useCurrentOrganizationTeachers = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['organization', 'teachers'],
     queryFn: getOrganizationTeachers,
   });
@@ -68,7 +67,7 @@ export const useRoleCounts = () => {
 
 export const useOrganizationStats = () => {
   return useQuery({
-    initialData: {
+    placeholderData: {
       courses: 0,
       teachers: 0,
       students: 0,
@@ -82,7 +81,7 @@ export const useOrganizationStats = () => {
 };
 export const useStudentStats = () => {
   return useQuery({
-    initialData: {
+    placeholderData: {
       courses: 0,
       completedLessons: 0,
       todayLessons: 0,
@@ -95,7 +94,7 @@ export const useStudentStats = () => {
 
 export const useTeacherStats = () => {
   return useQuery({
-    initialData: {
+    placeholderData: {
       courses: 0,
       students: 0,
       todayLessons: 0,

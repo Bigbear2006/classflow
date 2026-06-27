@@ -4,12 +4,9 @@ import { type QueryClient } from '@tanstack/react-query';
 import { AppContextProvider } from '../context.tsx';
 import { Toaster } from 'sonner';
 import appCss from '../styles/index.css?url';
-import type { AxiosInstance } from 'axios';
-// import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
-// import {TanStackRouterDevtools} from '@tanstack/react-router-devtools'
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 export interface RootRouteContext {
-  axiosInstance: AxiosInstance;
   queryClient: QueryClient;
 }
 
@@ -32,6 +29,7 @@ function RootComponent() {
       <AppContextProvider>
         <Toaster position="top-center" richColors={true} />
         <Outlet />
+        <ReactQueryDevtools/>
       </AppContextProvider>
     </RootDocument>
   );

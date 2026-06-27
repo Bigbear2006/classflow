@@ -3,7 +3,7 @@ import { getCabinets } from '../../api/cabinets/requests.ts';
 
 export const useCabinets = () => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['cabinets'],
     queryFn: getCabinets,
   });

@@ -27,9 +27,10 @@ import {
 } from './mappers.ts';
 import type { OrganizationMemberDetailResponse } from '../organizations/types.ts';
 import { mapOrgMemberDetail } from '../organizations/mappers.ts';
+import {useAxios} from "../../hooks/useAxios.ts";
 
 export const getCourses = (params?: GetAllCoursesParams): Promise<CourseDetail[]> => {
-  return axiosInstance
+  return useAxios()
     .get<CourseDetailResponse[]>('courses/', { params })
     .then(rsp => rsp.data.map(mapCourseDetail));
 };

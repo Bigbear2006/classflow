@@ -4,7 +4,7 @@ import type { GetLessonsParams } from '../../api/lessons/types.ts';
 
 export const useLessons = (params?: GetLessonsParams) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['lessons', params],
     queryFn: () => getLessons(params),
   });
@@ -16,7 +16,7 @@ interface UseLessonProps {
 
 export const useLessonStudents = ({ lessonId }: UseLessonProps) => {
   return useQuery({
-    initialData: [],
+    placeholderData: [],
     queryKey: ['lessons', lessonId, 'students'],
     queryFn: () => getLessonStudents(lessonId!),
     enabled: !!lessonId,

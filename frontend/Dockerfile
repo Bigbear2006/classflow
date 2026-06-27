@@ -6,4 +6,6 @@ COPY package.json package-lock.json ./
 RUN npm i
 
 COPY . .
-CMD ["npm", "run", "build"]
+RUN ["npm", "run", "build"]
+
+ENTRYPOINT ["node", "./.output/server/index.mjs"]

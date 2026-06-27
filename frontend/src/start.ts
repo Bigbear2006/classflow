@@ -1,19 +1,19 @@
-import {createCsrfMiddleware, createMiddleware, createStart} from '@tanstack/react-start';
+import { createCsrfMiddleware, createMiddleware, createStart } from '@tanstack/react-start';
 import { createAxiosInstance, setupInterceptor } from './api/base.ts';
 import { requestContext } from './hooks/useAxios.ts';
+import { getServerBaseURL } from './lib/axios.ts';
 
 const csrfMiddleware = createCsrfMiddleware({
-  filter: (ctx) => ctx.handlerType === 'serverFn',
-})
+  filter: ctx => ctx.handlerType === 'serverFn',
+});
 
 export const contextMiddleware = createMiddleware({ type: 'request' }).server(
   async ({ request, context, next }) => {
-    const url = new URL(request.url);
     const inst =
       (context as any).axiosInstance ||
       setupInterceptor(
         createAxiosInstance({
-          baseURL: `${url.protocol}//${url.host.replace(':5173', ':8000')}/api/v1/`,
+          baseURL: getServerBaseURL(request),
           cookie: request.headers.get('cookie') || undefined,
         }),
       );
@@ -23,7 +23,6 @@ export const contextMiddleware = createMiddleware({ type: 'request' }).server(
     });
   },
 );
-
 
 export const startInstance = createStart(() => ({
   requestMiddleware: [csrfMiddleware, contextMiddleware],

@@ -25,6 +25,7 @@ import {
   mapStudentStats,
   mapTeacherStats,
 } from './mappers.ts';
+import { useAxios } from '../../hooks/useAxios.ts';
 
 export const getOrganizations = (params: GetOrganizationsParams) => {
   return axiosInstance
@@ -33,7 +34,7 @@ export const getOrganizations = (params: GetOrganizationsParams) => {
 };
 
 export const getCurrentOrganization = () => {
-  return axiosInstance
+  return useAxios()
     .get<OrganizationResponse>('organizations/current/')
     .then(rsp => mapOrg(rsp.data))
     .catch(handleError);
@@ -50,14 +51,14 @@ export const getMyOrganizations = () => {
 };
 
 export const getCurrentOrganizationMember = () => {
-  return axiosInstance
+  return useAxios()
     .get<OrganizationMemberResponse>('organizations/current/members/me/')
     .then(rsp => mapOrgMember(rsp.data))
     .catch(handleError);
 };
 
 export const getOrganizationMembers = (params?: GetOrganizationMembersParams) => {
-  return axiosInstance
+  return useAxios()
     .get<OrganizationMemberDetailResponse[]>('organizations/current/members/', { params })
     .then(rsp => rsp.data.map(mapOrgMemberDetail));
 };
@@ -67,7 +68,7 @@ export const getOrganizationTeachers = () => {
 };
 
 export const getRoleCounts = (): Promise<RoleCount[]> => {
-  return axiosInstance
+  return useAxios()
     .get<RoleCountResponse[]>('organizations/current/roles/')
     .then(rsp => rsp.data);
 };
