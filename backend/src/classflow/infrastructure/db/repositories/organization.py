@@ -62,12 +62,6 @@ class OrganizationRepositoryImpl(OrganizationRepository):
     async def get_all(self, query: str) -> list[Organization]:
         stmt = (
             select(Organization)
-            .where(
-                or_(
-                    organizations_table.c.name.op('%')(query),
-                    organizations_table.c.slug.op('%')(query),
-                ),
-            )
             .order_by(
                 func.greatest(
                     func.similarity(organizations_table.c.name, query),
@@ -76,6 +70,15 @@ class OrganizationRepositoryImpl(OrganizationRepository):
             )
             .limit(10)
         )
+
+        if query:
+            stmt = stmt.where(
+                or_(
+                    organizations_table.c.name.op('%')(query),
+                    organizations_table.c.slug.op('%')(query),
+                ),
+            )
+
         rows = await self.session.scalars(stmt)
         return cast(list[Organization], rows.all())
 

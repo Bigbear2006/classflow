@@ -43,11 +43,10 @@ async def test_users(client: AsyncClient) -> None:
     )
     rsp = await client.post('/users/login/', json=asdict(login_dto))
     assert rsp.status_code == 204
-    access = rsp.cookies.get('access')
-    assert access
-    cookies = {'access': access}
+    access = rsp.cookies['access']
+    client.cookies.update({'access': access})
 
-    rsp = await client.get('/users/me/', cookies=cookies)
+    rsp = await client.get('/users/me/')
     data = rsp.json()
     assert data['fullname'] == register_dto.fullname
     assert data['email'] == register_dto.email
@@ -57,11 +56,7 @@ async def test_users(client: AsyncClient) -> None:
         fullname='Updated Test User',
         phone=register_dto.phone,
     )
-    rsp = await client.put(
-        '/users/me/',
-        json=asdict(update_dto),
-        cookies=cookies,
-    )
+    rsp = await client.put('/users/me/', json=asdict(update_dto))
     data = rsp.json()
     assert data['fullname'] == update_dto.fullname
     assert data['email'] == register_dto.email
@@ -72,11 +67,12 @@ async def test_users(client: AsyncClient) -> None:
         new_password='updated-test-password',
     )
     rsp = await client.patch(
-        '/users/me/change-password/',
-        json=asdict(change_password_dto),
-        cookies=cookies,
+        '/users/me/change-password/', json=asdict(change_password_dto)
     )
     assert rsp.status_code == 204
+
+    client.cookies.delete('access')
+    assert client.cookies.get('access') is None
 
     login_dto = LoginUserDTO(
         email=register_dto.email,

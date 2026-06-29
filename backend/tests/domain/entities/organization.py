@@ -13,4 +13,19 @@ test_organization_members = [
         user_id=1,
         role=UserRole.OWNER,
     ),
+    OrganizationMember(
+        organization_id=1,
+        user_id=2,
+        role=UserRole.ADMIN,
+    ),
+    OrganizationMember(
+        organization_id=1,
+        user_id=3,
+        role=UserRole.TEACHER,
+    ),
+    OrganizationMember(
+        organization_id=1,
+        user_id=4,
+        role=UserRole.STUDENT,
+    ),
 ]
